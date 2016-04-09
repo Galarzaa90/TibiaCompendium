@@ -156,9 +156,11 @@ public class Player {
         return deathList;
     }
 
+    /*
+    Unused setter
     public void setDeathList(List<Death> deathList) {
         this.deathList = deathList;
-    }
+    }*/
 
     public void addDeath(Death death){
         deathList.add(death);

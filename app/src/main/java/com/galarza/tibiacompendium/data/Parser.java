@@ -11,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    private String string;
 
     private static String STATUS = "Status:?<.*?(Free Account|Premium Account).+";
 

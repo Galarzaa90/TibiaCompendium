@@ -1,7 +1,6 @@
 package com.galarza.tibiacompendium;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -70,7 +69,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void restoreActionBar() {
+    private void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);

@@ -12,14 +12,6 @@ public class Death{
     public Death() {
     }
 
-    public Death(Date date, String dateString, boolean byPlayer, String killer, int level) {
-        this.date = date;
-        this.dateString = dateString;
-        this.byPlayer = byPlayer;
-        this.killer = killer;
-        this.level = level;
-    }
-
     public String toString(){
         return "Death: level = "+level+", killer = "+killer+", byPlayer = "+byPlayer+", date = "+
                 date.toString();

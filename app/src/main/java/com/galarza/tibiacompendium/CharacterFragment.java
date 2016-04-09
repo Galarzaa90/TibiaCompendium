@@ -18,8 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.LinearLayout;;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,7 +34,6 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -47,7 +45,6 @@ public class CharacterFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
-    private Button searchButton;
     private EditText searchField;
     private LinearLayout characterInfo;
     private RelativeLayout boxLoading;
@@ -66,7 +63,6 @@ public class CharacterFragment extends Fragment {
     private TextView characterComment;
 
     private LinearLayout characterDeaths;
-    private DeathListAdapter deathListAdapter;
 
     private LinearLayout boxHouse;
     private LinearLayout boxGuild;
@@ -129,7 +125,7 @@ public class CharacterFragment extends Fragment {
                 return false;
             }
         });
-        searchButton = (Button)rootView.findViewById(R.id.search_button);
+        Button searchButton = (Button) rootView.findViewById(R.id.search_button);
         searchButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,7 +136,7 @@ public class CharacterFragment extends Fragment {
         return rootView;
     }
 
-    class fetchData extends AsyncTask<String, Integer, Player> {
+    private class fetchData extends AsyncTask<String, Integer, Player> {
 
         @Override
         protected Player doInBackground(String... params) {
@@ -245,12 +241,12 @@ public class CharacterFragment extends Fragment {
                 }
                 characterInfo.setVisibility(View.VISIBLE);
 
-                deathListAdapter = new DeathListAdapter(getContext(), R.layout.row_death, result.getDeathList());
+                DeathListAdapter deathListAdapter = new DeathListAdapter(getContext(), R.layout.row_death, result.getDeathList());
                 Log.e("death number",String.valueOf(result.getDeathList().size()));
                 if(result.getDeathList().size() > 0) {
                     characterDeaths.removeAllViews();
                     boxDeaths.setVisibility(View.VISIBLE);
-                    for(int i  = 0; i < deathListAdapter.getCount(); i++){
+                    for(int i = 0; i < deathListAdapter.getCount(); i++){
                         View item = deathListAdapter.getView(i,null,null);
                         characterDeaths.addView(item);
                     }
