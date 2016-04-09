@@ -1,0 +1,27 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>}
+    </style>
+    <style name="MyButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+    </style>
+    <style name="TitleText" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">#80000000</item>
+        <item name="android:textSize">@dimen/title</item>
+    </style>
+    <style name="EntryText" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/black_100</item>
+        <item name="android:textSize">@dimen/entry</item>
+    </style>
+    <style name="BigEntryText" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/black_100</item>
+        <item name="android:textSize">@dimen/big_entry</item>
+    </style>
+
+</resources>
