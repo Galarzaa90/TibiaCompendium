@@ -21,6 +21,7 @@ public class Player {
     private Date lastLogin;
     private String lastLoginString;
     private String comment;
+    private boolean premium;
     private List<Death> deathList = new ArrayList<>();
 
     public String getName() {
@@ -151,6 +152,13 @@ public class Player {
         this.comment = comment;
     }
 
+    public boolean isPremium() {
+        return premium;
+    }
+
+    public void setPremium(boolean premium) {
+        this.premium = premium;
+    }
 
     public List<Death> getDeathList() {
         return deathList;

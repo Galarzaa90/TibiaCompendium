@@ -11,19 +11,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-
-    private static String STATUS = "Status:?<.*?(Free Account|Premium Account).+";
-
+    /**
+     * Parses Tibia's website content and fetches player's data
+     * @param content String containing website content
+     * @return A Player object containing the fetched info or null if the character was not found
+     */
     public static Player parseCharacter(String content){
         Player player = new Player();
 
-        content = content.substring(
-                content.indexOf("BoxContent"),
-                content.indexOf("<B>Search Character</B>"));
+        /* In order to reduce regular expression load, we reduce the content string */
+        int startIndex = content.indexOf("BoxContent");
+        int endIndex = content.indexOf("<B>Search Character</B>");
 
+        if(startIndex < 0){
+            return null;
+        }
+        content = content.substring(startIndex,endIndex);
+        /* TODO: Replace regular expressions with a HTML parser. */
         /* Get player's name */
-        String NAME = "Name:</td><td>([^<]+)\\s<";
-        Matcher m = getMatcher(content, NAME);
+        Matcher m = getMatcher(content, "Name:</td><td>([^<]+)\\s<");
         if(m.find()){
             player.setName(m.group(1).trim());
         }else{
@@ -31,29 +37,25 @@ public class Parser {
         }
 
         /* Get former names if available */
-        String FORMER_NAMES = "Names:</td><td>([^<]+)<";
-        m = getMatcher(content, FORMER_NAMES);
+        m = getMatcher(content, "Names:</td><td>([^<]+)<");
         if(m.find()){
             player.setFormerNames(m.group(1).trim());
         }
 
         /* Get player's sex */
-        String SEX = "Sex:</td><td>([^<]+)";
-        m = getMatcher(content, SEX);
+        m = getMatcher(content, "Sex:</td><td>([^<]+)");
         if(m.find()) {
             player.setSex(m.group(1));
         }
 
         /* Get player's vocation */
-        String VOCATION = "Vocation:</td><td>([^<]+)";
-        m = getMatcher(content, VOCATION);
+        m = getMatcher(content, "Vocation:</td><td>([^<]+)");
         if(m.find()) {
             player.setVocation(m.group(1));
         }
 
         /* Get player's level */
-        String LEVEL = "Level:</td><td>(\\d+)";
-        m = getMatcher(content, LEVEL);
+        m = getMatcher(content, "Level:</td><td>(\\d+)");
         int lvl = 0;
         if(m.find()){
             try{
@@ -66,8 +68,7 @@ public class Parser {
         player.setLevel(lvl);
 
         /* Get player's achievement points */
-        String ACHIEVEMENTS = "Points:</td><td>(\\d+)";
-        m = getMatcher(content, ACHIEVEMENTS);
+        m = getMatcher(content, "Points:</nobr></td><td>(\\d+)");
         int achievements = 0;
         if(m.find()){
             try{
@@ -80,50 +81,47 @@ public class Parser {
         player.setAchievementPoints(achievements);
 
         /* Get player's world */
-        String WORLD = "World:</td><td>([^<]+)";
-        m = getMatcher(content, WORLD);
+        m = getMatcher(content, "World:</td><td>([^<]+)");
         if(m.find()) {
             player.setWorld(m.group(1));
         }
 
         /* Get player's former world */
-        String FORMER_WORLD = "Former World:</td><td>([^<]+)";
-        m = getMatcher(content, FORMER_WORLD);
+        m = getMatcher(content, "Former World:</td><td>([^<]+)");
         if(m.find()) {
             player.setFormerWorld(m.group(1));
         }
 
         /* Get player's residence (city) */
-        String RESIDENCE = "Residence:</td><td>([^<]+)";
-        m = getMatcher(content, RESIDENCE);
+        m = getMatcher(content, "Residence:</td><td>([^<]+)");
         if(m.find()) {
             player.setResidence(m.group(1));
         }
 
         /* Get player's house */
-        String HOUSE = "House:</td><td>(.+?)\\s\\(([A-z]+)\\) is paid until ([A-z]+).*?;(\\d+).*?;(\\d+)";
-        m = getMatcher(content, HOUSE);
+        m = getMatcher(content, "House:</td><td>(.+?)\\s\\(([A-z]+)\\) is paid until ([A-z]+).*?;(\\d+).*?;(\\d+)");
         if(m.find()) {
             player.setHouse(m.group(1));
             player.setHouseCity(m.group(2));
         }
 
 
-        String GUILD_RANK = "membership:</td><td>([^<]+)\\sof the";
-        m = getMatcher(content, GUILD_RANK);
+        /* Get the player's guild rank */
+        m = getMatcher(content, "membership:</td><td>([^<]+)\\sof the");
         if(m.find()){
             player.setGuildRank(m.group(1).trim());
 
-            String GUILD = "GuildName=.*?([^\"]+).+";
-            m = getMatcher(content, GUILD);
+            /* Get the player's guild */
+            m = getMatcher(content, "GuildName=.*?([^\"]+).+");
             if (m.find()){
                 player.setGuild(m.group(1).replaceAll("\\+"," "));
             }
         }
 
-        String LAST_LOG = "Last login:</td><td>([A-z]+).*?;(\\d+).*?;(\\d+).*?;(\\d+):(\\d+):(\\d+).*?([A-Z]+)";
-        m = getMatcher(content, LAST_LOG);
+        /* Get the player's last login date */
+        m = getMatcher(content, "Last login:</td><td>([A-z]+).*?;(\\d+).*?;(\\d+).*?;(\\d+):(\\d+):(\\d+).*?([A-Z]+)");
         if(m.find()) {
+            /* Groups: Month, day, year, hour, minutes, seconds, timezone */
             player.setLastLoginString(String.format(
                     "%s %s %s %s:%s:%s %s",
                     m.group(1),m.group(2),m.group(3),m.group(4),m.group(5),m.group(6),m.group(7)
@@ -136,22 +134,28 @@ public class Parser {
             }
         }
 
-        String COMMENT = "Comment:</td><td>(.*)\\s</td>";
-        m = getMatcher(content, COMMENT,Pattern.DOTALL);
+        /* Get player's comment */
+        m = getMatcher(content, "Comment:</td><td>(.*)\\s</td>",Pattern.DOTALL);
         if(m.find()){
             player.setComment(m.group(1));
         }
 
+        /* Get player's premium status */
+        m = getMatcher(content,"Status:</td><td>([^<]+)");
+        if(m.find()){
+            player.setPremium(m.group(1).contains("Premium"));
+        }
+
         /* Reducing the content string to reduce regex load */
         content = content.substring(content.indexOf("<b>Character Deaths</b>"));
-        String DEATHS = "valign=\"top\" >([^<]+)<\\/td><td>(.+?)<\\/td></tr>";
-        m = getMatcher(content, DEATHS);
+
+        /* Getting character's deaths */
+        m = getMatcher(content, "valign=\"top\" >([^<]+)<\\/td><td>(.+?)<\\/td></tr>");
         while(m.find()){
             Death death = new Death();
             Matcher m1 = getMatcher(m.group(1),"(\\w+).+?;(\\d+).+?;(\\d+).+?;(\\d+):(\\d+):(\\d+).+?;(\\w+)");
             /* Getting death's date */
             if(m1.find()){
-                Log.e("date match",m1.group(0));
                 death.setDateString(String.format(
                         "%s %s %s %s:%s:%s %s",
                         m1.group(1),m1.group(2),m1.group(3),m1.group(4),m1.group(5),m1.group(6),m1.group(7)
@@ -181,7 +185,6 @@ public class Parser {
                     death.setByPlayer(true);
                 }
             }
-            Log.e("death",death.toString());
             player.addDeath(death);
         }
 
