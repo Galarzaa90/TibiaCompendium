@@ -5,9 +5,10 @@
         <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimary</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>}
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/grey_200</item>
     </style>
-    <style name="MyButton" parent="Theme.AppCompat.Light">
+    <style name="RaisedButton" parent="Theme.AppCompat.Light">
         <item name="colorControlHighlight">@color/colorAccent</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>
     </style>

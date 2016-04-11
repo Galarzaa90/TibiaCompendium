@@ -3,18 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_margin"
-    android:background="@color/grey_200"
-    android:orientation="vertical"
-    tools:context=".CharacterFragment"
-    android:animateLayoutChanges="true">
+    tools:context=".CharacterFragment">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
+            <!-- Search character box -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -24,7 +22,7 @@
                 android:layout_margin="5dp">
                 <EditText
                     android:id="@+id/search_char"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/search_hint"
@@ -37,23 +35,25 @@
                     android:textColor="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:theme="@style/MyButton"
+                    android:theme="@style/RaisedButton"
                     android:text="@string/search" />
             </LinearLayout>
+            <!-- Loading progress bar box -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/loading"
+                android:id="@+id/loading_box"
                 android:visibility="gone">
                 <ProgressBar
                     android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </RelativeLayout>
+            <!-- Character doesn't exists box -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/no_results"
+                android:id="@+id/no_results_box"
                 android:visibility="gone">
                 <TextView
                     android:layout_centerInParent="true"
@@ -61,8 +61,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_results"/>
             </RelativeLayout>
+            <!-- Character info box -->
             <LinearLayout
-                android:id="@+id/char_info"
+                android:id="@+id/character_box"
                 android:background="@color/white"
                 android:elevation="3dp"
                 android:padding="4dp"
@@ -75,7 +76,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
                     <TextView
                         android:id="@+id/char_name"
                         android:layout_height="wrap_content"
@@ -206,19 +206,30 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone"
-                tools:visibility="visible">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/comment"
-                    style="@style/TitleText"/>
+                tools:visibility="visible"
+                android:animateLayoutChanges="true">
+                <LinearLayout
+                    android:id="@+id/comment_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comment"
+                        style="@style/TitleText"/>
+                    <ImageView
+                        android:id="@+id/comment_toggle_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_drop_down"/>
+                </LinearLayout>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/char_comment"
-                    tools:text="Comments go in here\nCan have multiple lines"
+                    android:visibility="gone"
                     style="@style/EntryText"/>
-
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/deaths_box"
@@ -230,18 +241,30 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:visibility="gone"
-                tools:visibility="visible">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/deaths"
-                    style="@style/TitleText"/>
+                tools:visibility="visible"
+                android:animateLayoutChanges="true">
+                <LinearLayout
+                    android:id="@+id/deaths_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/deaths"
+                        style="@style/TitleText"/>
+                    <ImageView
+                        android:id="@+id/death_toggle_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_drop_down"/>
+                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/char_deaths"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    tools:listitem="@layout/row_death">
+                    android:visibility="gone">
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

@@ -22,7 +22,7 @@ public class Player {
     private String lastLoginString;
     private String comment;
     private boolean premium;
-    private List<Death> deathList = new ArrayList<>();
+    private final List<Death> deathList = new ArrayList<>();
 
     public String getName() {
         return name;

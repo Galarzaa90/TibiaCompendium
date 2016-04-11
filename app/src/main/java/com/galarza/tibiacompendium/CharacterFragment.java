@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +17,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.galarza.tibiacompendium.data.Death;
 import com.galarza.tibiacompendium.data.Parser;
 import com.galarza.tibiacompendium.data.Player;
-import com.galarza.tibiacompendium.data.Death;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -89,9 +88,9 @@ public class CharacterFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_character, container, false);
 
-        characterInfo = (LinearLayout) rootView.findViewById(R.id.char_info);
-        boxLoading = (RelativeLayout)rootView.findViewById(R.id.loading);
-        boxNoResults = (RelativeLayout)rootView.findViewById(R.id.no_results);
+        characterInfo = (LinearLayout) rootView.findViewById(R.id.character_box);
+        boxLoading = (RelativeLayout)rootView.findViewById(R.id.loading_box);
+        boxNoResults = (RelativeLayout)rootView.findViewById(R.id.no_results_box);
 
         characterGender = (ImageView)rootView.findViewById(R.id.char_gender);
         characterName = (TextView)rootView.findViewById(R.id.char_name);
@@ -130,6 +129,36 @@ public class CharacterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 new fetchData().execute(searchField.getText().toString());
+            }
+        });
+
+        final ImageView deathToggleIcon = (ImageView)rootView.findViewById(R.id.death_toggle_icon);
+        LinearLayout deathsHeader = (LinearLayout)rootView.findViewById(R.id.deaths_header);
+        deathsHeader.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(characterDeaths.getVisibility() == View.GONE){
+                    characterDeaths.setVisibility(View.VISIBLE);
+                    deathToggleIcon.setImageResource(R.drawable.ic_arrow_drop_up);
+                }else{
+                    characterDeaths.setVisibility(View.GONE);
+                    deathToggleIcon.setImageResource(R.drawable.ic_arrow_drop_down);
+                }
+            }
+        });
+
+        final ImageView commentToggleIcon = (ImageView)rootView.findViewById(R.id.comment_toggle_icon);
+        LinearLayout commentHeader = (LinearLayout)rootView.findViewById(R.id.comment_header);
+        commentHeader.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(characterComment.getVisibility() == View.GONE){
+                    characterComment.setVisibility(View.VISIBLE);
+                    commentToggleIcon.setImageResource(R.drawable.ic_arrow_drop_up);
+                }else{
+                    characterComment.setVisibility(View.GONE);
+                    commentToggleIcon.setImageResource(R.drawable.ic_arrow_drop_down);
+                }
             }
         });
 
@@ -242,7 +271,6 @@ public class CharacterFragment extends Fragment {
                 characterInfo.setVisibility(View.VISIBLE);
 
                 DeathListAdapter deathListAdapter = new DeathListAdapter(getContext(), R.layout.row_death, result.getDeathList());
-                Log.e("death number",String.valueOf(result.getDeathList().size()));
                 if(result.getDeathList().size() > 0) {
                     characterDeaths.removeAllViews();
                     boxDeaths.setVisibility(View.VISIBLE);
