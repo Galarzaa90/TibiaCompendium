@@ -30,5 +30,6 @@
     <string name="no_results">Character does not exist.</string>
     <string name="deaths">Deaths</string>
     <string name="death_details">%1$s at Level %2$d by %3$s</string>
+    <string name="title_search_guild">Search Guild</string>
 
 </resources>

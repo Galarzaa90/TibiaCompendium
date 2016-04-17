@@ -9,7 +9,7 @@
         <item name="android:colorBackground">@color/grey_200</item>
     </style>
     <style name="RaisedButton" parent="Theme.AppCompat.Light">
-        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>
     </style>
     <style name="TitleText" parent="@android:style/TextAppearance.Medium">
