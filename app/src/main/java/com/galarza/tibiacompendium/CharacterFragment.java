@@ -62,6 +62,7 @@ public class CharacterFragment extends Fragment {
     private TextView characterComment;
 
     private LinearLayout characterDeaths;
+    private LinearLayout otherCharacters;
 
     private LinearLayout boxHouse;
     private LinearLayout boxGuild;
@@ -69,6 +70,7 @@ public class CharacterFragment extends Fragment {
     private LinearLayout boxFormerWorld;
     private LinearLayout boxComment;
     private LinearLayout boxDeaths;
+    private LinearLayout boxChars;
 
     public static CharacterFragment newInstance() {
         CharacterFragment fragment = new CharacterFragment();
@@ -105,6 +107,8 @@ public class CharacterFragment extends Fragment {
         characterComment = (TextView)rootView.findViewById(R.id.char_comment);
 
         characterDeaths = (LinearLayout) rootView.findViewById(R.id.char_deaths);
+        otherCharacters = (LinearLayout) rootView.findViewById(R.id.other_chars);
+
 
         boxHouse = (LinearLayout)rootView.findViewById(R.id.box_house);
         boxGuild = (LinearLayout)rootView.findViewById(R.id.box_guild);
@@ -112,6 +116,7 @@ public class CharacterFragment extends Fragment {
         boxFormerWorld = (LinearLayout)rootView.findViewById(R.id.box_former_world);
         boxComment = (LinearLayout)rootView.findViewById(R.id.comment_box);
         boxDeaths = (LinearLayout)rootView.findViewById(R.id.deaths_box);
+        boxChars = (LinearLayout) rootView.findViewById(R.id.chars_box);
 
         searchField = (EditText)rootView.findViewById(R.id.search_char);
         searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -131,6 +136,21 @@ public class CharacterFragment extends Fragment {
                 new fetchData().execute(searchField.getText().toString());
             }
         });
+        /* Expand/Collapse buttons listeners */
+        final ImageView commentToggleIcon = (ImageView)rootView.findViewById(R.id.comment_toggle_icon);
+        LinearLayout commentHeader = (LinearLayout)rootView.findViewById(R.id.comment_header);
+        commentHeader.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(characterComment.getVisibility() == View.GONE){
+                    characterComment.setVisibility(View.VISIBLE);
+                    commentToggleIcon.setImageResource(R.drawable.ic_arrow_drop_up);
+                }else{
+                    characterComment.setVisibility(View.GONE);
+                    commentToggleIcon.setImageResource(R.drawable.ic_arrow_drop_down);
+                }
+            }
+        });
 
         final ImageView deathToggleIcon = (ImageView)rootView.findViewById(R.id.death_toggle_icon);
         LinearLayout deathsHeader = (LinearLayout)rootView.findViewById(R.id.deaths_header);
@@ -147,17 +167,17 @@ public class CharacterFragment extends Fragment {
             }
         });
 
-        final ImageView commentToggleIcon = (ImageView)rootView.findViewById(R.id.comment_toggle_icon);
-        LinearLayout commentHeader = (LinearLayout)rootView.findViewById(R.id.comment_header);
-        commentHeader.setOnClickListener(new OnClickListener() {
+        final ImageView charsToggleIcon = (ImageView)rootView.findViewById(R.id.chars_toggle_icon);
+        LinearLayout charsHeader = (LinearLayout)rootView.findViewById(R.id.chars_header);
+        charsHeader.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(characterComment.getVisibility() == View.GONE){
-                    characterComment.setVisibility(View.VISIBLE);
-                    commentToggleIcon.setImageResource(R.drawable.ic_arrow_drop_up);
+                if(otherCharacters.getVisibility() == View.GONE){
+                    otherCharacters.setVisibility(View.VISIBLE);
+                    charsToggleIcon.setImageResource(R.drawable.ic_arrow_drop_up);
                 }else{
-                    characterComment.setVisibility(View.GONE);
-                    commentToggleIcon.setImageResource(R.drawable.ic_arrow_drop_down);
+                    otherCharacters.setVisibility(View.GONE);
+                    charsToggleIcon.setImageResource(R.drawable.ic_arrow_drop_down);
                 }
             }
         });
@@ -210,6 +230,7 @@ public class CharacterFragment extends Fragment {
             characterInfo.setVisibility(View.GONE);
             boxComment.setVisibility(View.GONE);
             boxDeaths.setVisibility(View.GONE);
+            boxChars.setVisibility(View.GONE);
             boxLoading.setVisibility(View.VISIBLE);
             boxNoResults.setVisibility(View.GONE);
         }
@@ -282,6 +303,18 @@ public class CharacterFragment extends Fragment {
                     boxDeaths.setVisibility(View.GONE);
                 }
 
+                CharsListAdapter charListAdapter = new CharsListAdapter(getContext(), R.layout.row_other_char, result.getOtherCharacters());
+                if(result.getOtherCharacters().size() > 1) {
+                    otherCharacters.removeAllViews();
+                    boxChars.setVisibility(View.VISIBLE);
+                    for(int i = 0; i < charListAdapter.getCount(); i++){
+                        View item = charListAdapter.getView(i,null,null);
+                        otherCharacters.addView(item);
+                    }
+                }else{
+                    boxChars.setVisibility(View.GONE);
+                }
+
             }else{
                 boxNoResults.setVisibility(View.VISIBLE);
             }
@@ -325,6 +358,42 @@ public class CharacterFragment extends Fragment {
                     death.isByPlayer() ? "Killed" : "Died",
                     death.getLevel(),
                     death.getKiller()));
+            return rowView;
+        }
+    }
+
+    class CharsListAdapter extends ArrayAdapter<Player> {
+        private final Context context;
+        private final List<Player> objects;
+        private final int layout;
+
+        public CharsListAdapter(Context context, int resource, List<Player> objects) {
+            super(context, resource, objects);
+            this.context = context;
+            this.layout = resource;
+            this.objects = objects;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater =
+                    (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(layout, null);
+            Player player = objects.get(position);
+
+            TextView charName= (TextView)rowView.findViewById(R.id.char_name);
+            charName.setText(player.getName());
+
+            TextView charWorld = (TextView)rowView.findViewById(R.id.char_world);
+            charWorld.setText(player.getWorld());
+
+            rowView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new fetchData().execute(((TextView)v.findViewById(R.id.char_name)).getText().toString());
+                }
+            });
+
             return rowView;
         }
     }
