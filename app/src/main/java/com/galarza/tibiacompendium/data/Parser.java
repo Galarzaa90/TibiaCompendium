@@ -146,47 +146,68 @@ public class Parser {
             player.setPremium(m.group(1).contains("Premium"));
         }
 
-        /* Reducing the content string to reduce regex load */
-        content = content.substring(content.indexOf("<b>Character Deaths</b>"));
+        /* Checking if character has recent deaths */
+        startIndex = content.indexOf("<b>Character Deaths</b>");
+        if(startIndex >= 0) {
+            /* Reducing the content string to reduce regex load */
+            content = content.substring(startIndex);
 
-        /* Getting character's deaths */
-        m = getMatcher(content, "valign=\"top\" >([^<]+)<\\/td><td>(.+?)<\\/td></tr>");
-        while(m.find()){
-            Death death = new Death();
-            Matcher m1 = getMatcher(m.group(1),"(\\w+).+?;(\\d+).+?;(\\d+).+?;(\\d+):(\\d+):(\\d+).+?;(\\w+)");
-            /* Getting death's date */
-            if(m1.find()){
-                death.setDateString(String.format(
-                        "%s %s %s %s:%s:%s %s",
-                        m1.group(1),m1.group(2),m1.group(3),m1.group(4),m1.group(5),m1.group(6),m1.group(7)
-                ));
-                DateFormat format = new SimpleDateFormat("MMM dd yyyy HH:mm:ss z", Locale.UK);
-                try {
-                    death.setDate(format.parse(death.getDateString()));
-                } catch (ParseException e) {
-                    e.printStackTrace();
+            /* Getting character's deaths */
+            m = getMatcher(content, "valign=\"top\" >([^<]+)<\\/td><td>(.+?)<\\/td></tr>");
+            while (m.find()) {
+                Death death = new Death();
+                Matcher m1 = getMatcher(m.group(1), "(\\w+).+?;(\\d+).+?;(\\d+).+?;(\\d+):(\\d+):(\\d+).+?;(\\w+)");
+                /* Getting death's date */
+                if (m1.find()) {
+                    death.setDateString(String.format(
+                            "%s %s %s %s:%s:%s %s",
+                            m1.group(1), m1.group(2), m1.group(3), m1.group(4), m1.group(5), m1.group(6), m1.group(7)
+                    ));
+                    DateFormat format = new SimpleDateFormat("MMM dd yyyy HH:mm:ss z", Locale.UK);
+                    try {
+                        death.setDate(format.parse(death.getDateString()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
+                /* Getting level and killer */
+                /* Died by monster */
+                if (m.group(2).contains("Died")) {
+                    Matcher m2 = getMatcher(m.group(2), "Level (\\d+) by ([^.]+)");
+                    if (m2.find()) {
+                        death.setLevel(Integer.parseInt(m2.group(1)));
+                        death.setKiller(m2.group(2));
+                        death.setByPlayer(false);
+                    }
+                /* Killed by player */
+                } else {
+                    Matcher m2 = getMatcher(m.group(2), "Level (\\d+) by .+?name=([^\"]+)");
+                    if (m2.find()) {
+                        death.setLevel(Integer.parseInt(m2.group(1)));
+                        death.setKiller(m2.group(2).replaceAll("\\+", " "));
+                        death.setByPlayer(true);
+                    }
+                }
+                player.addDeath(death);
+
             }
-            /* Getting level and killer */
-            /* Died by monster */
-            if(m.group(2).contains("Died")){
-                Matcher m2 = getMatcher(m.group(2),"Level (\\d+) by ([^.]+)");
-                if(m2.find()){
-                    death.setLevel(Integer.parseInt(m2.group(1)));
-                    death.setKiller(m2.group(2));
-                    death.setByPlayer(false);
-                }
-            /* Killed by player */
-            }else{
-                Matcher m2 = getMatcher(m.group(2),"Level (\\d+) by .+?name=([^\"]+)");
-                if(m2.find()){
-                    death.setLevel(Integer.parseInt(m2.group(1)));
-                    death.setKiller(m2.group(2).replaceAll("\\+"," "));
-                    death.setByPlayer(true);
-                }
-            }
-            player.addDeath(death);
         }
+
+        /* Check if it displays other characters (character not hidden) */
+        startIndex = content.indexOf("<B>Characters</B>");
+        if (startIndex >= 0) {
+            /* Reducing the content string to reduce regex load */
+            content = content.substring(startIndex);
+            m = getMatcher(content,"<TD WIDTH=10%><NOBR>([^<]+)[^?]+.+?VALUE=\"([^\"]+)",Pattern.DOTALL);
+            while(m.find()){
+                Player otherCharacter = new Player();
+                otherCharacter.setWorld(m.group(1));
+                otherCharacter.setName(m.group(2));
+                player.addCharacter(otherCharacter);
+            }
+
+        }
+
 
         return player;
     }

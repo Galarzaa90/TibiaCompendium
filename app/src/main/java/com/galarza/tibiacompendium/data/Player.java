@@ -23,6 +23,7 @@ public class Player {
     private String comment;
     private boolean premium;
     private final List<Death> deathList = new ArrayList<>();
+    private final List<Player> otherCharacters = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -164,15 +165,16 @@ public class Player {
         return deathList;
     }
 
-    /*
-    Unused setter
-    public void setDeathList(List<Death> deathList) {
-        this.deathList = deathList;
-    }*/
 
     public void addDeath(Death death){
         deathList.add(death);
     }
 
+    public List<Player> getOtherCharacters() {
+        return otherCharacters;
+    }
 
+    public void addCharacter(Player character){
+        otherCharacters.add(character);
+    }
 }
