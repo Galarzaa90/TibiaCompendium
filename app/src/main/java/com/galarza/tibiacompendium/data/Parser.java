@@ -203,6 +203,9 @@ public class Parser {
                 Player otherCharacter = new Player();
                 otherCharacter.setWorld(m.group(1));
                 otherCharacter.setName(m.group(2));
+                /* Ignore if it's the current character */
+                if (player.getName().equalsIgnoreCase(otherCharacter.getName()))
+                        continue;
                 player.addCharacter(otherCharacter);
             }
 
