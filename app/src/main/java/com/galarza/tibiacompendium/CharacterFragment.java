@@ -40,8 +40,6 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class CharacterFragment extends Fragment {
-
-
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     private EditText searchField;

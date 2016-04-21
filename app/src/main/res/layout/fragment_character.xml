@@ -25,7 +25,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/search_hint"
+                    android:hint="@string/search_hint_player"
                     android:singleLine="true"
                     android:imeOptions="actionSearch"
                     android:inputType="text"/>
@@ -59,7 +59,7 @@
                     android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/no_results"/>
+                    android:text="@string/no_results_char"/>
             </RelativeLayout>
             <!-- Character info box -->
             <LinearLayout

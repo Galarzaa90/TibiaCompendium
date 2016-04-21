@@ -4,20 +4,27 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!-- Navigation -->
+    <string name="title_home">Home</string>
+    <string name="title_search_char">Character Search</string>
+    <string name="title_search_guild">Search Guild</string>
+
+    <string-array name="navigation_sections">
+        <item>@string/title_home</item>
+        <item>@string/title_search_char</item>
+        <item>@string/title_search_guild</item>
+    </string-array>
 
     <string name="action_settings">Settings</string>
 
 
-    <string name="title_home">Home</string>
-
     <!-- Character fragment -->
-    <string name="title_search_char">Search Character</string>
     <string name="name">Name</string>
     <string name="char_summary">Level %1$d %2$s</string>
     <string name="residence">Residence</string>
     <string name="char_residence">%1$s in %2$s</string>
     <string name="char_house">%1$s in %2$s</string>
-    <string name="search_hint">Character name</string>
+    <string name="search_hint_player">Character name</string>
     <string name="search">Search</string>
     <string name="achievements">Achievement Points</string>
     <string name="former_names">Former Names</string>
@@ -27,10 +34,14 @@
     <string name="former_world">Former World</string>
     <string name="last_login">Last Login</string>
     <string name="comment">Comment</string>
-    <string name="no_results">Character does not exist.</string>
+    <string name="no_results_char">Character does not exist.</string>
     <string name="deaths">Deaths</string>
     <string name="death_details">%1$s at Level %2$d by %3$s</string>
-    <string name="title_search_guild">Search Guild</string>
     <string name="other_chars">Other characters</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_hint_guild">Guild name</string>
+    <string name="no_results_guild">No guild found.</string>
 
 </resources>

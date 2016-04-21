@@ -46,25 +46,29 @@ public class MainActivity extends AppCompatActivity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if (position == 1) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container,CharacterFragment.newInstance())
-                    .commit();
-        } else{
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                    .commit();
+        switch(position){
+            case 1:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container,CharacterFragment.newInstance())
+                        .commit();
+                break;
+            case 2:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, GuildFragment.newInstance())
+                        .commit();
+                break;
+            default:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .commit();
+                break;
         }
     }
 
     public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_home);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_search_char);
-                break;
+        String titles[] = getResources().getStringArray(R.array.navigation_sections);
+        if(number <= titles.length){
+            mTitle = titles[number-1];
         }
     }
 

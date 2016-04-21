@@ -1,6 +1,7 @@
 package com.galarza.tibiacompendium.data;
 
 
+import android.text.Html;
 import android.util.Log;
 
 import java.text.DateFormat;
@@ -213,6 +214,49 @@ public class Parser {
 
 
         return player;
+    }
+
+
+    public static Guild parseGuild(String content){
+        Guild guild = new Guild();
+
+        int startIndex = content.indexOf("<td>Status</td>");
+
+        if(startIndex < 0){
+            return null;
+        }
+        int endIndex = content.indexOf("</table",startIndex);
+        content = content.substring(startIndex,endIndex);
+
+        Matcher m = getMatcher(
+                content,
+                "<TD>([^<]+)</TD></td><TD><A HREF=\"https://secure\\.tibia\\.com/community/\\?subtopic=characters&name=([^\"]+)\">[^<]+</A> *\\(*(.*?)\\)*</TD><TD>([^<]+)</TD><TD>([^<]+)</TD><TD>([^<]+)</TD><TD class='onlinestatus'><span class=\"(\\w+)\"",
+                Pattern.DOTALL
+        );
+        String prevRank = "";
+        while(m.find()){
+            GuildMember member = new GuildMember();
+            String rank = Html.fromHtml(m.group(1)).toString();
+            if(rank.equals(String.valueOf((char) 160))){
+                member.setRank(prevRank);
+            }else{
+                member.setRank(rank);
+                prevRank = rank;
+            }
+            member.setName(m.group(2).replaceAll("\\+", " "));
+            member.setVocation(m.group(4));
+            int level = 0;
+            try{
+                level = Integer.parseInt(m.group(5));
+            }catch(NumberFormatException nfe){
+                Log.e("Parser","Couldn't parse level: \""+m.group(5)+"\".");
+            }
+            member.setLevel(level);
+            member.setJoined(m.group(6));
+            member.setOnline(m.group(7).equalsIgnoreCase("green"));
+            guild.addMember(member);
+        }
+        return guild;
     }
 
     private static Matcher getMatcher(String str, String regex){
