@@ -19,6 +19,10 @@ public class Guild {
         return memberList;
     }
 
+    public int getMemberCount(){
+        return memberList.size();
+    }
+
     public int getOnlineCount(){
         int count = 0;
         for (GuildMember member: memberList){

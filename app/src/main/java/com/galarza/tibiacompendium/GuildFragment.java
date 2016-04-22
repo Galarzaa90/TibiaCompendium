@@ -11,7 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.galarza.tibiacompendium.data.Guild;
@@ -34,6 +37,14 @@ import java.util.List;
 public class GuildFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
 
+    private LinearLayout guildInfo;
+    private RelativeLayout boxLoading;
+    private RelativeLayout boxNoResults;
+
+    private TextView guildName;
+    private TextView guildMembers;
+    private TextView guildOnline;
+
     ListView memberList;
 
     EditText test;
@@ -55,6 +66,14 @@ public class GuildFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_guild, container, false);
+
+        guildInfo = (LinearLayout)rootView.findViewById(R.id.guild_box);
+        boxLoading = (RelativeLayout)rootView.findViewById(R.id.loading_box);
+        boxNoResults = (RelativeLayout)rootView.findViewById(R.id.no_results_box);
+
+        guildName = (TextView)rootView.findViewById(R.id.guild_name);
+        guildMembers = (TextView)rootView.findViewById(R.id.guild_members);
+        guildOnline = (TextView)rootView.findViewById(R.id.guild_members_online);
 
         memberList = (ListView)rootView.findViewById(R.id.member_list);
 
@@ -111,11 +130,23 @@ public class GuildFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            boxLoading.setVisibility(View.VISIBLE);
+            boxNoResults.setVisibility(View.GONE);
+            guildInfo.setVisibility(View.GONE);
         }
 
         @Override
         protected void onPostExecute(Guild guild) {
+            boxLoading.setVisibility(View.GONE);
+            if(guild == null){
+                boxNoResults.setVisibility(View.VISIBLE);
+                return;
+            }
+            guildName.setText(guild.getName());
+            guildMembers.setText(getString(R.string.guild_member_count,guild.getMemberCount()));
+            int onlineCount = guild.getOnlineCount();
+            guildOnline.setText(getResources().getQuantityString(R.plurals.guild_members_online,onlineCount,onlineCount));
+            guildInfo.setVisibility(View.VISIBLE);
             memberList.setAdapter(new MemberListAdapter(getContext(),R.layout.row_member, guild.getMemberList()));
         }
     }
@@ -154,8 +185,21 @@ public class GuildFragment extends Fragment {
             TextView name = (TextView)rowView.findViewById(R.id.name);
             name.setText(member.getName());
 
+            if(!member.getTitle().isEmpty()) {
+                TextView title = (TextView) rowView.findViewById(R.id.title);
+                title.setText(getString(R.string.member_title, member.getTitle()));
+            }
+
             TextView summary = (TextView)rowView.findViewById(R.id.summary);
             summary.setText(getString(R.string.char_summary,member.getLevel(),member.getVocation()));
+
+            TextView joined = (TextView)rowView.findViewById(R.id.joined);
+            joined.setText(member.getJoined());
+
+            if(!member.isOnline()){
+                ImageView online = (ImageView)rowView.findViewById(R.id.online);
+                online.setVisibility(View.INVISIBLE);
+            }
 
             return rowView;
         }

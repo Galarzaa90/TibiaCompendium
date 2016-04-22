@@ -39,9 +39,15 @@
     <string name="death_details">%1$s at Level %2$d by %3$s</string>
     <string name="other_chars">Other characters</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Guild fragment -->
     <string name="search_hint_guild">Guild name</string>
     <string name="no_results_guild">No guild found.</string>
+    <string name="member_title">(%1$s)</string>
+    <string name="guild_member_count">The guild has %1$d members.</string>
+    <plurals name="guild_members_online">
+        <item quantity="zero">There are no members online.</item>
+        <item quantity="one">There is %d member online.</item>
+        <item quantity="other">There are %d members online.</item>
+    </plurals>
 
 </resources>

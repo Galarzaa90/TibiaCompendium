@@ -220,15 +220,23 @@ public class Parser {
     public static Guild parseGuild(String content){
         Guild guild = new Guild();
 
-        int startIndex = content.indexOf("<td>Status</td>");
+        int startIndex = content.indexOf("<H1>");
 
         if(startIndex < 0){
             return null;
         }
+
+        Matcher m = getMatcher(content,"<H1>([^<]+)");
+        if(m.find()){
+            guild.setName(m.group(1));
+        }
+
+        /* Reducing string size to reduce regex load */
+        startIndex = content.indexOf("<td>Status</td>");
         int endIndex = content.indexOf("</table",startIndex);
         content = content.substring(startIndex,endIndex);
 
-        Matcher m = getMatcher(
+        m = getMatcher(
                 content,
                 "<TD>([^<]+)</TD></td><TD><A HREF=\"https://secure\\.tibia\\.com/community/\\?subtopic=characters&name=([^\"]+)\">[^<]+</A> *\\(*(.*?)\\)*</TD><TD>([^<]+)</TD><TD>([^<]+)</TD><TD>([^<]+)</TD><TD class='onlinestatus'><span class=\"(\\w+)\"",
                 Pattern.DOTALL
@@ -244,6 +252,7 @@ public class Parser {
                 prevRank = rank;
             }
             member.setName(m.group(2).replaceAll("\\+", " "));
+            member.setTitle(m.group(3));
             member.setVocation(m.group(4));
             int level = 0;
             try{
@@ -252,7 +261,8 @@ public class Parser {
                 Log.e("Parser","Couldn't parse level: \""+m.group(5)+"\".");
             }
             member.setLevel(level);
-            member.setJoined(m.group(6));
+            String joined = Html.fromHtml(m.group(6)).toString();
+            member.setJoined(joined.replaceAll(String.valueOf((char) 160), " "));
             member.setOnline(m.group(7).equalsIgnoreCase("green"));
             guild.addMember(member);
         }

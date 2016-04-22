@@ -55,9 +55,47 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_results_guild"/>
         </RelativeLayout>
-        <ListView
-            android:id="@+id/member_list"
+        <!-- Guild info box -->
+        <LinearLayout
+            android:id="@+id/guild_box"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/row_member"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:elevation="3dp"
+                android:padding="4dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/guild_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/BigEntryText"
+                    android:gravity="center_horizontal"
+                    tools:text="Guild Name"/>
+                <TextView
+                    android:id="@+id/guild_members"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="The guild has x members."/>
+                <TextView
+                    android:id="@+id/guild_members_online"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="There are 10 members online."/>
+            </LinearLayout>
+            <ListView
+                android:id="@+id/member_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="2dp"
+                android:fastScrollEnabled="true"
+                tools:listitem="@layout/row_member"/>
+        </LinearLayout>
 </LinearLayout>

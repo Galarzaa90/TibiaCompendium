@@ -3,7 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:elevation="2dp"
+    android:padding="4dp"
+    android:layout_marginBottom="2dp"
+    android:background="@color/white">
     <TextView
         android:id="@+id/rank"
         android:layout_width="0dp"
@@ -11,7 +15,7 @@
         android:layout_weight="20"
         android:layout_gravity="center_vertical"
         tools:text="Leader"/>
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/name_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -24,11 +28,34 @@
             style="@style/EntryText"
             tools:text="Galarzaa Fidera"/>
         <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/name"
+            android:layout_alignBaseline="@id/name"
+            android:paddingStart="2dp"
+            style="@style/TitleText"
+            tools:text="(Gala the Forgetful)"/>
+        <TextView
             android:id="@+id/summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/name"
             tools:text="Level 150 Royal Paladin"/>
-    </LinearLayout>
+        <TextView
+            android:id="@+id/joined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/summary"
+            tools:text="15 Nov 2015"/>
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/online"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_online"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="Online" />
 
 
 </LinearLayout>

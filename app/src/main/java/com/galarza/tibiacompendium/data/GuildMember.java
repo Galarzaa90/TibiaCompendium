@@ -1,8 +1,5 @@
 package com.galarza.tibiacompendium.data;
 
-/**
- * Created by Allan Galarza on 20/04/2016.
- */
 public class GuildMember extends Player{
     private String rank;
     private String title;
