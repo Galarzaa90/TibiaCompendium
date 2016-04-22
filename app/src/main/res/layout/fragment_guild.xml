@@ -10,10 +10,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="4dp"
-            android:elevation="2dp"
-            android:layout_margin="5dp">
+            style="@style/RaisedBox">
             <EditText
                 android:id="@+id/search_guild"
                 android:layout_width="0dp"
@@ -43,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
-        <!-- Character doesn't exists box -->
+        <!-- Guild doesn't exists box -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -66,9 +63,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:elevation="3dp"
-                android:padding="4dp"
+                style="@style/RaisedBox"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/guild_name"
@@ -94,7 +89,7 @@
                 android:layout_height="match_parent"
                 android:padding="4dp"
                 android:divider="@android:color/transparent"
-                android:dividerHeight="2dp"
+                android:dividerHeight="3dp"
                 android:fastScrollEnabled="true"
                 tools:listitem="@layout/row_member"/>
         </LinearLayout>

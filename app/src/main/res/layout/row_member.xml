@@ -4,10 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="2dp"
-    android:padding="4dp"
-    android:layout_marginBottom="2dp"
-    android:background="@color/white">
+    style="@style/RaisedBox">
     <TextView
         android:id="@+id/rank"
         android:layout_width="0dp"
