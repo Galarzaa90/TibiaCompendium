@@ -242,6 +242,7 @@ public class Parser {
                 Pattern.DOTALL
         );
         String prevRank = "";
+        int rankOrder = 0;
         while(m.find()){
             GuildMember member = new GuildMember();
             String rank = Html.fromHtml(m.group(1)).toString();
@@ -250,7 +251,9 @@ public class Parser {
             }else{
                 member.setRank(rank);
                 prevRank = rank;
+                rankOrder++;
             }
+            member.setRankOrder(rankOrder);
             member.setName(m.group(2).replaceAll("\\+", " "));
             member.setTitle(m.group(3));
             member.setVocation(m.group(4));
@@ -262,7 +265,8 @@ public class Parser {
             }
             member.setLevel(level);
             String joined = Html.fromHtml(m.group(6)).toString();
-            member.setJoined(joined.replaceAll(String.valueOf((char) 160), " "));
+            joined = joined.replaceAll(String.valueOf((char) 160), " ");
+            member.setJoined(joined);
             member.setOnline(m.group(7).equalsIgnoreCase("green"));
             guild.addMember(member);
         }

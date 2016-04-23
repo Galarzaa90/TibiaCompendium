@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -37,6 +40,9 @@ import java.util.List;
 public class GuildFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
 
+    private Guild guild = null;
+    private MemberListAdapter adapter = null;
+
     private LinearLayout guildInfo;
     private RelativeLayout boxLoading;
     private RelativeLayout boxNoResults;
@@ -46,8 +52,6 @@ public class GuildFragment extends Fragment {
     private TextView guildOnline;
 
     ListView memberList;
-
-    EditText test;
 
     public static GuildFragment newInstance() {
         GuildFragment fragment = new GuildFragment();
@@ -59,6 +63,12 @@ public class GuildFragment extends Fragment {
 
     public GuildFragment() {
 
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -130,24 +140,27 @@ public class GuildFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            guild = null;
             boxLoading.setVisibility(View.VISIBLE);
             boxNoResults.setVisibility(View.GONE);
             guildInfo.setVisibility(View.GONE);
         }
 
         @Override
-        protected void onPostExecute(Guild guild) {
+        protected void onPostExecute(Guild result) {
             boxLoading.setVisibility(View.GONE);
-            if(guild == null){
+            if(result == null){
                 boxNoResults.setVisibility(View.VISIBLE);
                 return;
             }
-            guildName.setText(guild.getName());
-            guildMembers.setText(getString(R.string.guild_member_count,guild.getMemberCount()));
-            int onlineCount = guild.getOnlineCount();
+            guild = result;
+            guildName.setText(result.getName());
+            guildMembers.setText(getString(R.string.guild_member_count,result.getMemberCount()));
+            int onlineCount = result.getOnlineCount();
             guildOnline.setText(getResources().getQuantityString(R.plurals.guild_members_online,onlineCount,onlineCount));
             guildInfo.setVisibility(View.VISIBLE);
-            memberList.setAdapter(new MemberListAdapter(getContext(),R.layout.row_member, guild.getMemberList()));
+            adapter = new MemberListAdapter(getContext(),R.layout.row_member, result.getMemberList());
+            memberList.setAdapter(adapter);
         }
     }
 
@@ -157,6 +170,51 @@ public class GuildFragment extends Fragment {
                 getArguments().getInt(ARG_SECTION_NUMBER));
         super.onAttach(activity);
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.guild,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch(id){
+            case R.id.by_name:
+                if(guild != null) {
+                    guild.sortByName();
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+            case R.id.by_rank:
+                if(guild != null) {
+                    guild.sortByRank();
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+            case R.id.by_level:
+                if(guild != null) {
+                    guild.sortByLevel();
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+            case R.id.by_vocation:
+                if(guild != null) {
+                    guild.sortByVocation();
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+            case R.id.by_joined:
+                if(guild != null) {
+                    guild.sortByJoined();
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     class MemberListAdapter extends ArrayAdapter<GuildMember>{
@@ -194,7 +252,7 @@ public class GuildFragment extends Fragment {
             summary.setText(getString(R.string.char_summary,member.getLevel(),member.getVocation()));
 
             TextView joined = (TextView)rowView.findViewById(R.id.joined);
-            joined.setText(member.getJoined());
+            joined.setText(member.getJoinedString());
 
             if(!member.isOnline()){
                 ImageView online = (ImageView)rowView.findViewById(R.id.online);
