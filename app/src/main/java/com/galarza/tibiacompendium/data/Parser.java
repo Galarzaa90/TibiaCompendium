@@ -231,6 +231,19 @@ public class Parser {
             guild.setName(m.group(1));
         }
 
+        m = getMatcher(content,"<IMG SRC=\"([^\"]+)\" W");
+        if(m.find()){
+            guild.setLogoUrl(m.group(1));
+        }
+
+        m = getMatcher(content,"founded on (\\w+) on ([^.]+)");
+        if(m.find()){
+            guild.setWorld(m.group(1));
+            String founded = Html.fromHtml(m.group(2)).toString();
+            founded = founded.replaceAll(String.valueOf((char) 160), " ");
+            guild.setFounded(founded);
+        }
+
         /* Reducing string size to reduce regex load */
         startIndex = content.indexOf("<td>Status</td>");
         int endIndex = content.indexOf("</table",startIndex);

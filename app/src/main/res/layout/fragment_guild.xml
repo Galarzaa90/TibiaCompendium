@@ -60,11 +60,10 @@
             android:orientation="vertical"
             android:visibility="gone"
             tools:visibility="visible">
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/RaisedBox"
-                android:orientation="vertical">
+                style="@style/RaisedBox">
                 <TextView
                     android:id="@+id/guild_name"
                     android:layout_width="match_parent"
@@ -73,16 +72,30 @@
                     android:gravity="center_horizontal"
                     tools:text="Guild Name"/>
                 <TextView
+                    android:id="@+id/guild_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/guild_name"
+                    tools:text="@string/guild_info"/>
+                <TextView
                     android:id="@+id/guild_members"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="The guild has x members."/>
+                    android:layout_below="@id/guild_info"
+                    tools:text="@string/guild_member_count"/>
                 <TextView
                     android:id="@+id/guild_members_online"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/guild_members"
                     tools:text="There are 10 members online."/>
-            </LinearLayout>
+                <ImageView
+                    android:id="@+id/guild_logo"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"/>
+            </RelativeLayout>
             <ListView
                 android:id="@+id/member_list"
                 android:layout_width="match_parent"

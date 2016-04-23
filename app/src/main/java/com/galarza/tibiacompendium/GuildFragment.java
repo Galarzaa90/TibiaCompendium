@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.galarza.tibiacompendium.data.Guild;
 import com.galarza.tibiacompendium.data.GuildMember;
 import com.galarza.tibiacompendium.data.Parser;
+import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,11 +44,13 @@ public class GuildFragment extends Fragment {
     private Guild guild = null;
     private MemberListAdapter adapter = null;
 
-    private LinearLayout guildInfo;
+    private LinearLayout guildBox;
     private RelativeLayout boxLoading;
     private RelativeLayout boxNoResults;
 
     private TextView guildName;
+    private ImageView guildLogo;
+    private TextView guildInfo;
     private TextView guildMembers;
     private TextView guildOnline;
 
@@ -77,11 +80,13 @@ public class GuildFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_guild, container, false);
 
-        guildInfo = (LinearLayout)rootView.findViewById(R.id.guild_box);
+        guildBox = (LinearLayout)rootView.findViewById(R.id.guild_box);
         boxLoading = (RelativeLayout)rootView.findViewById(R.id.loading_box);
         boxNoResults = (RelativeLayout)rootView.findViewById(R.id.no_results_box);
 
         guildName = (TextView)rootView.findViewById(R.id.guild_name);
+        guildLogo = (ImageView)rootView.findViewById(R.id.guild_logo);
+        guildInfo = (TextView)rootView.findViewById(R.id.guild_info);
         guildMembers = (TextView)rootView.findViewById(R.id.guild_members);
         guildOnline = (TextView)rootView.findViewById(R.id.guild_members_online);
 
@@ -125,7 +130,7 @@ public class GuildFragment extends Fragment {
 
                 stream.close();
                 connection.disconnect();
-                return Parser.parseGuild(buffer.toString());
+                    return Parser.parseGuild(buffer.toString());
             }catch (SocketTimeoutException s){
                 //publishProgress();
             }catch (IOException e) {
@@ -143,7 +148,7 @@ public class GuildFragment extends Fragment {
             guild = null;
             boxLoading.setVisibility(View.VISIBLE);
             boxNoResults.setVisibility(View.GONE);
-            guildInfo.setVisibility(View.GONE);
+            guildBox.setVisibility(View.GONE);
         }
 
         @Override
@@ -154,11 +159,15 @@ public class GuildFragment extends Fragment {
                 return;
             }
             guild = result;
+            if(result.getLogoUrl() != null) {
+                Picasso.with(getContext()).load(result.getLogoUrl()).into(guildLogo);
+            }
             guildName.setText(result.getName());
+            guildInfo.setText(getString(R.string.guild_info,result.getWorld(),result.getFoundedString()));
             guildMembers.setText(getString(R.string.guild_member_count,result.getMemberCount()));
             int onlineCount = result.getOnlineCount();
             guildOnline.setText(getResources().getQuantityString(R.plurals.guild_members_online,onlineCount,onlineCount));
-            guildInfo.setVisibility(View.VISIBLE);
+            guildBox.setVisibility(View.VISIBLE);
             adapter = new MemberListAdapter(getContext(),R.layout.row_member, result.getMemberList());
             memberList.setAdapter(adapter);
         }
