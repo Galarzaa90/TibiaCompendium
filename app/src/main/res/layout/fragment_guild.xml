@@ -82,7 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/guild_info"
-                    tools:text="@string/guild_member_count"/>
+                    tools:text="The guild has 100 members."/>
                 <TextView
                     android:id="@+id/guild_members_online"
                     android:layout_width="wrap_content"
@@ -91,6 +91,7 @@
                     tools:text="There are 10 members online."/>
                 <ImageView
                     android:id="@+id/guild_logo"
+                    android:contentDescription="@string/guild_logo"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_alignParentEnd="true"

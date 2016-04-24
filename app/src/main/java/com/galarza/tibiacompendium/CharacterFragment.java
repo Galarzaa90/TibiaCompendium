@@ -1,7 +1,5 @@
 package com.galarza.tibiacompendium;
 
-
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -76,10 +74,6 @@ public class CharacterFragment extends Fragment {
         args.putInt(ARG_SECTION_NUMBER, 2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public CharacterFragment(){
-
     }
 
     @Override
@@ -238,8 +232,10 @@ public class CharacterFragment extends Fragment {
             if(result != null){
                 if(result.getSex().equalsIgnoreCase("female")){
                     characterGender.setImageResource(R.drawable.ic_female);
+                    characterGender.setContentDescription(getString(R.string.female));
                 }else{
                     characterGender.setImageResource(R.drawable.ic_male);
+                    characterGender.setContentDescription(getString(R.string.male));
                 }
                 characterName.setText(result.getName());
                 characterSummary.setText(getString(
@@ -289,7 +285,7 @@ public class CharacterFragment extends Fragment {
                 }
                 characterInfo.setVisibility(View.VISIBLE);
 
-                DeathListAdapter deathListAdapter = new DeathListAdapter(getContext(), R.layout.row_death, result.getDeathList());
+                DeathListAdapter deathListAdapter = new DeathListAdapter(getContext(), result.getDeathList());
                 if(result.getDeathList().size() > 0) {
                     characterDeaths.removeAllViews();
                     boxDeaths.setVisibility(View.VISIBLE);
@@ -301,7 +297,7 @@ public class CharacterFragment extends Fragment {
                     boxDeaths.setVisibility(View.GONE);
                 }
 
-                CharsListAdapter charListAdapter = new CharsListAdapter(getContext(), R.layout.row_other_char, result.getOtherCharacters());
+                CharsListAdapter charListAdapter = new CharsListAdapter(getContext(), result.getOtherCharacters());
                 if(result.getOtherCharacters().size() > 1) {
                     otherCharacters.removeAllViews();
                     boxChars.setVisibility(View.VISIBLE);
@@ -322,10 +318,10 @@ public class CharacterFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        ((MainActivity) activity).onSectionAttached(
+    public void onAttach(Context context) {
+        ((MainActivity) context).onSectionAttached(
                 getArguments().getInt(ARG_SECTION_NUMBER));
-        super.onAttach(activity);
+        super.onAttach(context);
 
     }
 
@@ -334,10 +330,10 @@ public class CharacterFragment extends Fragment {
         private final List<Death> objects;
         private final int layout;
 
-        public DeathListAdapter(Context context, int resource, List<Death> objects) {
-            super(context, resource, objects);
+        public DeathListAdapter(Context context, List<Death> objects) {
+            super(context, R.layout.row_death, objects);
             this.context = context;
-            this.layout = resource;
+            this.layout = R.layout.row_death;
             this.objects = objects;
         }
 
@@ -365,10 +361,10 @@ public class CharacterFragment extends Fragment {
         private final List<Player> objects;
         private final int layout;
 
-        public CharsListAdapter(Context context, int resource, List<Player> objects) {
-            super(context, resource, objects);
+        public CharsListAdapter(Context context, List<Player> objects) {
+            super(context, R.layout.row_other_char, objects);
             this.context = context;
-            this.layout = resource;
+            this.layout = R.layout.row_other_char;
             this.objects = objects;
         }
 

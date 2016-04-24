@@ -26,6 +26,8 @@
     <!-- Character fragment -->
     <string name="name">Name</string>
     <string name="char_summary">Level %1$d %2$s</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
     <string name="residence">Residence</string>
     <string name="char_residence">%1$s in %2$s</string>
     <string name="char_house">%1$s in %2$s</string>
@@ -49,12 +51,22 @@
     <string name="no_results_guild">No guild found.</string>
     <string name="member_title">(%1$s)</string>
     <string name="guild_info">Founded on %1$s on %2$s.</string>
-    <string name="guild_member_count">The guild has %1$d members.</string>
+    <string name="guild_logo">Guild logo</string>
+
+    <plurals name="guild_member_count">
+        <item quantity="zero">The guild has no members.</item>
+        <item quantity="one">The guild has %d member.</item>
+        <item quantity="other">The guild has %d members.</item>
+    </plurals>
 
     <plurals name="guild_members_online">
         <item quantity="zero">There are no members online.</item>
         <item quantity="one">There is %d member online.</item>
         <item quantity="other">There are %d members online.</item>
     </plurals>
+
+    <!-- Misc -->
+    <string name="expand_collapse">Expand/Collapse</string>
+    <string name="online">Online</string>
 
 </resources>

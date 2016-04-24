@@ -31,6 +31,7 @@
             android:layout_toEndOf="@id/name"
             android:layout_alignBaseline="@id/name"
             android:paddingStart="2dp"
+            android:paddingEnd="0dp"
             style="@style/TitleText"
             tools:text="(Gala the Forgetful)"/>
         <TextView
@@ -52,7 +53,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_online"
         android:layout_gravity="center_vertical"
-        android:contentDescription="Online" />
+        android:contentDescription="@string/online" />
 
 
 </LinearLayout>

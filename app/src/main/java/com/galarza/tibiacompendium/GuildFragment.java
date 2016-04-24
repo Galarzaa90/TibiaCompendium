@@ -1,6 +1,5 @@
 package com.galarza.tibiacompendium;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -54,7 +53,7 @@ public class GuildFragment extends Fragment {
     private TextView guildMembers;
     private TextView guildOnline;
 
-    ListView memberList;
+    private ListView memberList;
 
     public static GuildFragment newInstance() {
         GuildFragment fragment = new GuildFragment();
@@ -62,10 +61,6 @@ public class GuildFragment extends Fragment {
         args.putInt(ARG_SECTION_NUMBER, 3);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public GuildFragment() {
-
     }
 
     @Override
@@ -164,20 +159,20 @@ public class GuildFragment extends Fragment {
             }
             guildName.setText(result.getName());
             guildInfo.setText(getString(R.string.guild_info,result.getWorld(),result.getFoundedString()));
-            guildMembers.setText(getString(R.string.guild_member_count,result.getMemberCount()));
+            guildMembers.setText(getResources().getQuantityString(R.plurals.guild_member_count,result.getMemberCount(),result.getMemberCount()));
             int onlineCount = result.getOnlineCount();
             guildOnline.setText(getResources().getQuantityString(R.plurals.guild_members_online,onlineCount,onlineCount));
             guildBox.setVisibility(View.VISIBLE);
-            adapter = new MemberListAdapter(getContext(),R.layout.row_member, result.getMemberList());
+            adapter = new MemberListAdapter(getContext(), result.getMemberList());
             memberList.setAdapter(adapter);
         }
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        ((MainActivity) activity).onSectionAttached(
+    public void onAttach(Context context) {
+        ((MainActivity) context).onSectionAttached(
                 getArguments().getInt(ARG_SECTION_NUMBER));
-        super.onAttach(activity);
+        super.onAttach(context);
 
     }
 
@@ -231,10 +226,10 @@ public class GuildFragment extends Fragment {
         private final List<GuildMember> objects;
         private final int layout;
 
-        public MemberListAdapter(Context context, int resource, List<GuildMember> objects) {
-            super(context, resource, objects);
+        public MemberListAdapter(Context context, List<GuildMember> objects) {
+            super(context, R.layout.row_member, objects);
             this.context = context;
-            this.layout = resource;
+            this.layout = R.layout.row_member;
             this.objects = objects;
         }
 

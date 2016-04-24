@@ -281,7 +281,9 @@ public class Parser {
             joined = joined.replaceAll(String.valueOf((char) 160), " ");
             member.setJoined(joined);
             member.setOnline(m.group(7).equalsIgnoreCase("green"));
-            guild.addMember(member);
+            if(!guild.addMember(member)){
+                Log.e("Parser:parseGuild","Couldn't add GuildMember:"+member.getName());
+            }
         }
         return guild;
     }

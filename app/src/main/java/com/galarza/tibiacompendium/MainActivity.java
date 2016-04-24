@@ -1,6 +1,6 @@
 package com.galarza.tibiacompendium;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -74,9 +73,10 @@ public class MainActivity extends AppCompatActivity
 
     private void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(mTitle);
+        }
     }
 
 
@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private EditText html;
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -131,24 +130,18 @@ public class MainActivity extends AppCompatActivity
             return fragment;
         }
 
-        public PlaceholderFragment() {
-        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-
-
-            return rootView;
+            return inflater.inflate(R.layout.fragment_main, container, false);
         }
 
         @Override
-        public void onAttach(Activity activity) {
-            ((MainActivity) activity).onSectionAttached(
+        public void onAttach(Context context) {
+            ((MainActivity) context).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
-            super.onAttach(activity);
+            super.onAttach(context);
 
         }
 

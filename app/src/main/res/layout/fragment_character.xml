@@ -80,7 +80,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:src="@drawable/ic_male"/>
+                        android:src="@drawable/ic_male"
+                        android:contentDescription="@string/male" />
                 </LinearLayout>
                 <TextView
                     android:id="@+id/char_summary"
@@ -211,7 +212,8 @@
                         android:id="@+id/comment_toggle_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_arrow_drop_down"/>
+                        android:src="@drawable/ic_arrow_drop_down"
+                        android:contentDescription="@string/expand_collapse"/>
                 </LinearLayout>
                 <TextView
                     android:layout_width="wrap_content"
@@ -243,7 +245,8 @@
                         android:id="@+id/death_toggle_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_arrow_drop_down"/>
+                        android:src="@drawable/ic_arrow_drop_down"
+                        android:contentDescription="@string/expand_collapse"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/char_deaths"
@@ -276,7 +279,8 @@
                         android:id="@+id/chars_toggle_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_arrow_drop_down"/>
+                        android:src="@drawable/ic_arrow_drop_down"
+                        android:contentDescription="@string/expand_collapse"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/other_chars"
