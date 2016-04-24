@@ -240,35 +240,54 @@ public class GuildFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater =
-                    (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(layout, null);
+            ViewHolder viewHolder;
+            if(convertView == null) {
+                LayoutInflater inflater =
+                        (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                viewHolder = new ViewHolder();
+
+                convertView = inflater.inflate(layout, parent, false);
+
+                viewHolder.rank = (TextView) convertView.findViewById(R.id.rank);
+                viewHolder.name = (TextView) convertView.findViewById(R.id.name);
+                viewHolder.title = (TextView) convertView.findViewById(R.id.title);
+                viewHolder.summary = (TextView) convertView.findViewById(R.id.summary);
+                viewHolder.joined = (TextView) convertView.findViewById(R.id.joined);
+                viewHolder.online = (ImageView) convertView.findViewById(R.id.online);
+
+                convertView.setTag(viewHolder);
+
+            }else{
+                viewHolder = (ViewHolder)convertView.getTag();
+            }
+
             GuildMember member = objects.get(position);
-
-            TextView rank = (TextView)rowView.findViewById(R.id.rank);
-            rank.setText(member.getRank());
-            rank.setVisibility(View.VISIBLE);
-
-            TextView name = (TextView)rowView.findViewById(R.id.name);
-            name.setText(member.getName());
-
-            if(!member.getTitle().isEmpty()) {
-                TextView title = (TextView) rowView.findViewById(R.id.title);
-                title.setText(getString(R.string.member_title, member.getTitle()));
+            viewHolder.rank.setText(member.getRank());
+            viewHolder.rank.setVisibility(View.VISIBLE);
+            viewHolder.name.setText(member.getName());
+            if (!member.getTitle().isEmpty()) {
+                viewHolder.title.setText(getString(R.string.member_title, member.getTitle()));
+            }else{
+                viewHolder.title.setText("");
             }
-
-            TextView summary = (TextView)rowView.findViewById(R.id.summary);
-            summary.setText(getString(R.string.char_summary,member.getLevel(),member.getVocation()));
-
-            TextView joined = (TextView)rowView.findViewById(R.id.joined);
-            joined.setText(member.getJoinedString());
-
-            if(!member.isOnline()){
-                ImageView online = (ImageView)rowView.findViewById(R.id.online);
-                online.setVisibility(View.INVISIBLE);
+            viewHolder.summary.setText(getString(R.string.char_summary, member.getLevel(), member.getVocation()));
+            viewHolder.joined.setText(member.getJoinedString());
+            if (!member.isOnline()) {
+                viewHolder.online.setVisibility(View.INVISIBLE);
+            }else{
+                viewHolder.online.setVisibility(View.GONE);
             }
+            return convertView;
+        }
 
-            return rowView;
+        private class ViewHolder{
+            TextView rank;
+            TextView name;
+            TextView title;
+            TextView summary;
+            TextView joined;
+            ImageView online;
         }
 
     }
