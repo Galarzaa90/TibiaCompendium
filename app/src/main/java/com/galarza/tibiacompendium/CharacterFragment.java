@@ -8,7 +8,6 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -45,6 +43,7 @@ import java.util.List;
  */
 public class CharacterFragment extends Fragment {
 
+    /* Views used in the async task */
     private LinearLayout characterInfo;
     private RelativeLayout boxLoading;
     private RelativeLayout boxNoResults;
@@ -85,6 +84,7 @@ public class CharacterFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_character, container, false);
 
+        /* Views used in the async task */
         characterInfo = (LinearLayout) rootView.findViewById(R.id.character_box);
         boxLoading = (RelativeLayout)rootView.findViewById(R.id.loading_box);
         boxNoResults = (RelativeLayout)rootView.findViewById(R.id.no_results_box);
@@ -103,7 +103,6 @@ public class CharacterFragment extends Fragment {
 
         characterDeaths = (LinearLayout) rootView.findViewById(R.id.char_deaths);
         otherCharacters = (LinearLayout) rootView.findViewById(R.id.other_chars);
-
 
         boxHouse = (LinearLayout)rootView.findViewById(R.id.box_house);
         boxGuild = (LinearLayout)rootView.findViewById(R.id.box_guild);
@@ -130,7 +129,7 @@ public class CharacterFragment extends Fragment {
             }
         });
 
-        Button searchButton = (Button) rootView.findViewById(R.id.search_button);
+        final Button searchButton = (Button) rootView.findViewById(R.id.search_button);
         searchButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +141,7 @@ public class CharacterFragment extends Fragment {
                 new fetchData().execute(searchField.getText().toString());
             }
         });
+
         /* Expand/Collapse buttons listeners */
         final ImageView commentToggleIcon = (ImageView)rootView.findViewById(R.id.comment_toggle_icon);
         LinearLayout commentHeader = (LinearLayout)rootView.findViewById(R.id.comment_header);
@@ -212,7 +212,7 @@ public class CharacterFragment extends Fragment {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    buffer.append(line).append("\r\n");
+                    buffer.append(line);
                 }
 
                 stream.close();
@@ -270,17 +270,17 @@ public class CharacterFragment extends Fragment {
 
                 if(result.getGuild() != null){
                     boxGuild.setVisibility(View.VISIBLE);
-                    String guildRank = result.getGuildRank();
+                    final String guildRank = result.getGuildRank();
                     final String guild = result.getGuild();
-                    String guildString = getString(R.string.guildcontent,guildRank,guild);
+                    final String guildString = getString(R.string.guildcontent,guildRank,guild);
                     SpannableString guildStyled = new SpannableString(guildString);
                     int startIndex = guildString.length()-guild.length();
                     int endIndex = guildString.length();
                     guildStyled.setSpan(new ClickableSpan() {
                         @Override
                         public void onClick(View widget) {
-                            Log.e("onClick","on click executed");
                             getFragmentManager().beginTransaction()
+                                    .setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out,android.R.anim.fade_in,android.R.anim.fade_out)
                                     .replace(R.id.container,GuildFragment.searchInstance(guild))
                                     .commit();
                         }
@@ -305,8 +305,8 @@ public class CharacterFragment extends Fragment {
                     boxFormerWorld.setVisibility(View.GONE);
                 }
 
-                if(result.getLastLogin() != null) {
-                    characterLastLogin.setText(result.getLastLogin().toString());
+                if(result.getLastLoginString() != null) {
+                    characterLastLogin.setText(result.getLastLoginString());
                 }
 
                 characterAchievements.setText(String.valueOf(result.getAchievementPoints()));
@@ -321,10 +321,7 @@ public class CharacterFragment extends Fragment {
                 if(result.getDeathList().size() > 0) {
                     characterDeaths.removeAllViews();
                     boxDeaths.setVisibility(View.VISIBLE);
-                    for(int i = 0; i < deathListAdapter.getCount(); i++){
-                        View item = deathListAdapter.getView(i,null,null);
-                        characterDeaths.addView(item);
-                    }
+                    deathListAdapter.populateView(characterDeaths);
                 }else{
                     boxDeaths.setVisibility(View.GONE);
                 }
@@ -333,10 +330,7 @@ public class CharacterFragment extends Fragment {
                 if(result.getOtherCharacters().size() > 1) {
                     otherCharacters.removeAllViews();
                     boxChars.setVisibility(View.VISIBLE);
-                    for(int i = 0; i < charListAdapter.getCount(); i++){
-                        View item = charListAdapter.getView(i,null,null);
-                        otherCharacters.addView(item);
-                    }
+                    charListAdapter.populateView(otherCharacters);
                 }else{
                     boxChars.setVisibility(View.GONE);
                 }
@@ -357,70 +351,66 @@ public class CharacterFragment extends Fragment {
 
     }
 
-    class DeathListAdapter extends ArrayAdapter<Death> {
+    class DeathListAdapter{
         private final Context context;
         private final List<Death> objects;
-        private final int layout;
+        static private final int layout = R.layout.row_death;
 
         public DeathListAdapter(Context context, List<Death> objects) {
-            super(context, R.layout.row_death, objects);
             this.context = context;
-            this.layout = R.layout.row_death;
             this.objects = objects;
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public void populateView(ViewGroup parent) {
             LayoutInflater inflater =
                     (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(layout, null);
-            Death death = objects.get(position);
+            for(Death death : objects) {
+                View rowView = inflater.inflate(layout, null);
 
-            TextView dateView = (TextView)rowView.findViewById(R.id.death_date);
-            dateView.setText(death.getDate().toString());
+                TextView dateView = (TextView)rowView.findViewById(R.id.death_date);
+                dateView.setText(death.getDateString());
 
-            TextView detailsView = (TextView)rowView.findViewById(R.id.death_details);
-            detailsView.setText(getString(R.string.death_details,
-                    death.isByPlayer() ? "Killed" : "Died",
-                    death.getLevel(),
-                    death.getKiller()));
-            return rowView;
+                TextView detailsView = (TextView)rowView.findViewById(R.id.death_details);
+                detailsView.setText(getString(R.string.death_details,
+                        death.isByPlayer() ? "Killed" : "Died",
+                        death.getLevel(),
+                        death.getKiller()));
+
+                parent.addView(rowView);
+            }
         }
     }
 
-    class CharsListAdapter extends ArrayAdapter<Player> {
+    class CharsListAdapter{
         private final Context context;
         private final List<Player> objects;
-        private final int layout;
+        static private final int layout = R.layout.row_other_char;
 
         public CharsListAdapter(Context context, List<Player> objects) {
-            super(context, R.layout.row_other_char, objects);
             this.context = context;
-            this.layout = R.layout.row_other_char;
             this.objects = objects;
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public void populateView(ViewGroup parent) {
             LayoutInflater inflater =
                     (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(layout, null);
-            Player player = objects.get(position);
+            for(Player player : objects) {
+                View rowView = inflater.inflate(layout, null);
+                TextView charName = (TextView) rowView.findViewById(R.id.char_name);
+                TextView charWorld = (TextView) rowView.findViewById(R.id.char_world);
 
-            TextView charName= (TextView)rowView.findViewById(R.id.char_name);
-            charName.setText(player.getName());
+                charName.setText(player.getName());
+                charWorld.setText(player.getWorld());
 
-            TextView charWorld = (TextView)rowView.findViewById(R.id.char_world);
-            charWorld.setText(player.getWorld());
+                rowView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new fetchData().execute(((TextView) v.findViewById(R.id.char_name)).getText().toString());
+                    }
+                });
 
-            rowView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new fetchData().execute(((TextView)v.findViewById(R.id.char_name)).getText().toString());
-                }
-            });
-
-            return rowView;
+                parent.addView(rowView);
+            }
         }
     }
 

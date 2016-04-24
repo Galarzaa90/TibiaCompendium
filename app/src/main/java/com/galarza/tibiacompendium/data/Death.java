@@ -1,10 +1,10 @@
 package com.galarza.tibiacompendium.data;
 
+import java.text.ParseException;
 import java.util.Date;
 
 public class Death{
     private Date date;
-    private String dateString;
     private boolean byPlayer;
     private String killer;
     private int level;
@@ -17,20 +17,16 @@ public class Death{
                 date.toString();
     }
 
-    public Date getDate() {
-        return date;
+    public String getDateString(){
+        return Utils.LONG_DATE.format(date);
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getDateString() {
-        return dateString;
-    }
-
-    public void setDateString(String dateString) {
-        this.dateString = dateString;
+    public void setDate(String dateString){
+        try{
+            date = Utils.LONG_DATE.parse(dateString);
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isByPlayer() {

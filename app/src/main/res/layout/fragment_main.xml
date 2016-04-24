@@ -3,13 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity$PlaceholderFragment"
+    tools:context=".MainActivity$homeFragment"
     android:columnCount="2"
     android:rowCount="2"
     android:useDefaultMargins="false"
     android:nestedScrollingEnabled="false">
 
     <Button
+        android:id="@+id/button_character"
         android:layout_columnWeight="50"
         android:layout_width="0dp"
         android:layout_height="120dp"
@@ -20,6 +21,7 @@
         android:text="@string/title_search_char"/>
 
     <Button
+        android:id="@+id/button_guild"
         android:layout_columnWeight="50"
         android:layout_width="0dp"
         android:layout_height="120dp"

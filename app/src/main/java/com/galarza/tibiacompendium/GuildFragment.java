@@ -46,6 +46,7 @@ public class GuildFragment extends Fragment {
     private Guild guild = null;
     private MemberListAdapter adapter = null;
 
+    /* Views used in the async task */
     private LinearLayout guildBox;
     private RelativeLayout boxLoading;
     private RelativeLayout boxNoResults;
@@ -87,6 +88,7 @@ public class GuildFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_guild, container, false);
 
+        /* Views used in the async task */
         guildBox = (LinearLayout)rootView.findViewById(R.id.guild_box);
         boxLoading = (RelativeLayout)rootView.findViewById(R.id.loading_box);
         boxNoResults = (RelativeLayout)rootView.findViewById(R.id.no_results_box);
@@ -129,7 +131,7 @@ public class GuildFragment extends Fragment {
             }
         });
 
-        /* If this was called with a guild argument, load guild */
+        /* If fragment was called with a guild argument, load guild */
         String guildName = getArguments().getString(Utils.ARG_GUILD_NAME);
         if(guildName != null){
             context = getContext();

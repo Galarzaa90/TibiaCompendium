@@ -2,15 +2,12 @@ package com.galarza.tibiacompendium.data;
 
 import android.util.Log;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class Guild {
     private String name;
@@ -18,8 +15,6 @@ public class Guild {
     private String world;
     private Date founded;
     private final List<GuildMember> memberList = new ArrayList<>();
-
-    private static final DateFormat DATEFORMAT = new SimpleDateFormat("MMM dd yyyy", Locale.UK);
 
     public String getName() {
         return name;
@@ -45,25 +40,17 @@ public class Guild {
         this.world = world;
     }
 
-    public Date getFounded() {
-        return founded;
-    }
-
-    public void setFounded(Date founded) {
-        this.founded = founded;
-    }
-
-    public String getFoundedString(){
-        return DATEFORMAT.format(founded);
-    }
-
     public List<GuildMember> getMemberList() {
         return memberList;
     }
 
+    public String getFoundedString(){
+        return Utils.SHORT_DATE.format(founded);
+    }
+
     public void setFounded(String foundedString){
         try {
-            founded = DATEFORMAT.parse(foundedString);
+            founded = Utils.SHORT_DATE.parse(foundedString);
         } catch (ParseException e) {
             Log.e("Guild","Couldn't parse date for Guild: "+this.getName());
             founded = null;

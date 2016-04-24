@@ -7,7 +7,7 @@
     <!-- Navigation -->
     <string name="title_home">Home</string>
     <string name="title_search_char">Character Search</string>
-    <string name="title_search_guild">Search Guild</string>
+    <string name="title_search_guild">Guild Search</string>
 
     <string-array name="navigation_sections">
         <item>@string/title_home</item>

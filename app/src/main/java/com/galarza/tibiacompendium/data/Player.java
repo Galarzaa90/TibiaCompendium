@@ -1,5 +1,8 @@
 package com.galarza.tibiacompendium.data;
 
+import android.util.Log;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +22,6 @@ public class Player {
     private String guildRank;
     private String guild;
     private Date lastLogin;
-    private String lastLoginString;
     private String comment;
     private boolean premium;
     private final List<Death> deathList = new ArrayList<>();
@@ -129,20 +131,16 @@ public class Player {
         this.guild = guild;
     }
 
-    public Date getLastLogin() {
-        return lastLogin;
+    public String getLastLoginString(){
+        return Utils.LONG_DATE.format(lastLogin);
     }
 
-    public void setLastLogin(Date lastLogin) {
-        this.lastLogin = lastLogin;
-    }
-
-    public String getLastLoginString() {
-        return lastLoginString;
-    }
-
-    public void setLastLoginString(String lastLoginString) {
-        this.lastLoginString = lastLoginString;
+    public void setLastLogin(String lastLoginString){
+        try{
+            lastLogin = Utils.LONG_DATE.parse(lastLoginString);
+        }catch(ParseException e){
+            Log.e("Player","Couldn't parse date for Player: "+this.getName());
+        }
     }
 
     public String getComment() {

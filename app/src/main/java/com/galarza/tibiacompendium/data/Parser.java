@@ -4,10 +4,6 @@ package com.galarza.tibiacompendium.data;
 import android.text.Html;
 import android.util.Log;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +24,6 @@ public class Parser {
             return null;
         }
         content = content.substring(startIndex,endIndex);
-        /* TODO: Replace regular expressions with a HTML parser. */
         /* Get player's name */
         Matcher m = getMatcher(content, "Name:</td><td>([^<]+)\\s<");
         if(m.find()){
@@ -106,7 +101,6 @@ public class Parser {
             player.setHouseCity(m.group(2));
         }
 
-
         /* Get the player's guild rank */
         m = getMatcher(content, "membership:</td><td>([^<]+)\\sof the");
         if(m.find()){
@@ -120,19 +114,11 @@ public class Parser {
         }
 
         /* Get the player's last login date */
-        m = getMatcher(content, "Last login:</td><td>([A-z]+).*?;(\\d+).*?;(\\d+).*?;(\\d+):(\\d+):(\\d+).*?([A-Z]+)");
+        m = getMatcher(content, "Last login:</td><td>([^<]+)");
         if(m.find()) {
-            /* Groups: Month, day, year, hour, minutes, seconds, timezone */
-            player.setLastLoginString(String.format(
-                    "%s %s %s %s:%s:%s %s",
-                    m.group(1),m.group(2),m.group(3),m.group(4),m.group(5),m.group(6),m.group(7)
-            ));
-            DateFormat format = new SimpleDateFormat("MMM dd yyyy HH:mm:ss z", Locale.UK);
-            try {
-                player.setLastLogin(format.parse(player.getLastLoginString()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            String lastLogin = Html.fromHtml(m.group(1)).toString();
+            lastLogin = lastLogin.replaceAll(String.valueOf((char) 160), " ");
+            player.setLastLogin(lastLogin);
         }
 
         /* Get player's comment */
@@ -157,20 +143,10 @@ public class Parser {
             m = getMatcher(content, "valign=\"top\" >([^<]+)<\\/td><td>(.+?)<\\/td></tr>");
             while (m.find()) {
                 Death death = new Death();
-                Matcher m1 = getMatcher(m.group(1), "(\\w+).+?;(\\d+).+?;(\\d+).+?;(\\d+):(\\d+):(\\d+).+?;(\\w+)");
                 /* Getting death's date */
-                if (m1.find()) {
-                    death.setDateString(String.format(
-                            "%s %s %s %s:%s:%s %s",
-                            m1.group(1), m1.group(2), m1.group(3), m1.group(4), m1.group(5), m1.group(6), m1.group(7)
-                    ));
-                    DateFormat format = new SimpleDateFormat("MMM dd yyyy HH:mm:ss z", Locale.UK);
-                    try {
-                        death.setDate(format.parse(death.getDateString()));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
+                String date = Html.fromHtml(m.group(1)).toString();
+                date = date.replaceAll(String.valueOf((char) 160), " ");
+                death.setDate(date);
                 /* Getting level and killer */
                 /* Died by monster */
                 if (m.group(2).contains("Died")) {
@@ -226,16 +202,19 @@ public class Parser {
             return null;
         }
 
+        /* Get guild name */
         Matcher m = getMatcher(content,"<H1>([^<]+)");
         if(m.find()){
             guild.setName(m.group(1));
         }
 
+        /* Get guild's logo */
         m = getMatcher(content,"<IMG SRC=\"([^\"]+)\" W");
         if(m.find()){
             guild.setLogoUrl(m.group(1));
         }
 
+        /* Get guild found date */
         m = getMatcher(content,"founded on (\\w+) on ([^.]+)");
         if(m.find()){
             guild.setWorld(m.group(1));
@@ -249,6 +228,7 @@ public class Parser {
         int endIndex = content.indexOf("</table",startIndex);
         content = content.substring(startIndex,endIndex);
 
+        /* Getting member list */
         m = getMatcher(
                 content,
                 "<TD>([^<]+)</TD></td><TD><A HREF=\"https://secure\\.tibia\\.com/community/\\?subtopic=characters&name=([^\"]+)\">[^<]+</A> *\\(*(.*?)\\)*</TD><TD>([^<]+)</TD><TD>([^<]+)</TD><TD>([^<]+)</TD><TD class='onlinestatus'><span class=\"(\\w+)\"",
@@ -258,6 +238,7 @@ public class Parser {
         int rankOrder = 0;
         while(m.find()){
             GuildMember member = new GuildMember();
+            /* Getting rank */
             String rank = Html.fromHtml(m.group(1)).toString();
             if(rank.equals(String.valueOf((char) 160))){
                 member.setRank(prevRank);
@@ -266,10 +247,14 @@ public class Parser {
                 prevRank = rank;
                 rankOrder++;
             }
+            /* Rank order is saved to sort the same way as the website */
             member.setRankOrder(rankOrder);
+            /* Getting name and title */
             member.setName(m.group(2).replaceAll("\\+", " "));
             member.setTitle(m.group(3));
+            /* Getting vocation */
             member.setVocation(m.group(4));
+            /* Getting level */
             int level = 0;
             try{
                 level = Integer.parseInt(m.group(5));
@@ -277,10 +262,12 @@ public class Parser {
                 Log.e("Parser","Couldn't parse level: \""+m.group(5)+"\".");
             }
             member.setLevel(level);
+            /* Getting join date */
             String joined = Html.fromHtml(m.group(6)).toString();
             joined = joined.replaceAll(String.valueOf((char) 160), " ");
             member.setJoined(joined);
             member.setOnline(m.group(7).equalsIgnoreCase("green"));
+
             if(!guild.addMember(member)){
                 Log.e("Parser:parseGuild","Couldn't add GuildMember:"+member.getName());
             }

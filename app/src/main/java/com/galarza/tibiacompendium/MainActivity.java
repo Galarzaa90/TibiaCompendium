@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.galarza.tibiacompendium.data.Utils;
 
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             default:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                        .replace(R.id.container, homeFragment.newInstance(position + 1))
                         .commit();
                 break;
         }
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class homeFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -123,8 +124,8 @@ public class MainActivity extends AppCompatActivity
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static homeFragment newInstance(int sectionNumber) {
+            homeFragment fragment = new homeFragment();
             Bundle args = new Bundle();
             args.putInt(Utils.ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
@@ -135,7 +136,29 @@ public class MainActivity extends AppCompatActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+            /* Button listeners */
+            final Button characterButton = (Button)rootView.findViewById(R.id.button_character);
+
+            characterButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.container,CharacterFragment.newInstance())
+                            .commit();
+                }
+            });
+            final Button guildButton = (Button)rootView.findViewById(R.id.button_guild);
+            guildButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.container,GuildFragment.newInstance())
+                            .commit();
+                }
+            });
+            return rootView;
         }
 
         @Override
