@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.galarza.tibiacompendium.data.Utils;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -116,7 +118,6 @@ public class MainActivity extends AppCompatActivity
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String ARG_SECTION_NUMBER = "section_number";
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            args.putInt(Utils.ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
         }
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onAttach(Context context) {
             ((MainActivity) context).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
+                    getArguments().getInt(Utils.ARG_SECTION_NUMBER));
             super.onAttach(context);
 
         }

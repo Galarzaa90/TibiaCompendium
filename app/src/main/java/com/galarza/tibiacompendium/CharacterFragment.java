@@ -5,12 +5,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +27,7 @@ import android.widget.TextView;
 import com.galarza.tibiacompendium.data.Death;
 import com.galarza.tibiacompendium.data.Parser;
 import com.galarza.tibiacompendium.data.Player;
+import com.galarza.tibiacompendium.data.Utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,9 +44,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class CharacterFragment extends Fragment {
-    private static final String ARG_SECTION_NUMBER = "section_number";
 
-    private EditText searchField;
     private LinearLayout characterInfo;
     private RelativeLayout boxLoading;
     private RelativeLayout boxNoResults;
@@ -71,7 +75,7 @@ public class CharacterFragment extends Fragment {
     public static CharacterFragment newInstance() {
         CharacterFragment fragment = new CharacterFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, 2);
+        args.putInt(Utils.ARG_SECTION_NUMBER, 2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,7 +83,6 @@ public class CharacterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_character, container, false);
 
         characterInfo = (LinearLayout) rootView.findViewById(R.id.character_box);
@@ -110,21 +113,32 @@ public class CharacterFragment extends Fragment {
         boxDeaths = (LinearLayout)rootView.findViewById(R.id.deaths_box);
         boxChars = (LinearLayout) rootView.findViewById(R.id.chars_box);
 
-        searchField = (EditText)rootView.findViewById(R.id.search_char);
+        final EditText searchField = (EditText)rootView.findViewById(R.id.search_char);
         searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                    new fetchData().execute(v.getText().toString());
+                    /* Hide virtual keyboard */
+                    InputMethodManager inputMethodManager =
+                            (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
+
+                    new fetchData().execute(v.getText().toString().trim());
                     return true;
                 }
                 return false;
             }
         });
+
         Button searchButton = (Button) rootView.findViewById(R.id.search_button);
         searchButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                /* Hide virtual keyboard */
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
+
                 new fetchData().execute(searchField.getText().toString());
             }
         });
@@ -237,6 +251,7 @@ public class CharacterFragment extends Fragment {
                     characterGender.setImageResource(R.drawable.ic_male);
                     characterGender.setContentDescription(getString(R.string.male));
                 }
+
                 characterName.setText(result.getName());
                 characterSummary.setText(getString(
                         R.string.char_summary,
@@ -255,7 +270,23 @@ public class CharacterFragment extends Fragment {
 
                 if(result.getGuild() != null){
                     boxGuild.setVisibility(View.VISIBLE);
-                    characterGuild.setText(getString(R.string.guildcontent,result.getGuildRank(),result.getGuild()));
+                    String guildRank = result.getGuildRank();
+                    final String guild = result.getGuild();
+                    String guildString = getString(R.string.guildcontent,guildRank,guild);
+                    SpannableString guildStyled = new SpannableString(guildString);
+                    int startIndex = guildString.length()-guild.length();
+                    int endIndex = guildString.length();
+                    guildStyled.setSpan(new ClickableSpan() {
+                        @Override
+                        public void onClick(View widget) {
+                            Log.e("onClick","on click executed");
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.container,GuildFragment.searchInstance(guild))
+                                    .commit();
+                        }
+                    },startIndex,endIndex,0);
+                    characterGuild.setMovementMethod(LinkMovementMethod.getInstance());
+                    characterGuild.setText(guildStyled);
                 }else{
                     boxGuild.setVisibility(View.GONE);
                 }
@@ -273,6 +304,7 @@ public class CharacterFragment extends Fragment {
                 }else{
                     boxFormerWorld.setVisibility(View.GONE);
                 }
+
                 if(result.getLastLogin() != null) {
                     characterLastLogin.setText(result.getLastLogin().toString());
                 }
@@ -320,7 +352,7 @@ public class CharacterFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         ((MainActivity) context).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
+                getArguments().getInt(Utils.ARG_SECTION_NUMBER));
         super.onAttach(context);
 
     }

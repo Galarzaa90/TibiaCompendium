@@ -4,12 +4,15 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +25,7 @@ import android.widget.TextView;
 import com.galarza.tibiacompendium.data.Guild;
 import com.galarza.tibiacompendium.data.GuildMember;
 import com.galarza.tibiacompendium.data.Parser;
+import com.galarza.tibiacompendium.data.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
@@ -38,7 +42,6 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class GuildFragment extends Fragment {
-    private static final String ARG_SECTION_NUMBER = "section_number";
 
     private Guild guild = null;
     private MemberListAdapter adapter = null;
@@ -54,11 +57,20 @@ public class GuildFragment extends Fragment {
     private TextView guildOnline;
 
     private ListView memberList;
+    private Context context;
 
     public static GuildFragment newInstance() {
         GuildFragment fragment = new GuildFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, 3);
+        args.putInt(Utils.ARG_SECTION_NUMBER, 3);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static GuildFragment searchInstance(String name){
+        GuildFragment fragment = newInstance();
+        Bundle args = fragment.getArguments();
+        args.putString(Utils.ARG_GUILD_NAME,name);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,14 +100,42 @@ public class GuildFragment extends Fragment {
         memberList = (ListView)rootView.findViewById(R.id.member_list);
 
         final EditText searchField = (EditText)rootView.findViewById(R.id.search_guild);
+        searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                    /* Hide virtual keyboard */
+                    InputMethodManager inputMethodManager =
+                            (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
+
+                    new fetchData().execute(v.getText().toString().trim());
+                    return true;
+                }
+                return false;
+            }
+        });
 
         Button searchButton = (Button) rootView.findViewById(R.id.search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /* Hide virtual keyboard */
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
+
                 new fetchData().execute(searchField.getText().toString());
             }
         });
+
+        /* If this was called with a guild argument, load guild */
+        String guildName = getArguments().getString(Utils.ARG_GUILD_NAME);
+        if(guildName != null){
+            context = getContext();
+            searchField.setText(guildName);
+            new fetchData().execute(guildName);
+        }
 
         return rootView;
     }
@@ -155,7 +195,7 @@ public class GuildFragment extends Fragment {
             }
             guild = result;
             if(result.getLogoUrl() != null) {
-                Picasso.with(getContext()).load(result.getLogoUrl()).into(guildLogo);
+                Picasso.with(context).load(result.getLogoUrl()).into(guildLogo);
             }
             guildName.setText(result.getName());
             guildInfo.setText(getString(R.string.guild_info,result.getWorld(),result.getFoundedString()));
@@ -171,7 +211,7 @@ public class GuildFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         ((MainActivity) context).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
+                getArguments().getInt(Utils.ARG_SECTION_NUMBER));
         super.onAttach(context);
 
     }
