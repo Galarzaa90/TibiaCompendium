@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity
      */
     private CharSequence mTitle;
 
+    public Fragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,20 +50,28 @@ public class MainActivity extends AppCompatActivity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
+        int in = R.anim.slide_in_right;
+        int out = R.anim.slide_out_left;
         switch(position){
             case 1:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container,CharacterFragment.newInstance())
+                        .setCustomAnimations(in,out,in,out)
+                        .addToBackStack(null)
                         .commit();
                 break;
             case 2:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, GuildFragment.newInstance())
+                        .setCustomAnimations(in,out,in,out)
+                        .addToBackStack(null)
                         .commit();
                 break;
             default:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, homeFragment.newInstance(position + 1))
+                        .replace(R.id.container, HomeFragment.newInstance(position + 1))
+                        .setCustomAnimations(in,out,in,out)
+                        .addToBackStack(null)
                         .commit();
                 break;
         }
@@ -74,11 +84,23 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void onSectionAttached(String title) {
+        mTitle = title;
+    }
+
     private void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setTitle(mTitle);
+        }
+    }
+
+    public void setTitle(String title) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(title);
         }
     }
 
@@ -111,10 +133,18 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        if(fragment instanceof HomeFragment){
+            finish();
+        }
+        super.onBackPressed();
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class homeFragment extends Fragment {
+    public static class HomeFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -124,8 +154,8 @@ public class MainActivity extends AppCompatActivity
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static homeFragment newInstance(int sectionNumber) {
-            homeFragment fragment = new homeFragment();
+        public static HomeFragment newInstance(int sectionNumber) {
+            HomeFragment fragment = new HomeFragment();
             Bundle args = new Bundle();
             args.putInt(Utils.ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
@@ -137,15 +167,19 @@ public class MainActivity extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
+            ((MainActivity)getActivity()).fragment = this;
             /* Button listeners */
             final Button characterButton = (Button)rootView.findViewById(R.id.button_character);
 
             characterButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int in = R.anim.slide_in_right;
+                    int out = R.anim.slide_out_left;
                     getFragmentManager().beginTransaction()
                             .replace(R.id.container,CharacterFragment.newInstance())
+                            .setCustomAnimations(in,out,in,out)
+                            .addToBackStack(null)
                             .commit();
                 }
             });
@@ -153,8 +187,12 @@ public class MainActivity extends AppCompatActivity
             guildButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int in = R.anim.slide_in_right;
+                    int out = R.anim.slide_out_left;
                     getFragmentManager().beginTransaction()
                             .replace(R.id.container,GuildFragment.newInstance())
+                            .setCustomAnimations(in,out,in,out)
+                            .addToBackStack(null)
                             .commit();
                 }
             });

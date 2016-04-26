@@ -42,6 +42,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class CharacterFragment extends Fragment {
+    Player player = null;
 
     /* Views used in the async task */
     private LinearLayout characterInfo;
@@ -79,10 +80,26 @@ public class CharacterFragment extends Fragment {
         return fragment;
     }
 
+    public static CharacterFragment searchInstance(String name){
+        CharacterFragment fragment = newInstance();
+        Bundle args = fragment.getArguments();
+        args.putString(Utils.ARG_PLAYER_NAME,name);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_character, container, false);
+
+        ((MainActivity)getActivity()).fragment = this;
 
         /* Views used in the async task */
         characterInfo = (LinearLayout) rootView.findViewById(R.id.character_box);
@@ -187,7 +204,16 @@ public class CharacterFragment extends Fragment {
                 }
             }
         });
-
+        /* If fragment was called with a guild argument, load guild */
+        String playerName = getArguments().getString(Utils.ARG_PLAYER_NAME);
+        if(player != null){
+            playerName = player.getName();
+        }
+        if(playerName != null){
+            searchField.setText(playerName);
+            new fetchData().execute(playerName);
+        }
+        
         return rootView;
     }
 
@@ -233,6 +259,7 @@ public class CharacterFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            player = null;
             characterInfo.setVisibility(View.GONE);
             boxComment.setVisibility(View.GONE);
             boxDeaths.setVisibility(View.GONE);
@@ -244,6 +271,8 @@ public class CharacterFragment extends Fragment {
         @Override
         protected void onPostExecute(Player result){
             if(result != null){
+                player = result;
+
                 if(result.getSex().equalsIgnoreCase("female")){
                     characterGender.setImageResource(R.drawable.ic_female);
                     characterGender.setContentDescription(getString(R.string.female));
@@ -267,20 +296,24 @@ public class CharacterFragment extends Fragment {
                 }else{
                     boxHouse.setVisibility(View.GONE);
                 }
-
                 if(result.getGuild() != null){
+                    /* Touching on guild name loads the guild info */
                     boxGuild.setVisibility(View.VISIBLE);
                     final String guildRank = result.getGuildRank();
                     final String guild = result.getGuild();
                     final String guildString = getString(R.string.guildcontent,guildRank,guild);
+
                     SpannableString guildStyled = new SpannableString(guildString);
                     int startIndex = guildString.length()-guild.length();
                     int endIndex = guildString.length();
                     guildStyled.setSpan(new ClickableSpan() {
                         @Override
                         public void onClick(View widget) {
+                            int in = R.anim.slide_in_right;
+                            int out = R.anim.slide_out_left;
                             getFragmentManager().beginTransaction()
-                                    .setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out,android.R.anim.fade_in,android.R.anim.fade_out)
+                                    .setCustomAnimations(in,out,in,out)
+                                    .addToBackStack(null)
                                     .replace(R.id.container,GuildFragment.searchInstance(guild))
                                     .commit();
                         }

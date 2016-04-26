@@ -88,6 +88,8 @@ public class GuildFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_guild, container, false);
 
+        ((MainActivity)getActivity()).fragment = this;
+
         /* Views used in the async task */
         guildBox = (LinearLayout)rootView.findViewById(R.id.guild_box);
         boxLoading = (RelativeLayout)rootView.findViewById(R.id.loading_box);
@@ -133,8 +135,8 @@ public class GuildFragment extends Fragment {
 
         /* If fragment was called with a guild argument, load guild */
         String guildName = getArguments().getString(Utils.ARG_GUILD_NAME);
+        context = getContext();
         if(guildName != null){
-            context = getContext();
             searchField.setText(guildName);
             new fetchData().execute(guildName);
         }
@@ -210,6 +212,8 @@ public class GuildFragment extends Fragment {
         }
     }
 
+
+
     @Override
     public void onAttach(Context context) {
         ((MainActivity) context).onSectionAttached(
@@ -277,7 +281,7 @@ public class GuildFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder;
+            final ViewHolder viewHolder;
             if(convertView == null) {
                 LayoutInflater inflater =
                         (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -299,7 +303,7 @@ public class GuildFragment extends Fragment {
                 viewHolder = (ViewHolder)convertView.getTag();
             }
 
-            GuildMember member = objects.get(position);
+            final GuildMember member = objects.get(position);
             viewHolder.rank.setText(member.getRank());
             viewHolder.rank.setVisibility(View.VISIBLE);
             viewHolder.name.setText(member.getName());
@@ -315,6 +319,18 @@ public class GuildFragment extends Fragment {
             }else{
                 viewHolder.online.setVisibility(View.GONE);
             }
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int in = R.anim.slide_in_right;
+                    int out = R.anim.slide_out_left;
+                    getFragmentManager().beginTransaction()
+                            .setCustomAnimations(in,out,in,out)
+                            .addToBackStack(null)
+                            .replace(R.id.container,CharacterFragment.searchInstance(member.getName()))
+                            .commit();
+                }
+            });
             return convertView;
         }
 
