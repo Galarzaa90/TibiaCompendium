@@ -298,7 +298,7 @@ public class GuildFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    class MemberListAdapter extends ArrayAdapter<GuildMember>{
+    class MemberListAdapter extends ArrayAdapter<GuildMember> {
         private final Context context;
         private final List<GuildMember> objects;
         private final int layout;

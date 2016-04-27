@@ -175,4 +175,20 @@ public class Player {
     public void addCharacter(Player character){
         otherCharacters.add(character);
     }
+
+    /* Returns a unique id for vocations for better ordering */
+    public int getVocationId(){
+        String vocation = getVocation().toLowerCase();
+        if(vocation.contains("druid")){
+            return 1;
+        }else if(vocation.contains("sorcerer")){
+            return 2;
+        }else if(vocation.contains("paladin")){
+            return 3;
+        }else if(vocation.contains("knight")){
+            return 4;
+        }else{
+            return 0;
+        }
+    }
 }

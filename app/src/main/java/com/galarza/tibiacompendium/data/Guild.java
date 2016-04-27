@@ -130,11 +130,11 @@ public class Guild {
     private class VocationComparator implements Comparator<GuildMember>{
         @Override
         public int compare(GuildMember lhs, GuildMember rhs) {
-            int comp = (lhs.getVocation()).compareTo(rhs.getVocation());
+            int comp = ((Integer)lhs.getVocationId()).compareTo(rhs.getVocationId());
             if(comp != 0){
                 return comp;
             }else{
-                return lhs.getName().compareToIgnoreCase(rhs.getName());
+                return ((Integer)rhs.getLevel()).compareTo(lhs.getLevel());
             }
         }
     }
