@@ -132,9 +132,17 @@ public class GuildFragment extends Fragment {
                 new fetchData().execute(searchField.getText().toString());
             }
         });
-
-        /* If fragment was called with a guild argument, load guild */
+        /* Getting guild name argument */
         String guildName = getArguments().getString(Utils.ARG_GUILD_NAME);
+        /* If a guild is already loaded, fill views */
+        if(guild != null){
+            loadViews(guild);
+        /* If fragment was called with a guild argument, load guild */
+        }else if(guildName != null){
+            searchField.setText(guildName);
+            new fetchData().execute(guildName);
+        }
+
         context = getContext();
         if(guildName != null){
             searchField.setText(guildName);
@@ -193,22 +201,8 @@ public class GuildFragment extends Fragment {
         @Override
         protected void onPostExecute(Guild result) {
             boxLoading.setVisibility(View.GONE);
-            if(result == null){
-                boxNoResults.setVisibility(View.VISIBLE);
-                return;
-            }
             guild = result;
-            if(result.getLogoUrl() != null) {
-                Picasso.with(context).load(result.getLogoUrl()).into(guildLogo);
-            }
-            guildName.setText(result.getName());
-            guildInfo.setText(getString(R.string.guild_info,result.getWorld(),result.getFoundedString()));
-            guildMembers.setText(getResources().getQuantityString(R.plurals.guild_member_count,result.getMemberCount(),result.getMemberCount()));
-            int onlineCount = result.getOnlineCount();
-            guildOnline.setText(getResources().getQuantityString(R.plurals.guild_members_online,onlineCount,onlineCount));
-            guildBox.setVisibility(View.VISIBLE);
-            adapter = new MemberListAdapter(getContext(), result.getMemberList());
-            memberList.setAdapter(adapter);
+            loadViews(guild);
         }
     }
 
@@ -220,6 +214,43 @@ public class GuildFragment extends Fragment {
                 getArguments().getInt(Utils.ARG_SECTION_NUMBER));
         super.onAttach(context);
 
+    }
+
+    public boolean loadViews(Guild guild){
+        if(guild == null){
+            boxNoResults.setVisibility(View.VISIBLE);
+            guildBox.setVisibility(View.GONE);
+            return false;
+        }
+        boxNoResults.setVisibility(View.GONE);
+        guildBox.setVisibility(View.VISIBLE);
+        /* Guild logo */
+        Picasso.with(getContext()).load(guild.getLogoUrl()).into(guildLogo);
+        /* Guild name */
+        guildName.setText(guild.getName());
+        /* Guild info */
+        guildInfo.setText(getString(
+                R.string.guild_info,
+                guild.getWorld(),
+                guild.getFoundedString()
+        ));
+        /* Member count */
+        guildMembers.setText(getResources().getQuantityString(
+                R.plurals.guild_member_count,
+                guild.getMemberCount(),
+                guild.getMemberCount()
+        ));
+        /* Online member count */
+        int onlineCount = guild.getOnlineCount();
+        guildOnline.setText(getResources().getQuantityString(
+                R.plurals.guild_members_online,
+                onlineCount,
+                onlineCount));
+        /* Guild member list */
+        adapter = new MemberListAdapter(getContext(), guild.getMemberList());
+        memberList.setAdapter(adapter);
+
+        return true;
     }
 
     @Override

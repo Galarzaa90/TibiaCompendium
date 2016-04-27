@@ -204,16 +204,17 @@ public class CharacterFragment extends Fragment {
                 }
             }
         });
-        /* If fragment was called with a guild argument, load guild */
+        /* Getting player name argument */
         String playerName = getArguments().getString(Utils.ARG_PLAYER_NAME);
+        /* If a player is already loaded, fill views */
         if(player != null){
-            playerName = player.getName();
-        }
-        if(playerName != null){
+            loadViews(player);
+        /* If fragment was called with a name argument, load name */
+        }else if(playerName != null){
             searchField.setText(playerName);
             new fetchData().execute(playerName);
         }
-        
+
         return rootView;
     }
 
@@ -260,119 +261,19 @@ public class CharacterFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             player = null;
+            boxLoading.setVisibility(View.VISIBLE);
             characterInfo.setVisibility(View.GONE);
             boxComment.setVisibility(View.GONE);
             boxDeaths.setVisibility(View.GONE);
             boxChars.setVisibility(View.GONE);
-            boxLoading.setVisibility(View.VISIBLE);
             boxNoResults.setVisibility(View.GONE);
         }
 
         @Override
         protected void onPostExecute(Player result){
-            if(result != null){
-                player = result;
-
-                if(result.getSex().equalsIgnoreCase("female")){
-                    characterGender.setImageResource(R.drawable.ic_female);
-                    characterGender.setContentDescription(getString(R.string.female));
-                }else{
-                    characterGender.setImageResource(R.drawable.ic_male);
-                    characterGender.setContentDescription(getString(R.string.male));
-                }
-
-                characterName.setText(result.getName());
-                characterSummary.setText(getString(
-                        R.string.char_summary,
-                        result.getLevel(),
-                        result.getVocation().equalsIgnoreCase("none") ? "" : result.getVocation())
-                );
-                characterResidence.setText(getString(R.string.char_residence,result.getResidence(),result.getWorld()));
-
-                if(result.getHouse() != null){
-                    boxHouse.setVisibility(View.VISIBLE);
-                    characterHouse.setText(result.getHouse());
-                    characterHouse.setText(getString(R.string.char_house,result.getHouse(),result.getHouseCity()));
-                }else{
-                    boxHouse.setVisibility(View.GONE);
-                }
-                if(result.getGuild() != null){
-                    /* Touching on guild name loads the guild info */
-                    boxGuild.setVisibility(View.VISIBLE);
-                    final String guildRank = result.getGuildRank();
-                    final String guild = result.getGuild();
-                    final String guildString = getString(R.string.guildcontent,guildRank,guild);
-
-                    SpannableString guildStyled = new SpannableString(guildString);
-                    int startIndex = guildString.length()-guild.length();
-                    int endIndex = guildString.length();
-                    guildStyled.setSpan(new ClickableSpan() {
-                        @Override
-                        public void onClick(View widget) {
-                            int in = R.anim.slide_in_right;
-                            int out = R.anim.slide_out_left;
-                            getFragmentManager().beginTransaction()
-                                    .setCustomAnimations(in,out,in,out)
-                                    .addToBackStack(null)
-                                    .replace(R.id.container,GuildFragment.searchInstance(guild))
-                                    .commit();
-                        }
-                    },startIndex,endIndex,0);
-                    characterGuild.setMovementMethod(LinkMovementMethod.getInstance());
-                    characterGuild.setText(guildStyled);
-                }else{
-                    boxGuild.setVisibility(View.GONE);
-                }
-
-                if(result.getFormerNames() != null){
-                    boxFormerName.setVisibility(View.VISIBLE);
-                    characterFormerNames.setText(result.getFormerNames());
-                }else{
-                    boxFormerName.setVisibility(View.GONE);
-                }
-
-                if(result.getFormerWorld() != null){
-                    boxFormerWorld.setVisibility(View.VISIBLE);
-                    characterFormerWorld.setText(result.getFormerWorld());
-                }else{
-                    boxFormerWorld.setVisibility(View.GONE);
-                }
-
-                if(result.getLastLoginString() != null) {
-                    characterLastLogin.setText(result.getLastLoginString());
-                }
-
-                characterAchievements.setText(String.valueOf(result.getAchievementPoints()));
-
-                if(result.getComment() != null){
-                    characterComment.setText(Html.fromHtml(result.getComment()));
-                    boxComment.setVisibility(View.VISIBLE);
-                }
-                characterInfo.setVisibility(View.VISIBLE);
-
-                DeathListAdapter deathListAdapter = new DeathListAdapter(getContext(), result.getDeathList());
-                if(result.getDeathList().size() > 0) {
-                    characterDeaths.removeAllViews();
-                    boxDeaths.setVisibility(View.VISIBLE);
-                    deathListAdapter.populateView(characterDeaths);
-                }else{
-                    boxDeaths.setVisibility(View.GONE);
-                }
-
-                CharsListAdapter charListAdapter = new CharsListAdapter(getContext(), result.getOtherCharacters());
-                if(result.getOtherCharacters().size() > 1) {
-                    otherCharacters.removeAllViews();
-                    boxChars.setVisibility(View.VISIBLE);
-                    charListAdapter.populateView(otherCharacters);
-                }else{
-                    boxChars.setVisibility(View.GONE);
-                }
-
-            }else{
-                boxNoResults.setVisibility(View.VISIBLE);
-            }
             boxLoading.setVisibility(View.GONE);
-
+            player = result;
+            loadViews(player);
         }
     }
 
@@ -382,6 +283,116 @@ public class CharacterFragment extends Fragment {
                 getArguments().getInt(Utils.ARG_SECTION_NUMBER));
         super.onAttach(context);
 
+    }
+
+    private boolean loadViews(Player player){
+        if(player == null){
+            boxNoResults.setVisibility(View.VISIBLE);
+            characterInfo.setVisibility(View.GONE);
+            boxComment.setVisibility(View.GONE);
+            boxDeaths.setVisibility(View.GONE);
+            boxChars.setVisibility(View.GONE);
+            return false;
+        }
+        boxNoResults.setVisibility(View.GONE);
+        characterInfo.setVisibility(View.VISIBLE);
+        /* Name */
+        characterName.setText(player.getName());
+        /* Summary (level & vocation) */
+        characterSummary.setText(getString(
+                R.string.char_summary,
+                player.getLevel(),
+                player.getVocation().equalsIgnoreCase("none") ? "" : player.getVocation()
+        ));
+        /* Sex */
+        if(player.getSex().equalsIgnoreCase("female")){
+            characterGender.setImageResource(R.drawable.ic_female);
+            characterGender.setContentDescription(getString(R.string.female));
+        }else{
+            characterGender.setImageResource(R.drawable.ic_male);
+            characterGender.setContentDescription(getString(R.string.male));
+        }
+        /* Residence */
+        characterResidence.setText(getString(
+                R.string.char_residence,
+                player.getResidence(),
+                player.getWorld()
+        ));
+        /* House */
+        if(player.getHouse() != null){
+            boxHouse.setVisibility(View.VISIBLE);
+            characterHouse.setText(getString(
+                    R.string.char_house,
+                    player.getHouse(),
+                    player.getHouseCity()
+            ));
+        }else{
+            boxHouse.setVisibility(View.GONE);
+        }
+        /* Guild */
+        if(player.getGuild() != null){
+            boxGuild.setVisibility(View.VISIBLE);
+            final String guildRank = player.getGuildRank();
+            final String guild = player.getGuild();
+            final String guildString = getString(R.string.guildcontent,guildRank,guild);
+            /* Make guild name touchable */
+            SpannableString guildStyled = new SpannableString(guildString);
+            int startIndex = guildString.length()-guild.length();
+            int endIndex = guildString.length();
+            guildStyled.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+                    int in = R.anim.slide_in_right;
+                    int out = R.anim.slide_out_left;
+                    getFragmentManager().beginTransaction()
+                            .setCustomAnimations(in,out,in,out)
+                            .addToBackStack(null)
+                            .replace(R.id.container,GuildFragment.searchInstance(guild))
+                            .commit();
+                }
+            },startIndex,endIndex,0);
+            characterGuild.setMovementMethod(LinkMovementMethod.getInstance());
+            characterGuild.setText(guildStyled);
+        }else{
+            boxGuild.setVisibility(View.GONE);
+        }
+        /* Former names */
+        if(player.getFormerNames() != null){
+            boxFormerName.setVisibility(View.VISIBLE);
+            characterFormerNames.setText(player.getFormerNames());
+        }else{
+            boxFormerName.setVisibility(View.GONE);
+        }
+        /* Former world */
+        if(player.getFormerWorld() != null){
+            boxFormerWorld.setVisibility(View.VISIBLE);
+            characterFormerWorld.setText(player.getFormerWorld());
+        }else{
+            boxFormerWorld.setVisibility(View.GONE);
+        }
+        /* Last login */
+        if(player.getLastLoginString() != null) {
+            characterLastLogin.setText(player.getLastLoginString());
+        }
+        /* Comment */
+        if(player.getComment() != null) {
+            characterComment.setText(Html.fromHtml(player.getComment()));
+            boxComment.setVisibility(View.VISIBLE);
+        }
+        /* Deaths */
+        DeathListAdapter deathListAdapter = new DeathListAdapter(getContext(), player.getDeathList());
+        if(player.getDeathList().size() > 0) {
+            characterDeaths.removeAllViews();
+            boxDeaths.setVisibility(View.VISIBLE);
+            deathListAdapter.populateView(characterDeaths);
+        }
+        CharsListAdapter charListAdapter = new CharsListAdapter(getContext(), player.getOtherCharacters());
+        if(player.getOtherCharacters().size() > 1) {
+            otherCharacters.removeAllViews();
+            boxChars.setVisibility(View.VISIBLE);
+            charListAdapter.populateView(otherCharacters);
+        }
+        return true;
     }
 
     class DeathListAdapter{
