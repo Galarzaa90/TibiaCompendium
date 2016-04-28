@@ -68,5 +68,7 @@
     <!-- Misc -->
     <string name="expand_collapse">Expand/Collapse</string>
     <string name="online">Online</string>
+    <string name="network_error">Network error. Check your internet connection.</string>
+    <string name="no_network_error">No connection available. Check your device\'s network settings.</string>
 
 </resources>

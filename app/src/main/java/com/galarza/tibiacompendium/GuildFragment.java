@@ -1,6 +1,7 @@
 package com.galarza.tibiacompendium;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.galarza.tibiacompendium.data.Guild;
 import com.galarza.tibiacompendium.data.GuildMember;
@@ -58,7 +60,6 @@ public class GuildFragment extends Fragment {
     private TextView guildOnline;
 
     private ListView memberList;
-    private Context context;
 
     public static GuildFragment newInstance() {
         GuildFragment fragment = new GuildFragment();
@@ -113,7 +114,7 @@ public class GuildFragment extends Fragment {
                             (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
 
-                    new fetchData().execute(v.getText().toString().trim());
+                    new fetchData(getContext()).execute(v.getText().toString().trim());
                     return true;
                 }
                 return false;
@@ -129,7 +130,7 @@ public class GuildFragment extends Fragment {
                         (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
 
-                new fetchData().execute(searchField.getText().toString());
+                new fetchData(getContext()).execute(searchField.getText().toString());
             }
         });
         /* Getting guild name argument */
@@ -140,21 +141,30 @@ public class GuildFragment extends Fragment {
         /* If fragment was called with a guild argument, load guild */
         }else if(guildName != null){
             searchField.setText(guildName);
-            new fetchData().execute(guildName);
-        }
-
-        context = getContext();
-        if(guildName != null){
-            searchField.setText(guildName);
-            new fetchData().execute(guildName);
+            new fetchData(getContext()).execute(guildName);
         }
 
         return rootView;
     }
 
     private class fetchData extends AsyncTask<String,Integer,Guild>{
+        private Context mContext;
+        public fetchData(Context context){
+            mContext = context;
+        }
+
         @Override
         protected Guild doInBackground(String... params) {
+            ConnectivityManager manager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            boolean mobileDataEnabled = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+                    .isConnectedOrConnecting();
+            boolean wifiEnabled = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+                    .isConnectedOrConnecting();
+            if(wifiEnabled || mobileDataEnabled){
+                publishProgress(Utils.NO_NETWORK_ENABLED);
+                return null;
+            }
+
             HttpURLConnection connection;
             InputStream stream;
             try {
@@ -181,13 +191,18 @@ public class GuildFragment extends Fragment {
             }catch (SocketTimeoutException s){
                 //publishProgress();
             }catch (IOException e) {
-                e.printStackTrace();
+                publishProgress(Utils.COULDNT_REACH);
             }
             return null;
         }
 
         protected void onProgressUpdate(Integer... progress){
-
+            if(progress[0] == Utils.COULDNT_REACH){
+                Toast.makeText(getContext(),R.string.network_error,Toast.LENGTH_SHORT).show();
+            }
+            if(progress[0] == Utils.NO_NETWORK_ENABLED){
+                Toast.makeText(getContext(),R.string.no_network_error,Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
@@ -216,11 +231,11 @@ public class GuildFragment extends Fragment {
 
     }
 
-    public boolean loadViews(Guild guild){
+    private void loadViews(Guild guild){
         if(guild == null){
             boxNoResults.setVisibility(View.VISIBLE);
             guildBox.setVisibility(View.GONE);
-            return false;
+            return;
         }
         boxNoResults.setVisibility(View.GONE);
         guildBox.setVisibility(View.VISIBLE);
@@ -249,8 +264,6 @@ public class GuildFragment extends Fragment {
         /* Guild member list */
         adapter = new MemberListAdapter(getContext(), guild.getMemberList());
         memberList.setAdapter(adapter);
-
-        return true;
     }
 
     @Override

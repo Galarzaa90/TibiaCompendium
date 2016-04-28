@@ -1,6 +1,7 @@
 package com.galarza.tibiacompendium;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.galarza.tibiacompendium.data.Death;
 import com.galarza.tibiacompendium.data.Parser;
@@ -42,7 +44,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class CharacterFragment extends Fragment {
-    Player player = null;
+    private Player player = null;
 
     /* Views used in the async task */
     private LinearLayout characterInfo;
@@ -139,7 +141,7 @@ public class CharacterFragment extends Fragment {
                             (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
 
-                    new fetchData().execute(v.getText().toString().trim());
+                    new fetchData(getContext()).execute(v.getText().toString().trim());
                     return true;
                 }
                 return false;
@@ -155,7 +157,7 @@ public class CharacterFragment extends Fragment {
                         (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
 
-                new fetchData().execute(searchField.getText().toString());
+                new fetchData(getContext()).execute(searchField.getText().toString());
             }
         });
 
@@ -212,16 +214,30 @@ public class CharacterFragment extends Fragment {
         /* If fragment was called with a name argument, load name */
         }else if(playerName != null){
             searchField.setText(playerName);
-            new fetchData().execute(playerName);
+            new fetchData(getContext()).execute(playerName);
         }
 
         return rootView;
     }
 
     private class fetchData extends AsyncTask<String, Integer, Player> {
+        private Context mContext;
+        public fetchData(Context context){
+            mContext = context;
+        }
 
         @Override
         protected Player doInBackground(String... params) {
+            ConnectivityManager manager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            boolean mobileDataEnabled = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+                    .isConnectedOrConnecting();
+            boolean wifiEnabled = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+                    .isConnectedOrConnecting();
+            if(wifiEnabled || mobileDataEnabled){
+                publishProgress(Utils.NO_NETWORK_ENABLED);
+                return null;
+            }
+
             HttpURLConnection connection;
             InputStream stream;
             try {
@@ -249,13 +265,18 @@ public class CharacterFragment extends Fragment {
             }catch (SocketTimeoutException s){
                 //publishProgress();
             }catch (IOException e) {
-                e.printStackTrace();
+                publishProgress(Utils.COULDNT_REACH);
             }
             return null;
         }
 
         protected void onProgressUpdate(Integer... progress){
-
+            if(progress[0] == Utils.COULDNT_REACH){
+                Toast.makeText(getContext(),R.string.network_error,Toast.LENGTH_SHORT).show();
+            }
+            if(progress[0] == Utils.NO_NETWORK_ENABLED){
+                Toast.makeText(getContext(),R.string.no_network_error,Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
@@ -285,14 +306,14 @@ public class CharacterFragment extends Fragment {
 
     }
 
-    private boolean loadViews(Player player){
+    private void loadViews(Player player){
         if(player == null){
             boxNoResults.setVisibility(View.VISIBLE);
             characterInfo.setVisibility(View.GONE);
             boxComment.setVisibility(View.GONE);
             boxDeaths.setVisibility(View.GONE);
             boxChars.setVisibility(View.GONE);
-            return false;
+            return;
         }
         boxNoResults.setVisibility(View.GONE);
         characterInfo.setVisibility(View.VISIBLE);
@@ -392,7 +413,6 @@ public class CharacterFragment extends Fragment {
             boxChars.setVisibility(View.VISIBLE);
             charListAdapter.populateView(otherCharacters);
         }
-        return true;
     }
 
     class DeathListAdapter{
@@ -449,7 +469,7 @@ public class CharacterFragment extends Fragment {
                 rowView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new fetchData().execute(((TextView) v.findViewById(R.id.char_name)).getText().toString());
+                        new fetchData(getContext()).execute(((TextView) v.findViewById(R.id.char_name)).getText().toString());
                     }
                 });
 

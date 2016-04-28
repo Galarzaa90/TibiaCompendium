@@ -14,4 +14,8 @@ public class Utils {
     /* Tibia.com date formats */
     public static final DateFormat LONG_DATE = new SimpleDateFormat("MMM dd yyyy, HH:mm:ss z", Locale.UK);
     public static final DateFormat SHORT_DATE = new SimpleDateFormat("MMM dd yyyy", Locale.UK);
+
+    /* fetchData AsyncTask error codes */
+    public static final int NO_NETWORK_ENABLED = 0;
+    public static final int COULDNT_REACH = 1;
 }
