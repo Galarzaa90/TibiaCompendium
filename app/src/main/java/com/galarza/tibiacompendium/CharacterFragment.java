@@ -2,6 +2,8 @@ package com.galarza.tibiacompendium;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -229,13 +231,18 @@ public class CharacterFragment extends Fragment {
         @Override
         protected Player doInBackground(String... params) {
             ConnectivityManager manager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-            boolean mobileDataEnabled = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-                    .isConnectedOrConnecting();
-            boolean wifiEnabled = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-                    .isConnectedOrConnecting();
-            if(wifiEnabled || mobileDataEnabled){
+            Network[] networks = manager.getAllNetworks();
+            boolean isConnected = false;
+            for(Network network : networks){
+                NetworkInfo networkInfo = manager.getNetworkInfo(network);
+                if(networkInfo != null && (networkInfo.getType() == ConnectivityManager.TYPE_WIFI ||
+                        networkInfo.getType() == ConnectivityManager.TYPE_WIFI) && networkInfo.isConnected()){
+                    isConnected = true;
+                    break;
+                }
+            }
+            if(!isConnected){
                 publishProgress(Utils.NO_NETWORK_ENABLED);
-                return null;
             }
 
             HttpURLConnection connection;
