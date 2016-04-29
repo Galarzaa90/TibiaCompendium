@@ -6,11 +6,13 @@
 
     <!-- Navigation -->
     <string name="title_home">Home</string>
+    <string name="title_items">Items</string>
     <string name="title_search_char">Character Search</string>
     <string name="title_search_guild">Guild Search</string>
 
     <string-array name="navigation_sections">
         <item>@string/title_home</item>
+        <item>@string/title_items</item>
         <item>@string/title_search_char</item>
         <item>@string/title_search_guild</item>
     </string-array>
@@ -70,5 +72,7 @@
     <string name="online">Online</string>
     <string name="network_error">Network error. Check your internet connection.</string>
     <string name="no_network_error">No connection available. Check your device\'s network settings.</string>
+    <string name="search_hint_item">Item name</string>
+    <string name="helmets">Helmets</string>
 
 </resources>

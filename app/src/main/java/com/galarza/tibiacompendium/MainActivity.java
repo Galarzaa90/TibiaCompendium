@@ -55,12 +55,19 @@ public class MainActivity extends AppCompatActivity
         switch(position){
             case 1:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container,CharacterFragment.newInstance())
+                        .replace(R.id.container,ItemFragment.newInstance())
                         .setCustomAnimations(in,out,in,out)
                         .addToBackStack(null)
                         .commit();
                 break;
             case 2:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container,CharacterFragment.newInstance())
+                        .setCustomAnimations(in,out,in,out)
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            case 3:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, GuildFragment.newInstance())
                         .setCustomAnimations(in,out,in,out)
@@ -69,7 +76,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             default:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, HomeFragment.newInstance(position + 1))
+                        .replace(R.id.container, HomeFragment.newInstance())
                         .setCustomAnimations(in,out,in,out)
                         .addToBackStack(null)
                         .commit();
@@ -77,15 +84,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void onSectionAttached(int number) {
-        String titles[] = getResources().getStringArray(R.array.navigation_sections);
-        if(number <= titles.length){
-            mTitle = titles[number-1];
-        }
-    }
-
-    public void onSectionAttached(String title) {
-        mTitle = title;
+    public void onSectionAttached(int titleResource) {
+        mTitle = getString(titleResource);
     }
 
     private void restoreActionBar() {
@@ -145,10 +145,10 @@ public class MainActivity extends AppCompatActivity
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static HomeFragment newInstance(int sectionNumber) {
+        public static HomeFragment newInstance() {
             HomeFragment fragment = new HomeFragment();
             Bundle args = new Bundle();
-            args.putInt(Utils.ARG_SECTION_NUMBER, sectionNumber);
+            args.putInt(Utils.ARG_TITLE_RESOURCE, R.string.title_home);
             fragment.setArguments(args);
             return fragment;
         }
@@ -160,8 +160,21 @@ public class MainActivity extends AppCompatActivity
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             ((MainActivity)getActivity()).fragment = this;
             /* Button listeners */
-            final Button characterButton = (Button)rootView.findViewById(R.id.button_character);
+            final Button ItemsButton = (Button)rootView.findViewById(R.id.button_items);
+            ItemsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int in = R.anim.slide_in_right;
+                    int out = R.anim.slide_out_left;
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.container,ItemFragment.newInstance())
+                            .setCustomAnimations(in,out,in,out)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
 
+            final Button characterButton = (Button)rootView.findViewById(R.id.button_character);
             characterButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -193,7 +206,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onAttach(Context context) {
             ((MainActivity) context).onSectionAttached(
-                    getArguments().getInt(Utils.ARG_SECTION_NUMBER));
+                    getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
             super.onAttach(context);
 
         }

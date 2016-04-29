@@ -66,7 +66,7 @@ public class GuildFragment extends Fragment {
     public static GuildFragment newInstance() {
         GuildFragment fragment = new GuildFragment();
         Bundle args = new Bundle();
-        args.putInt(Utils.ARG_SECTION_NUMBER, 3);
+        args.putInt(Utils.ARG_TITLE_RESOURCE, R.string.title_search_guild);
         fragment.setArguments(args);
         return fragment;
     }
@@ -163,13 +163,14 @@ public class GuildFragment extends Fragment {
             for(Network network : networks){
                 NetworkInfo networkInfo = manager.getNetworkInfo(network);
                 if(networkInfo != null && (networkInfo.getType() == ConnectivityManager.TYPE_WIFI ||
-                        networkInfo.getType() == ConnectivityManager.TYPE_WIFI) && networkInfo.isConnected()){
+                        networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) && networkInfo.isConnected()){
                     isConnected = true;
                     break;
                 }
             }
             if(!isConnected){
                 publishProgress(Utils.NO_NETWORK_ENABLED);
+                return null;
             }
 
             HttpURLConnection connection;
@@ -233,7 +234,7 @@ public class GuildFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         ((MainActivity) context).onSectionAttached(
-                getArguments().getInt(Utils.ARG_SECTION_NUMBER));
+                getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
         super.onAttach(context);
 
     }

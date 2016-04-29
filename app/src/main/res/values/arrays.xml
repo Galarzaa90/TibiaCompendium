@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categories_titles">
+        <item>Helmets</item>
+        <item>Armors</item>
+        <item>Legs</item>
+        <item>Boots</item>
+    </string-array>
+
+    <array name="categories_drawables">
+        <item>@drawable/tibia_demon_helmet</item>
+        <item>@drawable/tibia_demon_armor</item>
+        <item>@drawable/tibia_demon_legs</item>
+        <item>@drawable/tibia_firewalker_boots</item>
+    </array>
+
+    <string-array name="categories_name">
+        <item>Helmets</item>
+        <item>Armors</item>
+        <item>Legs</item>
+        <item>Boots</item>
+    </string-array>
+</resources>

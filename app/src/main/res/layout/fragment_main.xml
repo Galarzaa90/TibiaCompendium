@@ -10,6 +10,17 @@
     android:nestedScrollingEnabled="false">
 
     <Button
+        android:id="@+id/button_items"
+        android:layout_columnWeight="50"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textColor="@color/white"
+        android:theme="@style/RaisedButton"
+        android:text="@string/title_items"/>
+
+    <Button
         android:id="@+id/button_character"
         android:layout_columnWeight="50"
         android:layout_width="0dp"

@@ -7,7 +7,7 @@ import java.util.Locale;
 
 public class Utils {
     /* Argument keys */
-    public static final String ARG_SECTION_NUMBER = "section_number";
+    public static final String ARG_TITLE_RESOURCE = "title_resource";
     public static final String ARG_GUILD_NAME = "guild_name";
     public static final String ARG_PLAYER_NAME = "player_name";
 
