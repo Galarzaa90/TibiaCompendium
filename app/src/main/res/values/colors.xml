@@ -6,6 +6,8 @@
 
     <color name="grayText">@color/black_128</color>
 
+    <color name="TibiaLookColor">#00EF00</color>
+
 
     <color name="light_blue_600">#039be5</color>
     <color name="light_blue_800">#1565C0</color>

@@ -74,5 +74,9 @@
     <string name="no_network_error">No connection available. Check your device\'s network settings.</string>
     <string name="search_hint_item">Item name</string>
     <string name="helmets">Helmets</string>
+    <string name="dropped_by">Dropped by</string>
+    <string name="bought_by">Bought by</string>
+    <string name="sold_by">Sold by</string>
+    <string name="chance">%1$.2f%%</string>
 
 </resources>

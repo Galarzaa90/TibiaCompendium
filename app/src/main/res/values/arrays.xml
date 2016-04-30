@@ -5,6 +5,10 @@
         <item>Armors</item>
         <item>Legs</item>
         <item>Boots</item>
+        <item>Shields</item>
+        <item>Axe Weapons</item>
+        <item>Sword Weapons</item>
+        <item>Club Weapons</item>
     </string-array>
 
     <array name="categories_drawables">
@@ -12,6 +16,10 @@
         <item>@drawable/tibia_demon_armor</item>
         <item>@drawable/tibia_demon_legs</item>
         <item>@drawable/tibia_firewalker_boots</item>
+        <item>@drawable/tibia_demon_shield</item>
+        <item>@drawable/tibia_umbral_master_chopper</item>
+        <item>@drawable/tibia_umbral_master_slayer</item>
+        <item>@drawable/tibia_umbral_master_hammer</item>
     </array>
 
     <string-array name="categories_name">
@@ -19,5 +27,20 @@
         <item>Armors</item>
         <item>Legs</item>
         <item>Boots</item>
+        <item>Shields</item>
+        <item>Axe Weapons</item>
+        <item>Sword Weapons</item>
+        <item>Club Weapons</item>
+    </string-array>
+
+    <string-array name="categories_sort">
+        <item>Armor</item>
+        <item>Armor</item>
+        <item>Armor</item>
+        <item>Armor</item>
+        <item>Def</item>
+        <item>Attack</item>
+        <item>Attack</item>
+        <item>Attack</item>
     </string-array>
 </resources>

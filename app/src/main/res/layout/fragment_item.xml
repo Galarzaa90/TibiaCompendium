@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context=".ItemFragment">
     <!-- Search item -->
     <LinearLayout
@@ -38,6 +39,7 @@
         android:useDefaultMargins="false"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
+        android:animateLayoutChanges="true"
         android:alignmentMode="alignBounds"/>
     <LinearLayout
         android:id="@+id/category_header_box"
@@ -61,6 +63,87 @@
         android:layout_height="wrap_content"
         android:divider="@android:color/transparent"
         android:padding="4dp"
-        android:dividerHeight="3dp"/>
-
+        android:dividerHeight="3dp"
+        tools:visibility="gone"/>
+    <!-- Item info -->
+    <ScrollView
+        android:id="@+id/item_box"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                style="@style/RaisedBox">
+                <TextView
+                    android:id="@+id/item_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    tools:text="Item name"
+                    android:drawableStart="@drawable/ic_arrow_left"
+                    style="@style/BigEntryText"/>
+                <TextView
+                    android:id="@+id/item_look"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Look text"
+                    android:textColor="@color/TibiaLookColor"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/RaisedBox">
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bought_by"
+                    android:drawableEnd="@drawable/ic_arrow_drop_down"
+                    style="@style/TitleText"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/RaisedBox">
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sold_by"
+                    android:drawableEnd="@drawable/ic_arrow_drop_down"
+                    style="@style/TitleText"/>
+            </LinearLayout>
+            <!-- Dropped by box -->
+            <LinearLayout
+                android:id="@+id/drops_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                style="@style/RaisedBox">
+                <TextView
+                    android:id="@+id/drops_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dropped_by"
+                    android:drawableEnd="@drawable/ic_arrow_drop_down"
+                    style="@style/TitleText"/>
+                <LinearLayout
+                    android:id="@+id/item_drops"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

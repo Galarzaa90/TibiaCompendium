@@ -1,12 +1,21 @@
 package com.galarza.tibiacompendium.data;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Item {
     private String name;
     private int vendor_value;
     private int actual_value;
     private int capacity;
     private boolean stackable;
-    private byte[] image;
+    private Bitmap image;
+    private String lookText;
+    private List<ItemDrop> droppedBy = new ArrayList<>();
+    private List<NpcOffer> boughtBy = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -48,11 +57,43 @@ public class Item {
         this.stackable = stackable;
     }
 
-    public byte[] getImage() {
+    public Bitmap getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setImageFromBlob(byte[] image) {
+        this.image = BitmapFactory.decodeByteArray(image,0,image.length);
+    }
+
+    public String getLookText() {
+        return lookText;
+    }
+
+    public void setLookText(String lookText) {
+        this.lookText = lookText;
+    }
+
+    public List<ItemDrop> getDroppedBy() {
+        return droppedBy;
+    }
+
+    public void addDrop(ItemDrop drop){
+        droppedBy.add(drop);
+    }
+
+    public int getDropCount(){
+        return droppedBy.size();
+    }
+
+    public List<NpcOffer> getBoughtBy() {
+        return boughtBy;
+    }
+
+    public void addBoughtBy(NpcOffer offer){
+        boughtBy.add(offer);
+    }
+
+    public int getBuyersCount(){
+        return boughtBy.size();
     }
 }
