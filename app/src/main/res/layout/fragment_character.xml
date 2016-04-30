@@ -3,7 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".CharacterFragment">
+    <!-- Search character box -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/RaisedBox">
+        <EditText
+            android:id="@+id/search_char"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/search_hint_player"
+            android:singleLine="true"
+            android:imeOptions="actionSearch"
+            android:inputType="text"/>
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/RaisedButton"
+            android:text="@string/search" />
+    </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -12,27 +34,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:animateLayoutChanges="true">
-            <!-- Search character box -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/RaisedBox">
-                <EditText
-                    android:id="@+id/search_char"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/search_hint_player"
-                    android:singleLine="true"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"/>
-                <Button
-                    android:id="@+id/search_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:theme="@style/RaisedButton"
-                    android:text="@string/search" />
-            </LinearLayout>
             <!-- Loading progress bar box -->
             <RelativeLayout
                 android:layout_width="match_parent"
