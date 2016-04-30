@@ -164,47 +164,44 @@ public class CharacterFragment extends Fragment {
         });
 
         /* Expand/Collapse buttons listeners */
-        final ImageView commentToggleIcon = (ImageView)rootView.findViewById(R.id.comment_toggle_icon);
-        LinearLayout commentHeader = (LinearLayout)rootView.findViewById(R.id.comment_header);
+        final TextView commentHeader = (TextView) rootView.findViewById(R.id.comment_header);
         commentHeader.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(characterComment.getVisibility() == View.GONE){
                     characterComment.setVisibility(View.VISIBLE);
-                    commentToggleIcon.setImageResource(R.drawable.ic_arrow_drop_up);
+                    commentHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_up,0);
                 }else{
                     characterComment.setVisibility(View.GONE);
-                    commentToggleIcon.setImageResource(R.drawable.ic_arrow_drop_down);
+                    commentHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_down,0);
                 }
             }
         });
 
-        final ImageView deathToggleIcon = (ImageView)rootView.findViewById(R.id.death_toggle_icon);
-        LinearLayout deathsHeader = (LinearLayout)rootView.findViewById(R.id.deaths_header);
+        final TextView deathsHeader = (TextView)rootView.findViewById(R.id.deaths_header);
         deathsHeader.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(characterDeaths.getVisibility() == View.GONE){
                     characterDeaths.setVisibility(View.VISIBLE);
-                    deathToggleIcon.setImageResource(R.drawable.ic_arrow_drop_up);
+                    deathsHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_up,0);
                 }else{
                     characterDeaths.setVisibility(View.GONE);
-                    deathToggleIcon.setImageResource(R.drawable.ic_arrow_drop_down);
+                    deathsHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_down,0);
                 }
             }
         });
 
-        final ImageView charsToggleIcon = (ImageView)rootView.findViewById(R.id.chars_toggle_icon);
-        LinearLayout charsHeader = (LinearLayout)rootView.findViewById(R.id.chars_header);
+        final TextView charsHeader = (TextView) rootView.findViewById(R.id.chars_header);
         charsHeader.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(otherCharacters.getVisibility() == View.GONE){
                     otherCharacters.setVisibility(View.VISIBLE);
-                    charsToggleIcon.setImageResource(R.drawable.ic_arrow_drop_up);
+                    charsHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_up,0);
                 }else{
                     otherCharacters.setVisibility(View.GONE);
-                    charsToggleIcon.setImageResource(R.drawable.ic_arrow_drop_down);
+                    charsHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_down,0);
                 }
             }
         });

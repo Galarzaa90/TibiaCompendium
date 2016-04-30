@@ -199,23 +199,13 @@
                 android:visibility="gone"
                 tools:visibility="visible"
                 android:animateLayoutChanges="true">
-                <LinearLayout
+                <TextView
                     android:id="@+id/comment_header"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/comment"
-                        style="@style/TitleText"/>
-                    <ImageView
-                        android:id="@+id/comment_toggle_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_arrow_drop_down"
-                        android:contentDescription="@string/expand_collapse"/>
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:text="@string/comment"
+                    style="@style/TitleText"
+                    android:drawableEnd="@drawable/ic_arrow_drop_down"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -232,23 +222,13 @@
                 android:visibility="gone"
                 tools:visibility="visible"
                 android:animateLayoutChanges="true">
-                <LinearLayout
+                <TextView
                     android:id="@+id/deaths_header"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/deaths"
-                        style="@style/TitleText"/>
-                    <ImageView
-                        android:id="@+id/death_toggle_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_arrow_drop_down"
-                        android:contentDescription="@string/expand_collapse"/>
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:text="@string/deaths"
+                    style="@style/TitleText"
+                    android:drawableEnd="@drawable/ic_arrow_drop_down"/>
                 <LinearLayout
                     android:id="@+id/char_deaths"
                     android:layout_width="wrap_content"
@@ -266,23 +246,13 @@
                 android:visibility="gone"
                 tools:visibility="visible"
                 android:animateLayoutChanges="true">
-                <LinearLayout
+                <TextView
                     android:id="@+id/chars_header"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/other_chars"
-                        style="@style/TitleText"/>
-                    <ImageView
-                        android:id="@+id/chars_toggle_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_arrow_drop_down"
-                        android:contentDescription="@string/expand_collapse"/>
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:text="@string/comment"
+                    style="@style/TitleText"
+                    android:drawableEnd="@drawable/ic_arrow_drop_down"/>
                 <LinearLayout
                     android:id="@+id/other_chars"
                     android:layout_marginTop="4dp"
