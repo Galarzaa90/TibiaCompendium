@@ -409,81 +409,56 @@ public class CharacterFragment extends Fragment {
             boxComment.setVisibility(View.VISIBLE);
         }
         /* Deaths */
-        DeathListAdapter deathListAdapter = new DeathListAdapter(getContext(), player.getDeathList());
         if(player.getDeathList().size() > 0) {
             characterDeaths.removeAllViews();
             boxDeaths.setVisibility(View.VISIBLE);
-            deathListAdapter.populateView(characterDeaths);
+            loadDeathsView(getContext(),characterDeaths,player.getDeathList());
         }
-        CharsListAdapter charListAdapter = new CharsListAdapter(getContext(), player.getOtherCharacters());
         if(player.getOtherCharacters().size() > 1) {
             otherCharacters.removeAllViews();
             boxChars.setVisibility(View.VISIBLE);
-            charListAdapter.populateView(otherCharacters);
+            loadCharsView(getContext(),otherCharacters,player.getOtherCharacters());
         }
     }
 
-    class DeathListAdapter{
-        private final Context context;
-        private final List<Death> objects;
-        static private final int layout = R.layout.row_death;
 
-        public DeathListAdapter(Context context, List<Death> objects) {
-            this.context = context;
-            this.objects = objects;
-        }
+    void loadDeathsView(Context context,ViewGroup parent, List<Death> deaths) {
+        LayoutInflater inflater =
+                (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for(Death death : deaths) {
+            View rowView = inflater.inflate(R.layout.row_death, null);
 
-        public void populateView(ViewGroup parent) {
-            LayoutInflater inflater =
-                    (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            for(Death death : objects) {
-                View rowView = inflater.inflate(layout, null);
+            TextView dateView = (TextView)rowView.findViewById(R.id.death_date);
+            dateView.setText(death.getDateString());
 
-                TextView dateView = (TextView)rowView.findViewById(R.id.death_date);
-                dateView.setText(death.getDateString());
+            TextView detailsView = (TextView)rowView.findViewById(R.id.death_details);
+            detailsView.setText(getString(R.string.death_details,
+                    death.isByPlayer() ? "Killed" : "Died",
+                    death.getLevel(),
+                    death.getKiller()));
 
-                TextView detailsView = (TextView)rowView.findViewById(R.id.death_details);
-                detailsView.setText(getString(R.string.death_details,
-                        death.isByPlayer() ? "Killed" : "Died",
-                        death.getLevel(),
-                        death.getKiller()));
-
-                parent.addView(rowView);
-            }
+            parent.addView(rowView);
         }
     }
 
-    class CharsListAdapter{
-        private final Context context;
-        private final List<Player> objects;
-        static private final int layout = R.layout.row_other_char;
+    void loadCharsView(Context context,ViewGroup parent, List<Player> players) {
+        LayoutInflater inflater =
+                (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for(Player player : players) {
+            View rowView = inflater.inflate(R.layout.row_other_char, null);
+            TextView charName = (TextView) rowView.findViewById(R.id.char_name);
+            TextView charWorld = (TextView) rowView.findViewById(R.id.char_world);
 
-        public CharsListAdapter(Context context, List<Player> objects) {
-            this.context = context;
-            this.objects = objects;
-        }
+            charName.setText(player.getName());
+            charWorld.setText(player.getWorld());
 
-        public void populateView(ViewGroup parent) {
-            LayoutInflater inflater =
-                    (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            for(Player player : objects) {
-                View rowView = inflater.inflate(layout, null);
-                TextView charName = (TextView) rowView.findViewById(R.id.char_name);
-                TextView charWorld = (TextView) rowView.findViewById(R.id.char_world);
-
-                charName.setText(player.getName());
-                charWorld.setText(player.getWorld());
-
-                rowView.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new fetchData(getContext()).execute(((TextView) v.findViewById(R.id.char_name)).getText().toString());
-                    }
-                });
-
-                parent.addView(rowView);
-            }
+            rowView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new fetchData(getContext()).execute(((TextView) v.findViewById(R.id.char_name)).getText().toString());
+                }
+            });
+            parent.addView(rowView);
         }
     }
-
 }
