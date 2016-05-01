@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.galarza.tibiacompendium.data.Item;
 import com.galarza.tibiacompendium.data.ItemDrop;
+import com.galarza.tibiacompendium.data.NpcOffer;
 import com.galarza.tibiacompendium.data.TibiaDatabase;
 import com.galarza.tibiacompendium.data.Utils;
 
@@ -37,8 +38,12 @@ public class ItemFragment extends Fragment {
     private TextView itemName;
     private TextView itemLook;
 
+    private LinearLayout itemBuyers;
+    private LinearLayout itemSellers;
     private LinearLayout itemDrops;
 
+    private LinearLayout buyersBox;
+    private LinearLayout sellersBox;
     private LinearLayout itemDropsBox;
 
     private ListView itemList;
@@ -66,7 +71,7 @@ public class ItemFragment extends Fragment {
         ((MainActivity)getActivity()).fragment = this;
 
         categoryLayout = (GridLayout) rootView.findViewById(R.id.category_container);
-        new CategoryAdapter(getContext()).populateView(categoryLayout);
+        loadCategoryLayout(getContext(),categoryLayout);
 
         headerBox = (LinearLayout)rootView.findViewById(R.id.category_header_box);
         headerBox.setOnClickListener(new OnClickListener() {
@@ -92,8 +97,38 @@ public class ItemFragment extends Fragment {
             }
         });
         itemLook = (TextView)rootView.findViewById(R.id.item_look);
+        itemBuyers = (LinearLayout)rootView.findViewById(R.id.item_buyers);
+        itemSellers = (LinearLayout)rootView.findViewById(R.id.item_sellers);
         itemDrops = (LinearLayout)rootView.findViewById(R.id.item_drops);
 
+        buyersBox = (LinearLayout)rootView.findViewById(R.id.buyers_box);
+        final TextView buyersHeader = (TextView)rootView.findViewById(R.id.buyers_header) ;
+        buyersBox.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(itemBuyers.getVisibility() == View.GONE){
+                    itemBuyers.setVisibility(View.VISIBLE);
+                    buyersHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_up,0);
+                }else{
+                    itemBuyers.setVisibility(View.GONE);
+                    buyersHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_down,0);
+                }
+            }
+        });
+        sellersBox = (LinearLayout)rootView.findViewById(R.id.sellers_box);
+        final TextView sellersHeader = (TextView)rootView.findViewById(R.id.sellers_header) ;
+        sellersBox.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(itemSellers.getVisibility() == View.GONE){
+                    itemSellers.setVisibility(View.VISIBLE);
+                    sellersHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_up,0);
+                }else{
+                    itemSellers.setVisibility(View.GONE);
+                    sellersHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_down,0);
+                }
+            }
+        });
         itemDropsBox = (LinearLayout)rootView.findViewById(R.id.drops_box);
         final TextView itemDropsHeader = (TextView)rootView.findViewById(R.id.drops_header) ;
         itemDropsBox.setOnClickListener(new OnClickListener() {
@@ -164,6 +199,9 @@ public class ItemFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             itemBox.setVisibility(View.GONE);
+            itemBuyers.setVisibility(View.GONE);
+            itemSellers.setVisibility(View.GONE);
+            itemDrops.setVisibility(View.GONE);
         }
 
         @Override
@@ -171,15 +209,26 @@ public class ItemFragment extends Fragment {
             itemBox.setVisibility(View.VISIBLE);
             itemList.setVisibility(View.GONE);
             headerBox.setVisibility(View.GONE);
-            itemDrops.setVisibility(View.GONE);
 
             itemName.setText(item.getName());
             itemLook.setText(item.getLookText());
 
+            if(item.getBuyersCount() > 0){
+                buyersBox.setVisibility(View.VISIBLE);
+                loadOffersView(mContext,itemBuyers,item.getBuyers());
+            }else{
+                buyersBox.setVisibility(View.GONE);
+            }
+            if(item.getSellersCount() > 0){
+                sellersBox.setVisibility(View.VISIBLE);
+                loadOffersView(mContext,itemSellers,item.getSellers());
+            }else{
+                sellersBox.setVisibility(View.GONE);
+            }
+
             if(item.getDropCount() > 0) {
                 itemDropsBox.setVisibility(View.VISIBLE);
-                DropsAdapter adapter = new DropsAdapter(mContext, item.getDroppedBy());
-                adapter.populateView(itemDrops);
+                loadDropsView(mContext,itemDrops,item.getDroppedBy());
             }else{
                 itemDropsBox.setVisibility(View.GONE);
             }
@@ -246,75 +295,78 @@ public class ItemFragment extends Fragment {
         }
     }
 
-    private class CategoryAdapter{
-        private final Context context;
-        private final int layout = R.layout.category_item;
+    public void loadCategoryLayout(Context context, GridLayout parent){
+        final Context fContext = context;
+        LayoutInflater inflater =
+                (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        parent.removeAllViews();
+        final String[] categoryTitles = getResources().getStringArray(R.array.categories_titles);
+        final String[] categorySort = getResources().getStringArray(R.array.categories_sort);
+        final TypedArray categoryDrawables = getResources().obtainTypedArray(R.array.categories_drawables);
+        final String[] categoryName = getResources().getStringArray(R.array.categories_name);
+        for(int position = 0; position < categoryTitles.length; position++){
+            View view = inflater.inflate(R.layout.category_item,parent,false);
+            TextView categoryView = (TextView)view.findViewById(R.id.category);
 
-        public CategoryAdapter(Context context){
-            this.context = context;
+            categoryView.setText(categoryTitles[position]);
+            categoryView.setCompoundDrawablesRelativeWithIntrinsicBounds(categoryDrawables.getDrawable(position),null,null,null);
+            final int index = position;
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new fetchData(fContext).execute(categoryName[index],categorySort[index]);
+                    header.setText(categoryTitles[index]);
+                    headerBox.setVisibility(View.VISIBLE);
+                    categoryLayout.setVisibility(View.GONE);
+                }
+            });
+
+            parent.addView(view);
         }
-
-        public void populateView(GridLayout parent){
-            LayoutInflater inflater =
-                    (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            parent.removeAllViews();
-            final String[] categoryTitles = getResources().getStringArray(R.array.categories_titles);
-            final String[] categorySort = getResources().getStringArray(R.array.categories_sort);
-            final TypedArray categoryDrawables = getResources().obtainTypedArray(R.array.categories_drawables);
-            final String[] categoryName = getResources().getStringArray(R.array.categories_name);
-            for(int position = 0; position < categoryTitles.length; position++){
-                View view = inflater.inflate(layout,parent,false);
-                TextView categoryView = (TextView)view.findViewById(R.id.category);
-
-                categoryView.setText(categoryTitles[position]);
-                categoryView.setCompoundDrawablesRelativeWithIntrinsicBounds(categoryDrawables.getDrawable(position),null,null,null);
-                final int index = position;
-                view.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new fetchData(context).execute(categoryName[index],categorySort[index]);
-                        header.setText(categoryTitles[index]);
-                        headerBox.setVisibility(View.VISIBLE);
-                        categoryLayout.setVisibility(View.GONE);
-                    }
-                });
-
-                parent.addView(view);
-            }
-        }
-
+        categoryDrawables.recycle();
     }
 
-    class DropsAdapter{
-        private final Context context;
-        private final List<ItemDrop> objects;
-        static private final int layout = R.layout.row_itemdrop;
 
-        public DropsAdapter(Context context, List<ItemDrop> objects) {
-            this.context = context;
-            this.objects = objects;
-        }
 
-        public void populateView(ViewGroup parent) {
-            LayoutInflater inflater =
-                    (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            parent.removeAllViews();
-            for(ItemDrop itemDrop : objects) {
-                View rowView = inflater.inflate(layout,null);
-                TextView name = (TextView) rowView.findViewById(R.id.name);
-                TextView chance = (TextView) rowView.findViewById(R.id.chance);
+    public void loadDropsView(Context context, ViewGroup parent, List<ItemDrop> itemDrops) {
+        parent.removeAllViews();
+        LayoutInflater inflater =
+                (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for (ItemDrop itemDrop : itemDrops) {
+            View rowView = inflater.inflate(R.layout.row_itemdrop, null);
 
-                name.setText(itemDrop.getCreature());
-                BitmapDrawable drawable = new BitmapDrawable(getResources(),itemDrop.getImage());
-                name.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable,null,null,null);
-                if(itemDrop.getChance() > 0) {
-                    chance.setText(getString(R.string.chance, itemDrop.getChance()));
-                }else{
-                    chance.setText("?");
-                }
+            TextView name = (TextView) rowView.findViewById(R.id.name);
+            TextView chance = (TextView) rowView.findViewById(R.id.chance);
 
-                parent.addView(rowView);
+            name.setText(itemDrop.getCreature());
+            BitmapDrawable drawable = new BitmapDrawable(getResources(), itemDrop.getImage());
+            name.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null);
+            if (itemDrop.getChance() > 0) {
+                chance.setText(getString(R.string.chance, itemDrop.getChance()));
+            } else {
+                chance.setText("?");
             }
+
+            parent.addView(rowView);
+        }
+    }
+
+    public void loadOffersView(Context context, ViewGroup parent, List<NpcOffer> offers) {
+        parent.removeAllViews();
+        LayoutInflater inflater =
+                (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for (NpcOffer offer : offers) {
+            View rowView = inflater.inflate(R.layout.row_npcoffer, null);
+
+            TextView name = (TextView) rowView.findViewById(R.id.name);
+            TextView city = (TextView) rowView.findViewById(R.id.city);
+            TextView price = (TextView) rowView.findViewById(R.id.price);
+
+            name.setText(offer.getNpc());
+            city.setText(getString(R.string.city,offer.getCity()));
+            price.setText(getString(R.string.price,offer.getValue()));
+
+            parent.addView(rowView);
         }
     }
 

@@ -10,16 +10,25 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Creature name"
+        tools:text="NPC name"
         android:layout_alignParentStart="true"
         style="@style/EntryText"/>
     <TextView
-        android:id="@+id/chance"
+        android:id="@+id/city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/name"
+        android:layout_marginStart="3dp"
+        android:layout_alignBaseline="@id/name"
+        style="@style/TitleText"
+        tools:text="(City)"/>
+    <TextView
+        android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignBaseline="@id/name"
-        tools:text="10.00%"
+        tools:text="Price"
         style="@style/TitleText"/>
 
 </RelativeLayout>

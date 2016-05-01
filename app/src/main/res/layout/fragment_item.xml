@@ -96,29 +96,53 @@
                     tools:text="Look text"
                     android:textColor="@color/TibiaLookColor"/>
             </LinearLayout>
+            <!-- Bought by box -->
             <LinearLayout
+                android:id="@+id/buyers_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 style="@style/RaisedBox">
                 <TextView
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
+                    android:id="@+id/buyers_header"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/bought_by"
                     android:drawableEnd="@drawable/ic_arrow_drop_down"
                     style="@style/TitleText"/>
+                <LinearLayout
+                    android:id="@+id/item_buyers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+                </LinearLayout>
             </LinearLayout>
+            <!-- Bought by box -->
             <LinearLayout
+                android:id="@+id/sellers_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 style="@style/RaisedBox">
                 <TextView
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
+                    android:id="@+id/sellers_header"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/sold_by"
                     android:drawableEnd="@drawable/ic_arrow_drop_down"
                     style="@style/TitleText"/>
+                <LinearLayout
+                    android:id="@+id/item_sellers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+                </LinearLayout>
             </LinearLayout>
             <!-- Dropped by box -->
             <LinearLayout

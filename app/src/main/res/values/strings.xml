@@ -78,5 +78,7 @@
     <string name="bought_by">Bought by</string>
     <string name="sold_by">Sold by</string>
     <string name="chance">%1$.2f%%</string>
+    <string name="city">(%1$s)</string>
+    <string name="price">%1$,d</string>
 
 </resources>

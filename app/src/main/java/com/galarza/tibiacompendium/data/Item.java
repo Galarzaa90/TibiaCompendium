@@ -16,6 +16,7 @@ public class Item {
     private String lookText;
     private List<ItemDrop> droppedBy = new ArrayList<>();
     private List<NpcOffer> boughtBy = new ArrayList<>();
+    private List<NpcOffer> soldBy = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -85,7 +86,7 @@ public class Item {
         return droppedBy.size();
     }
 
-    public List<NpcOffer> getBoughtBy() {
+    public List<NpcOffer> getBuyers() {
         return boughtBy;
     }
 
@@ -95,5 +96,17 @@ public class Item {
 
     public int getBuyersCount(){
         return boughtBy.size();
+    }
+
+    public List<NpcOffer> getSellers() {
+        return soldBy;
+    }
+
+    public void addSoldBy(NpcOffer offer){
+        soldBy.add(offer);
+    }
+
+    public int getSellersCount(){
+        return soldBy.size();
     }
 }
