@@ -25,7 +25,7 @@ public class Parser {
         }
         content = content.substring(startIndex,endIndex);
         /* Get player's name */
-        Matcher m = getMatcher(content, "Name:</td><td>([^<]+)\\s<");
+        Matcher m = getMatcher(content, "Name:</td><td>([^<,]+)");
         if(m.find()){
             player.setName(m.group(1).trim());
         }else{
@@ -36,6 +36,14 @@ public class Parser {
         m = getMatcher(content, "Names:</td><td>([^<]+)<");
         if(m.find()){
             player.setFormerNames(m.group(1).trim());
+        }
+
+        /* Check if player is scheduled for deletion and get date */
+        m = getMatcher(content,", will be deleted at ([^<]+)");
+        if(m.find()){
+            String deleted = Html.fromHtml(m.group(1)).toString();
+            deleted = deleted.replaceAll(String.valueOf((char) 160), " ");
+            player.setDeletion(deleted);
         }
 
         /* Get player's sex */

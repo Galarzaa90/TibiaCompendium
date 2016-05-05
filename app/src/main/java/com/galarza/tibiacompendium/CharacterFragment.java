@@ -11,6 +11,7 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +55,7 @@ public class CharacterFragment extends Fragment {
     private RelativeLayout boxNoResults;
 
     private ImageView characterGender;
+    private ImageView characterWarning;
     private TextView characterName;
     private TextView characterSummary;
     private TextView characterResidence;
@@ -111,6 +113,7 @@ public class CharacterFragment extends Fragment {
         boxNoResults = (RelativeLayout)rootView.findViewById(R.id.no_results_box);
 
         characterGender = (ImageView)rootView.findViewById(R.id.char_gender);
+        characterWarning = (ImageView)rootView.findViewById(R.id.warning);
         characterName = (TextView)rootView.findViewById(R.id.char_name);
         characterSummary = (TextView)rootView.findViewById(R.id.char_summary);
         characterResidence = (TextView)rootView.findViewById(R.id.char_residence);
@@ -311,7 +314,7 @@ public class CharacterFragment extends Fragment {
 
     }
 
-    private void loadViews(Player player){
+    private void loadViews(final Player player){
         if(player == null){
             boxNoResults.setVisibility(View.VISIBLE);
             characterInfo.setVisibility(View.GONE);
@@ -415,6 +418,21 @@ public class CharacterFragment extends Fragment {
             otherCharacters.removeAllViews();
             boxChars.setVisibility(View.VISIBLE);
             loadCharsView(getContext(),otherCharacters,player.getOtherCharacters());
+        }
+
+        /* Deletion */
+        if(player.getDeletion() != null){
+            characterWarning.setVisibility(View.VISIBLE);
+            characterWarning.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast toast = Toast.makeText(getContext(),getString(R.string.deletion,player.getDeletionString()),Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.show();
+                }
+            });
+        }else{
+            characterWarning.setVisibility(View.GONE);
         }
     }
 

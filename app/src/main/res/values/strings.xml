@@ -27,6 +27,8 @@
 
     <!-- Character fragment -->
     <string name="name">Name</string>
+    <string name="deletion">Scheduled for deletion on %1$s</string>
+    <string name="warning">Character has a warning.</string>
     <string name="char_summary">Level %1$d %2$s</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
@@ -80,5 +82,4 @@
     <string name="chance">%1$.2f%%</string>
     <string name="city">(%1$s)</string>
     <string name="price">%1$,d</string>
-
 </resources>

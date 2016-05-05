@@ -24,6 +24,7 @@ public class Player {
     private Date lastLogin;
     private String comment;
     private boolean premium;
+    private Date deletion;
     private final List<Death> deathList = new ArrayList<>();
     private final List<Player> otherCharacters = new ArrayList<>();
 
@@ -139,7 +140,7 @@ public class Player {
         try{
             lastLogin = Utils.LONG_DATE.parse(lastLoginString);
         }catch(ParseException e){
-            Log.e("Player","Couldn't parse date for Player: "+this.getName());
+            Log.e("Player","Couldn't parse last login date for Player: "+this.getName());
         }
     }
 
@@ -157,6 +158,22 @@ public class Player {
 
     public void setPremium(boolean premium) {
         this.premium = premium;
+    }
+
+    public Date getDeletion(){
+        return deletion;
+    }
+
+    public String getDeletionString(){
+        return Utils.LONG_DATE.format(deletion);
+    }
+
+    public void setDeletion(String deletionString){
+        try{
+            deletion = Utils.LONG_DATE.parse(deletionString);
+        }catch(ParseException e){
+            Log.e("Player","Couldn't parse deletion date for Player: "+this.getName());
+        }
     }
 
     public List<Death> getDeathList() {
