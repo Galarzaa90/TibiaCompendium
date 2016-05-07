@@ -7,6 +7,10 @@ import android.util.Log;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Contains static methods to handle HTML parsing from the Tibia website
+ * @author Allan Galarza
+ */
 public class Parser {
     /**
      * Parses Tibia's website content and fetches player's data
@@ -18,12 +22,13 @@ public class Parser {
 
         /* In order to reduce regular expression load, we reduce the content string */
         int startIndex = content.indexOf("BoxContent");
-        int endIndex = content.indexOf("<B>Search Character</B>");
-
+        int endIndex = content.indexOf("<B>Search Player</B>");
         if(startIndex < 0){
             return null;
         }
         content = content.substring(startIndex,endIndex);
+
+
         /* Get player's name */
         Matcher m = getMatcher(content, "Name:</td><td>([^<,]+)");
         if(m.find()){
@@ -69,7 +74,6 @@ public class Parser {
             }
             player.setLevel(lvl);
         }
-        player.setLevel(lvl);
 
         /* Get player's achievement points */
         m = getMatcher(content, "Points:</nobr></td><td>(\\d+)");
@@ -82,7 +86,6 @@ public class Parser {
             }
             player.setAchievementPoints(achievements);
         }
-        player.setAchievementPoints(achievements);
 
         /* Get player's world */
         m = getMatcher(content, "World:</td><td>([^<]+)");
@@ -141,13 +144,13 @@ public class Parser {
             player.setPremium(m.group(1).contains("Premium"));
         }
 
-        /* Checking if character has recent deaths */
-        startIndex = content.indexOf("<b>Character Deaths</b>");
+        /* Checking if player has recent deaths */
+        startIndex = content.indexOf("<b>Player Deaths</b>");
         if(startIndex >= 0) {
             /* Reducing the content string to reduce regex load */
             content = content.substring(startIndex);
 
-            /* Getting character's deaths */
+            /* Getting player's deaths */
             m = getMatcher(content, "valign=\"top\" >([^<]+)<\\/td><td>(.+?)<\\/td></tr>");
             while (m.find()) {
                 Death death = new Death();
@@ -178,7 +181,7 @@ public class Parser {
             }
         }
 
-        /* Check if it displays other characters (character not hidden) */
+        /* Check if it displays other characters (player not hidden) */
         startIndex = content.indexOf("<B>Characters</B>");
         if (startIndex >= 0) {
             /* Reducing the content string to reduce regex load */
@@ -188,19 +191,21 @@ public class Parser {
                 Player otherCharacter = new Player();
                 otherCharacter.setWorld(m.group(1));
                 otherCharacter.setName(m.group(2));
-                /* Ignore if it's the current character */
+                /* Ignore if it's the current player */
                 if (player.getName().equalsIgnoreCase(otherCharacter.getName()))
                         continue;
                 player.addCharacter(otherCharacter);
             }
 
         }
-
-
         return player;
     }
 
-
+    /**
+     * Parses Tibia's website content and fetches guild's data
+     * @param content String containing website content
+     * @return A Guild object containing the fetched info or null if the guild was not found
+     */
     public static Guild parseGuild(String content){
         Guild guild = new Guild();
 
@@ -283,14 +288,25 @@ public class Parser {
         return guild;
     }
 
+    /**
+     * Compiles a regular expression, matches a string with the pattern and returns the matcher
+     * @param str String to match
+     * @param regex Regular expression to compile
+     * @return {@code Matcher} for the string and regular expression
+     */
     private static Matcher getMatcher(String str, String regex){
-        Pattern pattern = Pattern.compile(regex);
-        return pattern.matcher(str);
+        return getMatcher(str,regex,0);
     }
 
+    /**
+     * Compiles a regular expression, matches a string with the pattern and returns the matcher
+     * @param str String to match
+     * @param regex Regular expression to compile
+     * @param flags Compiler flags
+     * @return {@code Matcher} for the string and regular expression
+     */
     private static Matcher getMatcher(String str, String regex, int flags){
-        Pattern pattern = Pattern.compile(regex,flags);
-        return pattern.matcher(str);
+        return Pattern.compile(regex,flags).matcher(str);
     }
 
 }

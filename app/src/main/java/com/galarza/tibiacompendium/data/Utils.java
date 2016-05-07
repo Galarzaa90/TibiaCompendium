@@ -5,6 +5,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+/**
+ * Contains constants and static methods used through the application
+ * @author Allan Galarza
+ */
 public class Utils {
     /* Argument keys */
     public static final String ARG_TITLE_RESOURCE = "title_resource";

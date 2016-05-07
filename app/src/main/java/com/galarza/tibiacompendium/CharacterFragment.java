@@ -412,12 +412,12 @@ public class CharacterFragment extends Fragment {
         if(player.getDeathList().size() > 0) {
             characterDeaths.removeAllViews();
             boxDeaths.setVisibility(View.VISIBLE);
-            loadDeathsView(getContext(),characterDeaths,player.getDeathList());
+            loadDeathsView(getContext(),characterDeaths, player.getDeathList());
         }
         if(player.getOtherCharacters().size() > 1) {
             otherCharacters.removeAllViews();
             boxChars.setVisibility(View.VISIBLE);
-            loadCharsView(getContext(),otherCharacters,player.getOtherCharacters());
+            loadCharsView(getContext(),otherCharacters, player.getOtherCharacters());
         }
 
         /* Deletion */
@@ -426,7 +426,7 @@ public class CharacterFragment extends Fragment {
             characterWarning.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast toast = Toast.makeText(getContext(),getString(R.string.deletion,player.getDeletionString()),Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getContext(),getString(R.string.deletion, player.getDeletionString()),Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
                 }

@@ -91,7 +91,7 @@ public class TibiaDatabase extends SQLiteAssetHelper{
             sellOffer.setNpc(c.getString(0));
             sellOffer.setCity(Utils.toTitleCase(c.getString(1)));
             sellOffer.setValue(c.getInt(2));
-            item.addBoughtBy(sellOffer);
+            item.addBuyer(sellOffer);
         }
         c = db.rawQuery("SELECT NPCs.name, NPCs.city, BuyItems.value\n" +
                 "FROM Items, NPCs, BuyItems\n" +
@@ -102,7 +102,7 @@ public class TibiaDatabase extends SQLiteAssetHelper{
             buyOffer.setNpc(c.getString(0));
             buyOffer.setCity(Utils.toTitleCase(c.getString(1)));
             buyOffer.setValue(c.getInt(2));
-            item.addSoldBy(buyOffer);
+            item.addSeller(buyOffer);
         }
         c.close();
         return item;
