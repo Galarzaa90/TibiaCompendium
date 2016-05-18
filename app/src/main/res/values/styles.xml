@@ -25,9 +25,9 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/entry</item>
     </style>
-    <style name="BigEntryText" parent="@android:style/TextAppearance.Medium">
+    <style name="BigTitleText" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/big_entry</item>
+        <item name="android:textSize">@dimen/big_title</item>
     </style>
 
     <style name="RaisedBox" parent="AppTheme">

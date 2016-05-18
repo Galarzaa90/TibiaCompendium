@@ -55,7 +55,7 @@
             tools:text="Category Title"
             android:gravity="center"
             android:drawableStart="@drawable/ic_arrow_left"
-            style="@style/BigEntryText"/>
+            style="@style/BigTitleText"/>
     </LinearLayout>
     <ListView
         android:id="@+id/category_results"
@@ -88,7 +88,7 @@
                     android:gravity="center"
                     tools:text="Item name"
                     android:drawableStart="@drawable/ic_arrow_left"
-                    style="@style/BigEntryText"/>
+                    style="@style/BigTitleText"/>
                 <TextView
                     android:id="@+id/item_look"
                     android:layout_width="wrap_content"

@@ -12,6 +12,8 @@ import java.util.List;
  * @author Allan Galarza
  */
 public class Player {
+    private static final String TAG = "Player";
+
     private String name;
     private String formerNames;
     private String sex;
@@ -228,7 +230,7 @@ public class Player {
         try{
             lastLogin = Utils.LONG_DATE.parse(lastLoginString);
         }catch(ParseException e){
-            Log.e("Player","Couldn't parse last login date for Player: "+this.getName());
+            Log.e(TAG,"setLastLogin: Couldn't parse date for Player: "+this.getName());
         }
     }
 
@@ -281,7 +283,7 @@ public class Player {
         try{
             deletion = Utils.LONG_DATE.parse(deletionString);
         }catch(ParseException e){
-            Log.e("Player","Couldn't parse deletion date for Player: "+this.getName());
+            Log.e(TAG,"setDeletion: Couldn't parse date for Player: "+this.getName());
         }
     }
 

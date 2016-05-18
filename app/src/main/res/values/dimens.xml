@@ -7,7 +7,7 @@
 
     <dimen name="title">14sp</dimen>
     <dimen name="entry">18sp</dimen>
-    <dimen name="big_entry">24sp</dimen>
+    <dimen name="big_title">24sp</dimen>
 
     <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
          https://developer.android.com/design/patterns/navigation-drawer.html -->

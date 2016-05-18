@@ -68,7 +68,7 @@
                     android:id="@+id/guild_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/BigEntryText"
+                    style="@style/BigTitleText"
                     android:gravity="center_horizontal"
                     tools:text="Guild Name"/>
                 <TextView

@@ -10,6 +10,7 @@ import java.util.Date;
  * @author Allan Galarza
  */
 public class GuildMember extends Player {
+    private static final String TAG ="GuildMember";
     private String rank;
     private int rankOrder;
     private String title;
@@ -86,7 +87,7 @@ public class GuildMember extends Player {
         try {
             joined = Utils.SHORT_DATE.parse(joinedString);
         } catch (ParseException e) {
-            Log.e("GuildMember","Couldn't parse date for GuildMember: "+this.getName());
+            Log.e(TAG,"setJoined: Couldn't parse date for GuildMember: "+this.getName());
             joined = null;
         }
     }

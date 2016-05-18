@@ -15,6 +15,8 @@ import java.util.List;
  * @author Allan Galarza
  */
 public class Guild {
+    private static final String TAG ="Guild";
+
     private String name;
     private String logoUrl;
     private String world;
@@ -84,7 +86,7 @@ public class Guild {
         try {
             founded = Utils.SHORT_DATE.parse(foundedString);
         } catch (ParseException e) {
-            Log.e("Guild","Couldn't parse date for Guild: "+this.getName());
+            Log.e("TAG","setFounded: Couldn't parse date for Guild: "+this.getName());
             founded = null;
         }
     }

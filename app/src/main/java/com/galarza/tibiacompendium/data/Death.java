@@ -10,6 +10,8 @@ import java.util.Date;
  * @author Allan Galarza
  */
 public class Death{
+    private static final String TAG ="Death";
+
     private Date date;
     private boolean byPlayer;
     private String killer; //TODO: Replace with List of killers
@@ -29,7 +31,7 @@ public class Death{
         try{
             date = Utils.LONG_DATE.parse(dateString);
         }catch (ParseException e) {
-            Log.e("Death","Couldn't parse date");
+            Log.e(TAG,"setDate: Couldn't parse date");
         }
     }
 

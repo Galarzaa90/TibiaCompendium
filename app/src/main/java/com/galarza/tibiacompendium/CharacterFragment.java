@@ -112,13 +112,13 @@ public class CharacterFragment extends Fragment {
         boxLoading = (RelativeLayout)rootView.findViewById(R.id.loading_box);
         boxNoResults = (RelativeLayout)rootView.findViewById(R.id.no_results_box);
 
-        characterGender = (ImageView)rootView.findViewById(R.id.char_gender);
+        characterGender = (ImageView)rootView.findViewById(R.id.gender);
         characterWarning = (ImageView)rootView.findViewById(R.id.warning);
-        characterName = (TextView)rootView.findViewById(R.id.char_name);
-        characterSummary = (TextView)rootView.findViewById(R.id.char_summary);
-        characterResidence = (TextView)rootView.findViewById(R.id.char_residence);
-        characterHouse = (TextView)rootView.findViewById(R.id.char_house);
-        characterAchievements = (TextView)rootView.findViewById(R.id.char_achievements);
+        characterName = (TextView)rootView.findViewById(R.id.name);
+        characterSummary = (TextView)rootView.findViewById(R.id.summary);
+        characterResidence = (TextView)rootView.findViewById(R.id.residence);
+        characterHouse = (TextView)rootView.findViewById(R.id.house);
+        characterAchievements = (TextView)rootView.findViewById(R.id.achievements);
         characterGuild = (TextView)rootView.findViewById(R.id.char_guild);
         characterFormerNames = (TextView)rootView.findViewById(R.id.char_former_names);
         characterFormerWorld = (TextView)rootView.findViewById(R.id.char_former_world);
@@ -341,6 +341,8 @@ public class CharacterFragment extends Fragment {
             characterGender.setImageResource(R.drawable.ic_male);
             characterGender.setContentDescription(getString(R.string.male));
         }
+        /* Achievement points */
+        characterAchievements.setText(String.valueOf(player.getAchievementPoints()));
         /* Residence */
         characterResidence.setText(getString(
                 R.string.char_residence,
@@ -461,7 +463,7 @@ public class CharacterFragment extends Fragment {
                 (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for(Player player : players) {
             View rowView = inflater.inflate(R.layout.row_other_char, null);
-            TextView charName = (TextView) rowView.findViewById(R.id.char_name);
+            TextView charName = (TextView) rowView.findViewById(R.id.name);
             TextView charWorld = (TextView) rowView.findViewById(R.id.char_world);
 
             charName.setText(player.getName());
@@ -470,7 +472,7 @@ public class CharacterFragment extends Fragment {
             rowView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new fetchData(getContext()).execute(((TextView) v.findViewById(R.id.char_name)).getText().toString());
+                    new fetchData(getContext()).execute(((TextView) v.findViewById(R.id.name)).getText().toString());
                 }
             });
             parent.addView(rowView);

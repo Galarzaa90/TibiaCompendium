@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
  * @author Allan Galarza
  */
 public class Parser {
+    private static final String TAG = "Parser";
     /**
      * Parses Tibia's website content and fetches player's data
      * @param content String containing website content
@@ -22,7 +23,7 @@ public class Parser {
 
         /* In order to reduce regular expression load, we reduce the content string */
         int startIndex = content.indexOf("BoxContent");
-        int endIndex = content.indexOf("<B>Search Player</B>");
+        int endIndex = content.indexOf("<B>Search Character</B>");
         if(startIndex < 0){
             return null;
         }
@@ -70,7 +71,7 @@ public class Parser {
             try{
                 lvl = Integer.parseInt(m.group(1));
             }catch(NumberFormatException nfe){
-                Log.e("Parser","Couldn't parse level: \""+m.group(1)+"\".");
+                Log.e(TAG,"parseCharacter: Couldn't parse level: \""+m.group(1)+"\".");
             }
             player.setLevel(lvl);
         }
@@ -82,7 +83,7 @@ public class Parser {
             try{
                 achievements = Integer.parseInt(m.group(1));
             }catch(NumberFormatException nfe){
-                Log.e("Parser","Couldn't parse achievement points: \""+m.group(1)+"\".");
+                Log.e(TAG,"parseCharacter: Couldn't parse achievement points: \""+m.group(1)+"\".");
             }
             player.setAchievementPoints(achievements);
         }
@@ -272,7 +273,7 @@ public class Parser {
             try{
                 level = Integer.parseInt(m.group(5));
             }catch(NumberFormatException nfe){
-                Log.e("Parser","Couldn't parse level: \""+m.group(5)+"\".");
+                Log.e(TAG,"parseGuild: Couldn't parse level: \""+m.group(5)+"\".");
             }
             member.setLevel(level);
             /* Getting join date */
@@ -282,7 +283,7 @@ public class Parser {
             member.setOnline(m.group(7).equalsIgnoreCase("green"));
 
             if(!guild.addMember(member)){
-                Log.e("Parser:parseGuild","Couldn't add GuildMember:"+member.getName());
+                Log.e(TAG,"parseGuild: Couldn't add GuildMember:"+member.getName());
             }
         }
         return guild;
