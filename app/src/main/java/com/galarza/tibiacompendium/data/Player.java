@@ -220,7 +220,11 @@ public class Player {
      * @return string displaying the last login of the character
      */
     public String getLastLoginString(){
-        return Utils.LONG_DATE.format(lastLogin);
+        if (lastLogin != null){
+            return Utils.LONG_DATE.format(lastLogin);
+        }else{
+            return "Never logged in";
+        }
     }
 
     /**
