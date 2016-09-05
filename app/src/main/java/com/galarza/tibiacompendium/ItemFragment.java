@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -237,9 +238,9 @@ public class ItemFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        ((MainActivity) context).onSectionAttached(
-                getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
         super.onAttach(context);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
 
     }
 

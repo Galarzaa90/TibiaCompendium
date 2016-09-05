@@ -3,12 +3,9 @@ package com.galarza.tibiacompendium;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +13,7 @@ import android.widget.Button;
 
 import com.galarza.tibiacompendium.data.Utils;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
+public class MainActivity extends AppCompatActivity {
     private CharSequence mTitle;
 
     public Fragment fragment;
@@ -36,77 +23,14 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-    }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container,HomeFragment.newInstance())
+                .addToBackStack(null)
+                .commit();
 
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        int in = R.anim.slide_in_right;
-        int out = R.anim.slide_out_left;
-        switch(position){
-            case 1:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container,ItemFragment.newInstance())
-                        .setCustomAnimations(in,out,in,out)
-                        .addToBackStack(null)
-                        .commit();
-                break;
-            case 2:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container,CharacterFragment.newInstance())
-                        .setCustomAnimations(in,out,in,out)
-                        .addToBackStack(null)
-                        .commit();
-                break;
-            case 3:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, GuildFragment.newInstance())
-                        .setCustomAnimations(in,out,in,out)
-                        .addToBackStack(null)
-                        .commit();
-                break;
-            default:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, HomeFragment.newInstance())
-                        .setCustomAnimations(in,out,in,out)
-                        .addToBackStack(null)
-                        .commit();
-                break;
-        }
-    }
-
-    public void onSectionAttached(int titleResource) {
-        mTitle = getString(titleResource);
-    }
-
-    private void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(mTitle);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -135,7 +59,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class HomeFragment extends Fragment {
+    public static class HomeFragment extends  Fragment{
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -205,9 +129,9 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onAttach(Context context) {
-            ((MainActivity) context).onSectionAttached(
-                    getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
             super.onAttach(context);
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            toolbar.setTitle(getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
 
         }
 

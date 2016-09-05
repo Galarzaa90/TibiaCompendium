@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -233,9 +234,9 @@ public class GuildFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        ((MainActivity) context).onSectionAttached(
-                getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
         super.onAttach(context);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
 
     }
 
