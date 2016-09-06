@@ -144,9 +144,8 @@ public class Parser {
         if(m.find()){
             player.setPremium(m.group(1).contains("Premium"));
         }
-
         /* Checking if player has recent deaths */
-        startIndex = content.indexOf("<b>Player Deaths</b>");
+        startIndex = content.indexOf("<b>Character Deaths</b>");
         if(startIndex >= 0) {
             /* Reducing the content string to reduce regex load */
             content = content.substring(startIndex);
