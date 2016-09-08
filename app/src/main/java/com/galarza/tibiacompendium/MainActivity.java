@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         public void onAttach(Context context) {
             super.onAttach(context);
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-            toolbar.setTitle(getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
+            //toolbar.setTitle(R.string.app_name);
 
         }
 

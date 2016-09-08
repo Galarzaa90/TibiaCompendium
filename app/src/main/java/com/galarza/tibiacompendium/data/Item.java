@@ -1,8 +1,5 @@
 package com.galarza.tibiacompendium.data;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +12,7 @@ public class Item {
     private int value;
     private int weight;
     private boolean stackable;
-    private Bitmap image;
+    private byte[] image;
     private String lookText;
     private List<ItemDrop> droppedBy = new ArrayList<>();
     private List<NpcOffer> buyers = new ArrayList<>();
@@ -80,16 +77,15 @@ public class Item {
     /**
      * @return the bitmap of the image
      */
-    public Bitmap getImage() {
+    public byte[] getImage() {
         return image;
     }
 
     /**
-     * Converts an image binary into a bitmap
-     * @param image image in blob format
+     * @param image image bytes
      */
-    public void setImageFromBlob(byte[] image) {
-        this.image = BitmapFactory.decodeByteArray(image,0,image.length);
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     /**

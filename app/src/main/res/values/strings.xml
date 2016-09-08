@@ -74,4 +74,8 @@
     <string name="chance">%1$.2f%%</string>
     <string name="city">(%1$s)</string>
     <string name="price">%1$,d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_hint_creature">Search creature</string>
 </resources>

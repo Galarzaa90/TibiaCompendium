@@ -39,7 +39,8 @@ public class TibiaDatabase extends SQLiteAssetHelper{
         while(c.moveToNext()){
             Item item = new Item();
             item.setName(c.getString(0));
-            item.setImageFromBlob(c.getBlob(2));
+            //item.setImageFromBlob(c.getBlob(2));
+            item.setImage(c.getBlob(2));
             item.setLookText(c.getString(3));
             items.add(item);
         }

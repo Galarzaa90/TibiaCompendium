@@ -2,18 +2,20 @@ package com.galarza.tibiacompendium;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -25,7 +27,12 @@ import com.galarza.tibiacompendium.data.NpcOffer;
 import com.galarza.tibiacompendium.data.TibiaDatabase;
 import com.galarza.tibiacompendium.data.Utils;
 
+import java.io.IOException;
 import java.util.List;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
+import pl.droidsonroids.gif.GifTextView;
 
 
 public class ItemFragment extends Fragment {
@@ -151,6 +158,7 @@ public class ItemFragment extends Fragment {
         return rootView;
     }
 
+
     private class fetchData extends AsyncTask<String, Integer, List<Item>> {
         private Context mContext;
         public fetchData(Context context){
@@ -240,7 +248,7 @@ public class ItemFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
+        //toolbar.setTitle(R.string.title_items);
 
     }
 
@@ -268,7 +276,7 @@ public class ItemFragment extends Fragment {
                 convertView = inflater.inflate(layout,null);
 
                 viewHolder.name = (TextView)convertView.findViewById(R.id.item_name);
-                viewHolder.image = (ImageView)convertView.findViewById(R.id.image);
+                viewHolder.image = (GifImageView)convertView.findViewById(R.id.image);
 
                 convertView.setTag(viewHolder);
             }else{
@@ -278,7 +286,15 @@ public class ItemFragment extends Fragment {
             final Item item = objects.get(position);
 
             viewHolder.name.setText(item.getName());
-            viewHolder.image.setImageBitmap(item.getImage());
+            //viewHolder.image.setImageBitmap(item.getImage());
+            GifDrawable gifFromBytes = null;
+            try {
+                gifFromBytes = new GifDrawable(item.getImage());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            viewHolder.image.setImageDrawable(gifFromBytes);
+
 
             convertView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -292,7 +308,7 @@ public class ItemFragment extends Fragment {
 
         private class ViewHolder{
             TextView name;
-            ImageView image;
+            GifImageView image;
         }
     }
 
@@ -305,12 +321,22 @@ public class ItemFragment extends Fragment {
         final String[] categorySort = getResources().getStringArray(R.array.categories_sort);
         final TypedArray categoryDrawables = getResources().obtainTypedArray(R.array.categories_drawables);
         final String[] categoryName = getResources().getStringArray(R.array.categories_name);
+
+        int screenWidth = getScreenWidth();
+        int cellWidth = screenWidth / 2;
+        GridLayout.LayoutParams p;
         for(int position = 0; position < categoryTitles.length; position++){
             View view = inflater.inflate(R.layout.category_item,parent,false);
-            TextView categoryView = (TextView)view.findViewById(R.id.category);
+            GifTextView categoryView = (GifTextView) view.findViewById(R.id.category);
 
             categoryView.setText(categoryTitles[position]);
-            categoryView.setCompoundDrawablesRelativeWithIntrinsicBounds(categoryDrawables.getDrawable(position),null,null,null);
+            GifDrawable icon = null;
+            try {
+                 icon = new GifDrawable(getResources(),categoryDrawables.getResourceId(position,0));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            categoryView.setCompoundDrawablesRelativeWithIntrinsicBounds(icon,null,null,null);
             final int index = position;
             view.setOnClickListener(new OnClickListener() {
                 @Override
@@ -321,13 +347,23 @@ public class ItemFragment extends Fragment {
                     categoryLayout.setVisibility(View.GONE);
                 }
             });
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                p = (GridLayout.LayoutParams) view.getLayoutParams();
+                p.width = cellWidth;
+            }
+
 
             parent.addView(view);
         }
         categoryDrawables.recycle();
     }
 
-
+    private int getScreenWidth(){
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return  size.x;
+    }
 
     public void loadDropsView(Context context, ViewGroup parent, List<ItemDrop> itemDrops) {
         parent.removeAllViews();
