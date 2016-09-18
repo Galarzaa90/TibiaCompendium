@@ -89,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/guild_members"
                     tools:text="There are 10 members online."/>
-                <ImageView
+                <pl.droidsonroids.gif.GifImageView
                     android:id="@+id/guild_logo"
                     android:contentDescription="@string/guild_logo"
                     android:layout_width="64dp"

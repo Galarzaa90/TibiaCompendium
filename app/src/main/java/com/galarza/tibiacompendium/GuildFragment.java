@@ -31,7 +31,6 @@ import com.galarza.tibiacompendium.data.Guild;
 import com.galarza.tibiacompendium.data.GuildMember;
 import com.galarza.tibiacompendium.data.Parser;
 import com.galarza.tibiacompendium.data.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,8 +39,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.List;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,7 +63,7 @@ public class GuildFragment extends Fragment {
     private RelativeLayout boxNoResults;
 
     private TextView guildName;
-    private ImageView guildLogo;
+    private GifImageView guildLogo;
     private TextView guildInfo;
     private TextView guildMembers;
     private TextView guildOnline;
@@ -100,7 +106,7 @@ public class GuildFragment extends Fragment {
         boxNoResults = (RelativeLayout)rootView.findViewById(R.id.no_results_box);
 
         guildName = (TextView)rootView.findViewById(R.id.guild_name);
-        guildLogo = (ImageView)rootView.findViewById(R.id.guild_logo);
+        guildLogo = (GifImageView) rootView.findViewById(R.id.guild_logo);
         guildInfo = (TextView)rootView.findViewById(R.id.guild_info);
         guildMembers = (TextView)rootView.findViewById(R.id.guild_members);
         guildOnline = (TextView)rootView.findViewById(R.id.guild_members_online);
@@ -229,6 +235,45 @@ public class GuildFragment extends Fragment {
             loadViews(guild);
         }
     }
+    
+    private class fetchGuildLogo extends AsyncTask<String,Integer,GifDrawable>{
+
+        private final String logoUrl;
+
+        public fetchGuildLogo(String logoUrl) {
+            this.logoUrl = logoUrl;
+        }
+
+        @Override
+        protected GifDrawable doInBackground(String... strings) {
+            try {
+                URLConnection urlConnection = new URL(logoUrl).openConnection();
+                urlConnection.connect();
+                final int contentLength = urlConnection.getContentLength();
+                ByteBuffer buffer = ByteBuffer.allocateDirect(contentLength);
+                ReadableByteChannel channel = Channels.newChannel(urlConnection.getInputStream());
+                while (buffer.remaining() > 0){
+                    channel.read(buffer);
+                }
+                channel.close();
+                return new GifDrawable(buffer);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(GifDrawable gifDrawable) {
+            if (gifDrawable != null){
+                guildLogo.setImageDrawable(gifDrawable);
+            }else{
+                guildLogo.setImageResource(R.drawable.default_guildlogo);
+            }
+        }
+    }
 
 
 
@@ -249,7 +294,7 @@ public class GuildFragment extends Fragment {
         boxNoResults.setVisibility(View.GONE);
         guildBox.setVisibility(View.VISIBLE);
         /* Guild logo */
-        Picasso.with(getContext()).load(guild.getLogoUrl()).into(guildLogo);
+        new fetchGuildLogo(guild.getLogoUrl()).execute();
         /* Guild name */
         guildName.setText(guild.getName());
         /* Guild info */
