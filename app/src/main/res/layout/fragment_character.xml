@@ -3,29 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/activity_margin"
     android:orientation="vertical"
     tools:context=".CharacterFragment">
     <!-- Search player box -->
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/RaisedBox">
-        <EditText
-            android:id="@+id/search_char"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/search_hint_player"
-            android:singleLine="true"
-            android:imeOptions="actionSearch"
-            android:inputType="text"/>
-        <Button
-            android:id="@+id/search_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:theme="@style/RaisedButton"
-            android:text="@string/search" />
-    </LinearLayout>
+        android:padding="@dimen/cardview_padding">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/search_char"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/search_hint_player"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1"
+                android:gravity="center_vertical"/>
+            <Button
+                android:id="@+id/search_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/RaisedButton"
+                android:text="@string/search" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -39,7 +45,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/loading_box"
-                android:visibility="gone">
+                android:visibility="gone"
+                tools:visibility="visible">
                 <ProgressBar
                     android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
@@ -50,7 +57,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/no_results_box"
-                android:visibility="gone">
+                android:visibility="gone"
+                tools:visibility="visible">
                 <TextView
                     android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
@@ -58,226 +66,245 @@
                     android:text="@string/no_results_char"/>
             </RelativeLayout>
             <!-- Player info box -->
-            <LinearLayout
-                android:id="@+id/character_box"
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/RaisedBox"
+                android:id="@+id/character_box"
                 android:visibility="gone"
-                tools:visibility="visible"
-                android:orientation="vertical">
+                tools:visibility="visible">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <ImageView
-                        android:id="@+id/warning"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:src="@drawable/ic_warning"
-                        android:tint="@color/red"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        android:contentDescription="@string/warning"/>
-                    <TextView
-                        android:id="@+id/name"
-                        android:layout_height="match_parent"
-                        android:layout_width="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_weight="10"
-                        tools:text="Name"
-                        style="@style/BigTitleText"/>
-                    <ImageView
-                        android:id="@+id/gender"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:src="@drawable/ic_male"
-                        android:contentDescription="@string/male" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:id="@+id/summary"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="100"
-                        style="@style/EntryText"
-                        tools:text="Level 123 Vocation"/>
-                    <TextView
-                        android:id="@+id/achievements"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="20"
-                        style="@style/EntryText"/>
-                    <ImageView
-                        android:layout_width="18sp"
-                        android:layout_height="18sp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_achievements"
-                        android:contentDescription="@string/achievements" />
-                </LinearLayout>
-                <TextView
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="@string/residence"
-                    style="@style/TitleText"/>
-                <TextView
-                    android:id="@+id/residence"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    tools:text="City in World"
-                    style="@style/EntryText"/>
-                <LinearLayout
-                    android:id="@+id/box_house"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="@dimen/cardview_padding">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/warning"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:src="@drawable/ic_warning"
+                            android:tint="@color/red"
+                            android:visibility="gone"
+                            tools:visibility="visible"
+                            android:contentDescription="@string/warning"/>
+                        <TextView
+                            android:id="@+id/name"
+                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:gravity="center_vertical"
+                            android:layout_weight="10"
+                            tools:text="Name"
+                            style="@style/BigTitleText"/>
+                        <ImageView
+                            android:id="@+id/gender"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:src="@drawable/ic_male"
+                            android:contentDescription="@string/male" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/summary"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="100"
+                            style="@style/EntryText"
+                            tools:text="Level 123 Vocation"/>
+                        <TextView
+                            android:id="@+id/achievements"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="20"
+                            style="@style/EntryText"/>
+                        <ImageView
+                            android:layout_width="18sp"
+                            android:layout_height="18sp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_achievements"
+                            android:contentDescription="@string/achievements" />
+                    </LinearLayout>
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:text="@string/house"/>
-                    <TextView
-                        android:id="@+id/house"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        tools:text="House"
-                        style="@style/EntryText"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/box_guild"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:text="@string/guild"
+                        android:text="@string/residence"
                         style="@style/TitleText"/>
                     <TextView
-                        android:id="@+id/char_guild"
+                        android:id="@+id/residence"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        tools:text="Rank of the Guild"
+                        tools:text="City in World"
+                        style="@style/EntryText"/>
+                    <LinearLayout
+                        android:id="@+id/box_house"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="@string/house"/>
+                        <TextView
+                            android:id="@+id/house"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            tools:text="House"
+                            style="@style/EntryText"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/box_guild"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="@string/guild"
+                            style="@style/TitleText"/>
+                        <TextView
+                            android:id="@+id/char_guild"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            tools:text="Rank of the Guild"
+                            style="@style/EntryText"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/box_former_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="@string/former_names"/>
+                        <TextView
+                            android:id="@+id/char_former_names"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            tools:text="Former name, Former name 2, ..."
+                            style="@style/EntryText"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/box_former_world"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="@string/former_world"/>
+                        <TextView
+                            android:id="@+id/char_former_world"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            tools:text="Formwer World"
+                            style="@style/EntryText"/>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="@string/last_login"/>
+                    <TextView
+                        android:id="@+id/char_last_login"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        tools:text="Sep 09 2015 13:37 PST"
                         style="@style/EntryText"/>
                 </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/box_former_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:text="@string/former_names"/>
-                    <TextView
-                        android:id="@+id/char_former_names"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        tools:text="Former name, Former name 2, ..."
-                        style="@style/EntryText"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/box_former_world"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:text="@string/former_world"/>
-                    <TextView
-                        android:id="@+id/char_former_world"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        tools:text="Formwer World"
-                        style="@style/EntryText"/>
-                </LinearLayout>
-                <TextView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="@string/last_login"/>
-                <TextView
-                    android:id="@+id/char_last_login"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    tools:text="Sep 09 2015 13:37 PST"
-                    style="@style/EntryText"/>
-            </LinearLayout>
-            <LinearLayout
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
                 android:id="@+id/comment_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/RaisedBox"
-                android:orientation="vertical"
+                android:layout_marginTop="@dimen/cardview_margin"
                 android:visibility="gone"
-                tools:visibility="visible"
-                android:animateLayoutChanges="true">
-                <TextView
-                    android:id="@+id/comment_header"
+                tools:visibility="visible">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/comment"
-                    style="@style/TitleText"
-                    android:drawableEnd="@drawable/ic_arrow_drop_down"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/char_comment"
-                    android:visibility="gone"
-                    style="@style/EntryText"/>
-            </LinearLayout>
-            <LinearLayout
+                    android:orientation="vertical"
+                    android:animateLayoutChanges="true"
+                    android:padding="@dimen/cardview_padding">
+                    <TextView
+                        android:id="@+id/comment_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comment"
+                        style="@style/TitleText"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/char_comment"
+                        android:visibility="gone"
+                        style="@style/EntryText"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
                 android:id="@+id/deaths_box"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/RaisedBox"
-                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/cardview_margin"
                 android:visibility="gone"
-                tools:visibility="visible"
-                android:animateLayoutChanges="true">
-                <TextView
-                    android:id="@+id/deaths_header"
+                tools:visibility="visible">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/deaths"
-                    style="@style/TitleText"
-                    android:drawableEnd="@drawable/ic_arrow_drop_down"/>
-                <LinearLayout
-                    android:id="@+id/char_deaths"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:padding="@dimen/cardview_padding"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:animateLayoutChanges="true">
+                    <TextView
+                        android:id="@+id/deaths_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/deaths"
+                        style="@style/TitleText"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down"/>
+                    <LinearLayout
+                        android:id="@+id/char_deaths"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
                 android:id="@+id/chars_box"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/RaisedBox"
-                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/cardview_margin"
                 android:visibility="gone"
-                tools:visibility="visible"
-                android:animateLayoutChanges="true">
-                <TextView
-                    android:id="@+id/chars_header"
+                tools:visibility="visible">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/other_chars"
-                    style="@style/TitleText"
-                    android:drawableEnd="@drawable/ic_arrow_drop_down"/>
-                <LinearLayout
-                    android:id="@+id/other_chars"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:padding="@dimen/cardview_padding"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:animateLayoutChanges="true">
+                    <TextView
+                        android:id="@+id/chars_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/other_chars"
+                        style="@style/TitleText"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down"/>
+                    <LinearLayout
+                        android:id="@+id/other_chars"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

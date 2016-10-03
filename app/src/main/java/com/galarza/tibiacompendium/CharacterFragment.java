@@ -49,7 +49,7 @@ public class CharacterFragment extends Fragment {
     private Player player = null;
 
     /* Views used in the async task */
-    private LinearLayout characterInfo;
+    private ViewGroup characterInfo;
     private RelativeLayout boxLoading;
     private RelativeLayout boxNoResults;
 
@@ -73,9 +73,10 @@ public class CharacterFragment extends Fragment {
     private LinearLayout boxGuild;
     private LinearLayout boxFormerName;
     private LinearLayout boxFormerWorld;
-    private LinearLayout boxComment;
-    private LinearLayout boxDeaths;
-    private LinearLayout boxChars;
+
+    private ViewGroup boxComment;
+    private ViewGroup boxDeaths;
+    private ViewGroup boxChars;
 
     public static CharacterFragment newInstance() {
         CharacterFragment fragment = new CharacterFragment();
@@ -107,7 +108,7 @@ public class CharacterFragment extends Fragment {
         ((MainActivity)getActivity()).fragment = this;
 
         /* Views used in the async task */
-        characterInfo = (LinearLayout) rootView.findViewById(R.id.character_box);
+        characterInfo = (ViewGroup) rootView.findViewById(R.id.character_box);
         boxLoading = (RelativeLayout)rootView.findViewById(R.id.loading_box);
         boxNoResults = (RelativeLayout)rootView.findViewById(R.id.no_results_box);
 
@@ -131,9 +132,10 @@ public class CharacterFragment extends Fragment {
         boxGuild = (LinearLayout)rootView.findViewById(R.id.box_guild);
         boxFormerName = (LinearLayout)rootView.findViewById(R.id.box_former_name);
         boxFormerWorld = (LinearLayout)rootView.findViewById(R.id.box_former_world);
-        boxComment = (LinearLayout)rootView.findViewById(R.id.comment_box);
-        boxDeaths = (LinearLayout)rootView.findViewById(R.id.deaths_box);
-        boxChars = (LinearLayout) rootView.findViewById(R.id.chars_box);
+
+        boxComment = (ViewGroup) rootView.findViewById(R.id.comment_box);
+        boxDeaths = (ViewGroup)rootView.findViewById(R.id.deaths_box);
+        boxChars = (ViewGroup) rootView.findViewById(R.id.chars_box);
 
         final EditText searchField = (EditText)rootView.findViewById(R.id.search_char);
         searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -298,7 +300,9 @@ public class CharacterFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
+        if(toolbar != null) {
+            toolbar.setTitle(getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
+        }
     }
 
     private void loadViews(final Player player){

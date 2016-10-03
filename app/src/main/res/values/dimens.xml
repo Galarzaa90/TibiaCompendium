@@ -1,6 +1,10 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_margin">10dp</dimen>
+    <!-- Screen margin -->
+    <dimen name="activity_margin">5dp</dimen>
+    <!-- Padding for raised boxes, must be set a layout inside cardview, instead of CardView itself -->
+    <dimen name="cardview_padding">3dp</dimen>
+    <!-- Top margin for CardViews -->
+    <dimen name="cardview_margin">5dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="row_box_padding">5dp</dimen>
@@ -8,9 +12,5 @@
     <dimen name="title">14sp</dimen>
     <dimen name="entry">18sp</dimen>
     <dimen name="big_title">24sp</dimen>
-
-    <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
-         https://developer.android.com/design/patterns/navigation-drawer.html -->
-    <dimen name="navigation_drawer_width">240dp</dimen>
 
 </resources>
