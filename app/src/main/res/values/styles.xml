@@ -27,6 +27,7 @@
         <item name="android:textSize">@dimen/big_title</item>
     </style>
 
+
     <style name="RaisedBox" parent="AppTheme">
         <item name="android:background">@color/white</item>
         <item name="android:padding">4dp</item>
