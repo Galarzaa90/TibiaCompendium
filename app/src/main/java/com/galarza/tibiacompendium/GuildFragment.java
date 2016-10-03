@@ -3,6 +3,7 @@ package com.galarza.tibiacompendium;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -268,7 +269,9 @@ public class GuildFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
+        if(toolbar != null) {
+            toolbar.setTitle(getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
+        }
 
     }
 
@@ -357,15 +360,16 @@ public class GuildFragment extends Fragment {
         private final List<GuildMember> objects;
         private final int layout;
 
-        public MemberListAdapter(Context context, List<GuildMember> objects) {
+        MemberListAdapter(Context context, List<GuildMember> objects) {
             super(context, R.layout.row_member, objects);
             this.context = context;
             this.layout = R.layout.row_member;
             this.objects = objects;
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             final ViewHolder viewHolder;
             if(convertView == null) {
                 LayoutInflater inflater =
