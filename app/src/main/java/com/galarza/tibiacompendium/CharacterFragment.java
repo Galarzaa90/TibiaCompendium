@@ -1,9 +1,6 @@
 package com.galarza.tibiacompendium;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.galarza.tibiacompendium.data.Death;
+import com.galarza.tibiacompendium.data.NetworkUtils;
 import com.galarza.tibiacompendium.data.Parser;
 import com.galarza.tibiacompendium.data.Player;
 import com.galarza.tibiacompendium.data.Utils;
@@ -225,24 +223,13 @@ public class CharacterFragment extends Fragment {
 
     private class fetchData extends AsyncTask<String, Integer, Player> {
         private Context mContext;
-        public fetchData(Context context){
+        fetchData(Context context){
             mContext = context;
         }
 
         @Override
         protected Player doInBackground(String... params) {
-            ConnectivityManager manager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-            Network[] networks = manager.getAllNetworks();
-            boolean isConnected = false;
-            for(Network network : networks){
-                NetworkInfo networkInfo = manager.getNetworkInfo(network);
-                if(networkInfo != null && (networkInfo.getType() == ConnectivityManager.TYPE_WIFI ||
-                        networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) && networkInfo.isConnected()){
-                    isConnected = true;
-                    break;
-                }
-            }
-            if(!isConnected){
+            if(!NetworkUtils.isConnected(mContext)){
                 publishProgress(Utils.NO_NETWORK_ENABLED);
                 return null;
             }
