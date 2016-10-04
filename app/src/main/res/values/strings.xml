@@ -40,7 +40,7 @@
     <string name="comment">Comment</string>
     <string name="no_results_char">Character does not exist.</string>
     <string name="deaths">Deaths</string>
-    <string name="death_details">%1$s at Level %2$d by %3$s</string>
+    <string name="death_details">%1$s at level %2$d by %3$s</string>
     <string name="other_chars">Other characters</string>
 
     <!-- Guild fragment -->
