@@ -403,8 +403,8 @@ public class GuildFragment extends Fragment {
             }
             viewHolder.summary.setText(getString(R.string.char_summary, member.getLevel(), member.getVocation()));
             viewHolder.joined.setText(member.getJoinedString());
-            if (!member.isOnline()) {
-                viewHolder.online.setVisibility(View.INVISIBLE);
+            if (member.isOnline()) {
+                viewHolder.online.setVisibility(View.VISIBLE);
             }else{
                 viewHolder.online.setVisibility(View.GONE);
             }
