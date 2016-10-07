@@ -1,62 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/activity_margin"
+    android:orientation="vertical"
     android:animateLayoutChanges="true"
     tools:context=".ItemFragment">
     <!-- Search item -->
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/RaisedBox">
-        <EditText
-            android:id="@+id/search_item"
-            android:layout_width="0dp"
+        android:layout_marginTop="@dimen/cardview_margin"
+        android:layout_marginBottom="@dimen/cardview_margin">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/search_hint_item"
-            android:singleLine="true"
-            android:imeOptions="actionSearch"
-            android:inputType="text"/>
-        <Button
-            android:id="@+id/search_button"
-            android:elevation="2dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:theme="@style/RaisedButton"
-            android:text="@string/search" />
-    </LinearLayout>
-    <GridLayout
-        android:id="@+id/category_container"
+            android:padding="@dimen/cardview_padding">
+            <EditText
+                android:id="@+id/search_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/search_hint_item"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1" />
+            <Button
+                android:id="@+id/search_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:theme="@style/RaisedButton"
+                android:text="@string/search" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/category_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnCount="2"
-        android:layout_margin="1dp"
-        android:useDefaultMargins="false"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
-        android:animateLayoutChanges="true"
-        android:visibility="visible"/>
-    <LinearLayout
+        android:scrollbars="vertical"/>
+    <android.support.v7.widget.CardView
         android:id="@+id/category_header_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/RaisedBoxTouchable"
+        android:layout_marginTop="@dimen/cardview_margin"
+        android:layout_marginBottom="@dimen/cardview_margin"
         android:visibility="gone"
         tools:visibility="visible">
-        <TextView
-            android:id="@+id/category_header"
+        <LinearLayout
+            android:padding="@dimen/cardview_padding"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Category Title"
-            android:gravity="center"
-            android:drawableStart="@drawable/ic_arrow_left"
-            style="@style/BigTitleText"/>
-    </LinearLayout>
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/category_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Category Title"
+                android:gravity="center"
+                android:drawableStart="@drawable/ic_arrow_left"
+                style="@style/BigTitleText"/>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
     <ListView
         android:id="@+id/category_results"
         android:layout_width="match_parent"
@@ -76,98 +81,122 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                style="@style/RaisedBox">
-                <TextView
-                    android:id="@+id/item_name"
+                android:layout_marginTop="@dimen/cardview_margin"
+                android:layout_marginBottom="@dimen/cardview_margin">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    tools:text="Item name"
-                    android:drawableStart="@drawable/ic_arrow_left"
-                    style="@style/BigTitleText"/>
-                <TextView
-                    android:id="@+id/item_look"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Look text"
-                    android:textColor="@color/TibiaLookColor"/>
-            </LinearLayout>
+                    android:orientation="vertical"
+                    android:padding="@dimen/cardview_padding">
+                    <TextView
+                        android:id="@+id/item_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        tools:text="Item name"
+                        android:drawableStart="@drawable/ic_arrow_left"
+                        style="@style/BigTitleText"/>
+                    <TextView
+                        android:id="@+id/item_look"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Look text"
+                        android:textColor="@color/TibiaLookColor"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
             <!-- Bought by box -->
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:id="@+id/buyers_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                style="@style/RaisedBox">
-                <TextView
-                    android:id="@+id/buyers_header"
+                android:layout_marginTop="@dimen/cardview_margin"
+                android:layout_marginBottom="@dimen/cardview_margin">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/bought_by"
-                    android:drawableEnd="@drawable/ic_arrow_drop_down"
-                    style="@style/TitleText"/>
-                <LinearLayout
-                    android:id="@+id/item_buyers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:padding="@dimen/cardview_padding"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/buyers_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bought_by"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down"
+                        style="@style/TitleText"/>
+                    <LinearLayout
+                        android:id="@+id/item_buyers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
             <!-- Bought by box -->
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:id="@+id/sellers_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                style="@style/RaisedBox">
-                <TextView
-                    android:id="@+id/sellers_header"
+                android:layout_marginTop="@dimen/cardview_margin"
+                android:layout_marginBottom="@dimen/cardview_margin">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/sold_by"
-                    android:drawableEnd="@drawable/ic_arrow_drop_down"
-                    style="@style/TitleText"/>
-                <LinearLayout
-                    android:id="@+id/item_sellers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:padding="@dimen/cardview_padding"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/sellers_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sold_by"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down"
+                        style="@style/TitleText"/>
+                    <LinearLayout
+                        android:id="@+id/item_sellers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
             <!-- Dropped by box -->
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:id="@+id/drops_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                style="@style/RaisedBox">
-                <TextView
-                    android:id="@+id/drops_header"
+                android:layout_marginTop="@dimen/cardview_margin"
+                android:layout_marginBottom="@dimen/cardview_margin">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dropped_by"
-                    android:drawableEnd="@drawable/ic_arrow_drop_down"
-                    style="@style/TitleText"/>
-                <LinearLayout
-                    android:id="@+id/item_drops"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:padding="@dimen/cardview_padding">
+                    <TextView
+                        android:id="@+id/drops_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dropped_by"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down"
+                        style="@style/TitleText"/>
+                    <LinearLayout
+                        android:id="@+id/item_drops"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -39,7 +39,6 @@ public class TibiaDatabase extends SQLiteAssetHelper{
         while(c.moveToNext()){
             Item item = new Item();
             item.setName(c.getString(0));
-            //item.setImageFromBlob(c.getBlob(2));
             item.setImage(c.getBlob(2));
             item.setLookText(c.getString(3));
             items.add(item);
@@ -80,7 +79,7 @@ public class TibiaDatabase extends SQLiteAssetHelper{
             ItemDrop itemDrop = new ItemDrop();
             itemDrop.setCreature(c.getString(0));
             itemDrop.setChance(c.getDouble(1));
-            itemDrop.setImageFromBlob(c.getBlob(2));
+            itemDrop.setImage(c.getBlob(2));
             item.addDrop(itemDrop);
         }
         c = db.rawQuery("SELECT NPCs.name, NPCs.city, SellItems.value\n" +

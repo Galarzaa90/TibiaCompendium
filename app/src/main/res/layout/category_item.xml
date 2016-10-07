@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:layout_width="match_parent"
-    tools:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    style="@style/RaisedBoxTouchable"
-    android:clickable="true"
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-    <pl.droidsonroids.gif.GifTextView
-        android:id="@+id/category"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/cardview_margin"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:id="@+id/card">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Category name"
-        android:gravity="center"
-        tools:drawableStart="@drawable/tibia_demon_helmet"/>
-</LinearLayout>
+        android:padding="@dimen/cardview_padding">
+        <pl.droidsonroids.gif.GifTextView
+            android:id="@+id/category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Category name"
+            android:gravity="center"
+            tools:drawableStart="@drawable/tibia_demon_helmet"/>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

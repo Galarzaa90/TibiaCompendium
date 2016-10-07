@@ -1,8 +1,5 @@
 package com.galarza.tibiacompendium.data;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 /**
  * Constains information of an item drop
  * @author Allan Galarza
@@ -10,7 +7,7 @@ import android.graphics.BitmapFactory;
 public class ItemDrop {
     private String creature;
     private double chance;
-    private Bitmap image;
+    private byte[] image;
 
     /**
      * @return name of the creature that drops it
@@ -41,17 +38,16 @@ public class ItemDrop {
     }
 
     /**
-     * @return image of the item
+     * @return the bitmap of the image
      */
-    public Bitmap getImage() {
+    public byte[] getImage() {
         return image;
     }
 
     /**
-     * Converts a binary image to a bitmap
-     * @param image image in blob format
+     * @param image image bytes
      */
-    public void setImageFromBlob(byte[] image) {
-        this.image = BitmapFactory.decodeByteArray(image,0,image.length);
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }
