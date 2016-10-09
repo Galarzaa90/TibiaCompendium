@@ -6,9 +6,14 @@
         <item>Legs</item>
         <item>Boots</item>
         <item>Shields</item>
+        <item>Spellbooks</item>
         <item>Axe Weapons</item>
         <item>Sword Weapons</item>
         <item>Club Weapons</item>
+        <item>Distance Weapons</item>
+        <item>Ammo</item>
+        <item>Wands</item>
+        <item>Rods</item>
     </string-array>
 
     <array name="categories_drawables">
@@ -17,9 +22,14 @@
         <item>@drawable/tibia_demon_legs</item>
         <item>@drawable/tibia_firewalker_boots</item>
         <item>@drawable/tibia_demon_shield</item>
+        <item>@drawable/tibia_umbral_master_spellbook</item>
         <item>@drawable/tibia_umbral_master_chopper</item>
         <item>@drawable/tibia_umbral_master_slayer</item>
         <item>@drawable/tibia_umbral_master_hammer</item>
+        <item>@drawable/tibia_umbral_master_bow</item>
+        <item>@drawable/tibia_crystalline_arrow</item>
+        <item>@drawable/tibia_wand_of_everblazing</item>
+        <item>@drawable/tibia_glacial_rod</item>
     </array>
 
     <string-array name="categories_name">
@@ -28,9 +38,14 @@
         <item>Legs</item>
         <item>Boots</item>
         <item>Shields</item>
+        <item>Spellbooks</item>
         <item>Axe Weapons</item>
         <item>Sword Weapons</item>
         <item>Club Weapons</item>
+        <item>Distance Weapons</item>
+        <item>Ammunition</item>
+        <item>Wands</item>
+        <item>Rods</item>
     </string-array>
 
     <string-array name="categories_sort">
@@ -39,8 +54,13 @@
         <item>Armor</item>
         <item>Armor</item>
         <item>Def</item>
+        <item>Level</item>
         <item>Attack</item>
         <item>Attack</item>
         <item>Attack</item>
+        <item>Name</item>
+        <item>Attack</item>
+        <item>Level</item>
+        <item>Level</item>
     </string-array>
 </resources>

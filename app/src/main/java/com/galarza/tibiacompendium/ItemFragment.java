@@ -2,18 +2,24 @@ package com.galarza.tibiacompendium;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.FilterQueryProvider;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -54,6 +60,9 @@ public class ItemFragment extends Fragment {
     private ListView itemList;
     private RecyclerView categoryView;
 
+    private AutoCompleteTextView searchField;
+    private Button searchButton;
+
     public static ItemFragment newInstance() {
         ItemFragment fragment = new ItemFragment();
         Bundle args = new Bundle();
@@ -74,6 +83,47 @@ public class ItemFragment extends Fragment {
         View rootView =  inflater.inflate(R.layout.fragment_item, container, false);
 
         ((MainActivity)getActivity()).fragment = this;
+
+        db = new TibiaDatabase(getContext());
+
+        searchField = (AutoCompleteTextView)rootView.findViewById(R.id.search_item);
+
+        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(
+                getContext(),
+                android.R.layout.simple_list_item_1,
+                null,
+                new String[]{"title"},
+                new int[]{android.R.id.text1},
+                0);
+
+        cursorAdapter.setFilterQueryProvider(new FilterQueryProvider() {
+            @Override
+            public Cursor runQuery(CharSequence constraint) {
+                if (constraint != null) {
+                    return db.getItemList(constraint.toString());
+                }else{
+                    return null;
+                }
+
+            }
+        });
+        cursorAdapter.setCursorToStringConverter(new SimpleCursorAdapter.CursorToStringConverter() {
+            @Override
+            public CharSequence convertToString(Cursor cursor) {
+                final int index = cursor.getColumnIndexOrThrow("title");
+                return cursor.getString(index);
+            }
+        });
+
+        searchField.setAdapter(cursorAdapter);
+
+        searchButton = (Button)rootView.findViewById(R.id.search_button);
+        searchButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new fetchItem(getContext()).execute(searchField.getText().toString().trim());
+            }
+        });
 
         categoryView = (RecyclerView) rootView.findViewById(R.id.category_view);
         GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
@@ -157,7 +207,7 @@ public class ItemFragment extends Fragment {
         });
 
 
-        db = new TibiaDatabase(getContext());
+
 
         return rootView;
     }
@@ -223,7 +273,7 @@ public class ItemFragment extends Fragment {
             itemList.setVisibility(View.GONE);
             headerBox.setVisibility(View.GONE);
 
-            itemName.setText(item.getName());
+            itemName.setText(item.getTitle());
             itemLook.setText(item.getLookText());
 
             if(item.getBuyersCount() > 0){
@@ -358,7 +408,10 @@ public class ItemFragment extends Fragment {
 
             final Item item = objects.get(position);
 
-            viewHolder.name.setText(item.getName());
+            Log.e("name",item.getName());
+            Log.e("title",item.getTitle());
+
+            viewHolder.name.setText(item.getTitle());
             GifDrawable gifFromBytes = null;
             try {
                 gifFromBytes = new GifDrawable(item.getImage());
@@ -371,7 +424,7 @@ public class ItemFragment extends Fragment {
             convertView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new fetchItem(context).execute(item.getName());
+                    new fetchItem(context).execute(item.getTitle());
                 }
             });
 

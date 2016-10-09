@@ -4,6 +4,7 @@ package com.galarza.tibiacompendium.data;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
@@ -20,7 +21,7 @@ public class TibiaDatabase extends SQLiteAssetHelper{
 
     public List<Item> getItemsByCategory(String category, String order){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT title, capacity, image, look_text\n" +
+        Cursor c = db.rawQuery("SELECT name, title, capacity, image, look_text\n" +
                 "\t,max(CASE WHEN ItemProperties.property = \"Arm\" THEN ItemProperties.value END) AS Armor\n" +
                 "\t,max(CASE WHEN ItemProperties.property = \"Voc\" THEN ItemProperties.value END) AS Vocations\n" +
                 "\t,max(CASE WHEN ItemProperties.property = \"Level\" THEN ItemProperties.value END) AS Level\n" +
@@ -39,8 +40,9 @@ public class TibiaDatabase extends SQLiteAssetHelper{
         while(c.moveToNext()){
             Item item = new Item();
             item.setName(c.getString(0));
-            item.setImage(c.getBlob(2));
-            item.setLookText(c.getString(3));
+            item.setTitle(c.getString(1));
+            item.setImage(c.getBlob(3));
+            item.setLookText(c.getString(4));
             items.add(item);
         }
         c.close();
@@ -49,7 +51,7 @@ public class TibiaDatabase extends SQLiteAssetHelper{
 
     public Item getItem(String name){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT Items.title, Items.capacity, Items.image, Items.look_text\n" +
+        Cursor c = db.rawQuery("SELECT Items.name, Items.title, Items.capacity, Items.image, Items.look_text\n" +
                 "\t,max(CASE WHEN ItemProperties.property = \"Arm\" THEN ItemProperties.value END) AS Armor\n" +
                 "\t,max(CASE WHEN ItemProperties.property = \"Voc\" THEN ItemProperties.value END) AS Vocations\n" +
                 "\t,max(CASE WHEN ItemProperties.property = \"Level\" THEN ItemProperties.value END) AS Level\n" +
@@ -61,7 +63,7 @@ public class TibiaDatabase extends SQLiteAssetHelper{
                 "\t,max(CASE WHEN ItemProperties.property = \"Type\" THEN ItemProperties.value END) AS Type\n" +
                 "FROM Items\n" +
                 "LEFT JOIN ItemProperties ON ItemProperties.itemid = Items.id\n" +
-                "WHERE Items.name LIKE \""+name+"\"\n" +
+                "WHERE Items.title LIKE \""+name+"\"\n" +
                 "GROUP BY 1\n" +
                 "LIMIT 1",null);
         if(c.getCount() < 1){
@@ -70,7 +72,8 @@ public class TibiaDatabase extends SQLiteAssetHelper{
         c.moveToFirst();
         Item item = new Item();
         item.setName(c.getString(0));
-        item.setLookText(c.getString(3));
+        item.setTitle(c.getString(1));
+        item.setLookText(c.getString(4));
         c = db.rawQuery("SELECT Creatures.title AS \"Name\", CreatureDrops.percentage, Creatures.image \n" +
                 "FROM Items, CreatureDrops, Creatures \n" +
                 "WHERE CreatureDrops.itemid = Items.id AND Creatures.id = CreatureDrops.creatureid AND Items.name LIKE \""+name+"\"\n" +
@@ -106,5 +109,14 @@ public class TibiaDatabase extends SQLiteAssetHelper{
         }
         c.close();
         return item;
+    }
+
+    public Cursor getItemList(CharSequence name){
+        String nameLike = "%"+name+"%";
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT Items.id as _id, Items.name, Items.title FROM Items WHERE Items.name LIKE \""+nameLike+"\"",null);
+        c.moveToFirst();
+        Log.e("cursor", String.valueOf(c.getCount()));
+        return c;
     }
 }

@@ -9,6 +9,7 @@ import java.util.List;
  */
 public class Item {
     private String name;
+    private String title;
     private int value;
     private int weight;
     private boolean stackable;
@@ -30,6 +31,15 @@ public class Item {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**
