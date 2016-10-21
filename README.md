@@ -3,11 +3,12 @@ Tibia Compendium is a [Tibia](http://www.tibia.com/abouttibia/?subtopic=whatisti
 
 ## Current features
 * Character lookup
+* Guild lookup
+* Item lookup
 
 ## Planned features
-* Guild lookup
+
 * Level up notifications
 * Damage calculators
 * Stat calculators
-* Item lookup
 * Creature lookup
