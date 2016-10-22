@@ -101,8 +101,8 @@ public class GuildFragment extends Fragment {
 
         /* Views used in the async task */
         guildBox = (LinearLayout)rootView.findViewById(R.id.guild_box);
-        boxLoading = (RelativeLayout)rootView.findViewById(R.id.loading_box);
-        boxNoResults = (RelativeLayout)rootView.findViewById(R.id.no_results_box);
+        boxLoading = (RelativeLayout)rootView.findViewById(R.id.container_loading);
+        boxNoResults = (RelativeLayout)rootView.findViewById(R.id.container_no_results);
 
         guildName = (TextView)rootView.findViewById(R.id.guild_name);
         guildLogo = (GifImageView) rootView.findViewById(R.id.guild_logo);
@@ -129,7 +129,7 @@ public class GuildFragment extends Fragment {
             }
         });
 
-        Button searchButton = (Button) rootView.findViewById(R.id.search_button);
+        Button searchButton = (Button) rootView.findViewById(R.id.button_search);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

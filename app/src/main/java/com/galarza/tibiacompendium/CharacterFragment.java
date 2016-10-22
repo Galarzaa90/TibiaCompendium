@@ -20,8 +20,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,34 +48,34 @@ public class CharacterFragment extends Fragment {
     private Player mPlayer = null;
 
     /* Views used in the async task */
-    private ViewGroup characterInfo;
-    private RelativeLayout boxLoading;
-    private RelativeLayout boxNoResults;
+    private ViewGroup mContainerCharacter;
+    private ViewGroup mContainerLoading;
+    private ViewGroup mContainerNoResults;
 
-    private ImageView characterGender;
-    private ImageView characterWarning;
-    private TextView characterName;
-    private TextView characterSummary;
-    private TextView characterResidence;
-    private TextView characterHouse;
-    private TextView characterGuild;
-    private TextView characterAchievements;
-    private TextView characterFormerNames;
-    private TextView characterFormerWorld;
-    private TextView characterLastLogin;
-    private TextView characterComment;
+    private ImageView mGender;
+    private ImageView mWarning;
+    private TextView mName;
+    private TextView mSummary;
+    private TextView mResidence;
+    private TextView mHouse;
+    private TextView mGuild;
+    private TextView mAchiements;
+    private TextView mFormerNames;
+    private TextView mFormerWorld;
+    private TextView mLastLogin;
+    private TextView mComment;
 
-    private LinearLayout characterDeaths;
-    private LinearLayout otherCharacters;
+    private ViewGroup mDeaths;
+    private ViewGroup mCharacters;
 
-    private LinearLayout boxHouse;
-    private LinearLayout boxGuild;
-    private LinearLayout boxFormerName;
-    private LinearLayout boxFormerWorld;
+    private ViewGroup mContainerHouse;
+    private ViewGroup mContainerGuild;
+    private ViewGroup mContainerFormerNames;
+    private ViewGroup mContainerFormerWorld;
 
-    private ViewGroup boxComment;
-    private ViewGroup boxDeaths;
-    private ViewGroup boxChars;
+    private ViewGroup mContainerComment;
+    private ViewGroup mContainerDeaths;
+    private ViewGroup mContainerChars;
 
     public static CharacterFragment newInstance() {
         CharacterFragment fragment = new CharacterFragment();
@@ -109,37 +107,37 @@ public class CharacterFragment extends Fragment {
         ((MainActivity)getActivity()).fragment = this;
 
         /* Views used in the async task */
-        characterInfo = (ViewGroup) rootView.findViewById(R.id.character_box);
-        boxLoading = (RelativeLayout)rootView.findViewById(R.id.loading_box);
-        boxNoResults = (RelativeLayout)rootView.findViewById(R.id.no_results_box);
+        mContainerCharacter = (ViewGroup) rootView.findViewById(R.id.container_character);
+        mContainerLoading = (ViewGroup) rootView.findViewById(R.id.container_loading);
+        mContainerNoResults = (ViewGroup) rootView.findViewById(R.id.container_no_results);
 
-        characterGender = (ImageView)rootView.findViewById(R.id.gender);
-        characterWarning = (ImageView)rootView.findViewById(R.id.warning);
-        characterName = (TextView)rootView.findViewById(R.id.name);
-        characterSummary = (TextView)rootView.findViewById(R.id.summary);
-        characterResidence = (TextView)rootView.findViewById(R.id.residence);
-        characterHouse = (TextView)rootView.findViewById(R.id.house);
-        characterAchievements = (TextView)rootView.findViewById(R.id.achievements);
-        characterGuild = (TextView)rootView.findViewById(R.id.char_guild);
-        characterFormerNames = (TextView)rootView.findViewById(R.id.char_former_names);
-        characterFormerWorld = (TextView)rootView.findViewById(R.id.char_former_world);
-        characterLastLogin = (TextView)rootView.findViewById(R.id.char_last_login);
-        characterComment = (TextView)rootView.findViewById(R.id.char_comment);
+        mGender = (ImageView)rootView.findViewById(R.id.gender);
+        mWarning = (ImageView)rootView.findViewById(R.id.warning);
+        mName = (TextView)rootView.findViewById(R.id.name);
+        mSummary = (TextView)rootView.findViewById(R.id.summary);
+        mResidence = (TextView)rootView.findViewById(R.id.residence);
+        mHouse = (TextView)rootView.findViewById(R.id.house);
+        mAchiements = (TextView)rootView.findViewById(R.id.achievements);
+        mGuild = (TextView)rootView.findViewById(R.id.guild);
+        mFormerNames = (TextView)rootView.findViewById(R.id.former_names);
+        mFormerWorld = (TextView)rootView.findViewById(R.id.former_world);
+        mLastLogin = (TextView)rootView.findViewById(R.id.last_login);
+        mComment = (TextView)rootView.findViewById(R.id.comment);
 
-        characterDeaths = (LinearLayout) rootView.findViewById(R.id.char_deaths);
-        otherCharacters = (LinearLayout) rootView.findViewById(R.id.other_chars);
+        mDeaths = (ViewGroup) rootView.findViewById(R.id.deaths);
+        mCharacters = (ViewGroup) rootView.findViewById(R.id.other_chars);
 
-        boxHouse = (LinearLayout)rootView.findViewById(R.id.box_house);
-        boxGuild = (LinearLayout)rootView.findViewById(R.id.box_guild);
-        boxFormerName = (LinearLayout)rootView.findViewById(R.id.box_former_name);
-        boxFormerWorld = (LinearLayout)rootView.findViewById(R.id.box_former_world);
+        mContainerHouse = (ViewGroup) rootView.findViewById(R.id.container_house);
+        mContainerGuild = (ViewGroup) rootView.findViewById(R.id.container_guild);
+        mContainerFormerNames = (ViewGroup) rootView.findViewById(R.id.container_former_names);
+        mContainerFormerWorld = (ViewGroup) rootView.findViewById(R.id.container_former_world);
 
-        boxComment = (ViewGroup) rootView.findViewById(R.id.comment_box);
-        boxDeaths = (ViewGroup)rootView.findViewById(R.id.deaths_box);
-        boxChars = (ViewGroup) rootView.findViewById(R.id.chars_box);
+        mContainerComment = (ViewGroup) rootView.findViewById(R.id.container_comment);
+        mContainerDeaths = (ViewGroup)rootView.findViewById(R.id.container_deaths);
+        mContainerChars = (ViewGroup) rootView.findViewById(R.id.container_chars);
 
-        final EditText searchField = (EditText)rootView.findViewById(R.id.search_char);
-        searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        final EditText fieldSearch = (EditText)rootView.findViewById(R.id.field_search);
+        fieldSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_SEARCH){
@@ -155,8 +153,8 @@ public class CharacterFragment extends Fragment {
             }
         });
 
-        final Button searchButton = (Button) rootView.findViewById(R.id.search_button);
-        searchButton.setOnClickListener(new OnClickListener() {
+        final Button buttonSearch = (Button) rootView.findViewById(R.id.button_search);
+        buttonSearch.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 /* Hide virtual keyboard */
@@ -164,63 +162,64 @@ public class CharacterFragment extends Fragment {
                         (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
 
-                new fetchData(getContext()).execute(searchField.getText().toString());
+                new fetchData(getContext()).execute(fieldSearch.getText().toString());
             }
         });
 
         /* Expand/Collapse buttons listeners */
-        final TextView commentHeader = (TextView) rootView.findViewById(R.id.comment_header);
-        commentHeader.setOnClickListener(new OnClickListener() {
+        final TextView headerComment = (TextView) rootView.findViewById(R.id.header_comment);
+        headerComment.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(characterComment.getVisibility() == View.GONE){
-                    characterComment.setVisibility(View.VISIBLE);
-                    commentHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_up,0);
+                if(mComment.getVisibility() == View.GONE){
+                    mComment.setVisibility(View.VISIBLE);
+                    headerComment.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_up,0);
                 }else{
-                    characterComment.setVisibility(View.GONE);
-                    commentHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_down,0);
+                    mComment.setVisibility(View.GONE);
+                    headerComment.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_down,0);
                 }
             }
         });
 
-        final TextView deathsHeader = (TextView)rootView.findViewById(R.id.deaths_header);
-        deathsHeader.setOnClickListener(new OnClickListener() {
+        final TextView headerDeaths = (TextView)rootView.findViewById(R.id.header_deaths);
+        headerDeaths.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(characterDeaths.getVisibility() == View.GONE){
-                    characterDeaths.setVisibility(View.VISIBLE);
-                    deathsHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_up,0);
+                if(mDeaths.getVisibility() == View.GONE){
+                    mDeaths.setVisibility(View.VISIBLE);
+                    headerDeaths.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_up,0);
                 }else{
-                    characterDeaths.setVisibility(View.GONE);
-                    deathsHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_down,0);
+                    mDeaths.setVisibility(View.GONE);
+                    headerDeaths.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_down,0);
                 }
             }
         });
 
-        final TextView charsHeader = (TextView) rootView.findViewById(R.id.chars_header);
-        charsHeader.setOnClickListener(new OnClickListener() {
+        final TextView headerChars = (TextView) rootView.findViewById(R.id.header_chars);
+        headerChars.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(otherCharacters.getVisibility() == View.GONE){
-                    otherCharacters.setVisibility(View.VISIBLE);
-                    charsHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_up,0);
+                if(mCharacters.getVisibility() == View.GONE){
+                    mCharacters.setVisibility(View.VISIBLE);
+                    headerChars.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_up,0);
                 }else{
-                    otherCharacters.setVisibility(View.GONE);
-                    charsHeader.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_down,0);
+                    mCharacters.setVisibility(View.GONE);
+                    headerChars.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_drop_down,0);
                 }
             }
         });
-        /* Getting mPlayer name argument */
+        /* Getting player name argument */
         String playerName = getArguments().getString(Utils.ARG_PLAYER_NAME);
-        /* If a mPlayer is already loaded, fill views */
+        /* If a player is already loaded, fill views */
         if(mPlayer != null){
             loadViews(mPlayer);
         /* If fragment was called with a name argument, load name */
         }else if(playerName != null){
-            searchField.setText(playerName);
+            fieldSearch.setText(playerName);
             new fetchData(getContext()).execute(playerName);
         }
 
+        /* Recovering state */
         if(savedInstanceState != null){
             String playerJson = savedInstanceState.getString("PLAYER","");
             if(!playerJson.isEmpty()){
@@ -240,10 +239,9 @@ public class CharacterFragment extends Fragment {
         String playerJson = null;
         if(mPlayer != null){
             playerJson = gson.toJson(mPlayer);
-
         }
-        outState.putString("PLAYER",playerJson);
 
+        outState.putString("PLAYER",playerJson);
         super.onSaveInstanceState(outState);
     }
 
@@ -304,17 +302,17 @@ public class CharacterFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             mPlayer = null;
-            boxLoading.setVisibility(View.VISIBLE);
-            characterInfo.setVisibility(View.GONE);
-            boxComment.setVisibility(View.GONE);
-            boxDeaths.setVisibility(View.GONE);
-            boxChars.setVisibility(View.GONE);
-            boxNoResults.setVisibility(View.GONE);
+            mContainerLoading.setVisibility(View.VISIBLE);
+            mContainerCharacter.setVisibility(View.GONE);
+            mContainerComment.setVisibility(View.GONE);
+            mContainerDeaths.setVisibility(View.GONE);
+            mContainerChars.setVisibility(View.GONE);
+            mContainerNoResults.setVisibility(View.GONE);
         }
 
         @Override
         protected void onPostExecute(Player result){
-            boxLoading.setVisibility(View.GONE);
+            mContainerLoading.setVisibility(View.GONE);
             mPlayer = result;
             loadViews(mPlayer);
         }
@@ -331,53 +329,53 @@ public class CharacterFragment extends Fragment {
 
     private void loadViews(final Player player){
         if(player == null){
-            boxNoResults.setVisibility(View.VISIBLE);
-            characterInfo.setVisibility(View.GONE);
-            boxComment.setVisibility(View.GONE);
-            boxDeaths.setVisibility(View.GONE);
-            boxChars.setVisibility(View.GONE);
+            mContainerNoResults.setVisibility(View.VISIBLE);
+            mContainerCharacter.setVisibility(View.GONE);
+            mContainerComment.setVisibility(View.GONE);
+            mContainerDeaths.setVisibility(View.GONE);
+            mContainerChars.setVisibility(View.GONE);
             return;
         }
-        boxNoResults.setVisibility(View.GONE);
-        characterInfo.setVisibility(View.VISIBLE);
+        mContainerNoResults.setVisibility(View.GONE);
+        mContainerCharacter.setVisibility(View.VISIBLE);
         /* Name */
-        characterName.setText(player.getName());
+        mName.setText(player.getName());
         /* Summary (level & vocation) */
-        characterSummary.setText(getString(
+        mSummary.setText(getString(
                 R.string.char_summary,
                 player.getLevel(),
                 player.getVocation().equalsIgnoreCase("none") ? "" : player.getVocation()
         ));
         /* Sex */
         if(player.getSex().equalsIgnoreCase("female")){
-            characterGender.setImageResource(R.drawable.ic_female);
-            characterGender.setContentDescription(getString(R.string.female));
+            mGender.setImageResource(R.drawable.ic_female);
+            mGender.setContentDescription(getString(R.string.female));
         }else{
-            characterGender.setImageResource(R.drawable.ic_male);
-            characterGender.setContentDescription(getString(R.string.male));
+            mGender.setImageResource(R.drawable.ic_male);
+            mGender.setContentDescription(getString(R.string.male));
         }
         /* Achievement points */
-        characterAchievements.setText(String.valueOf(player.getAchievementPoints()));
+        mAchiements.setText(String.valueOf(player.getAchievementPoints()));
         /* Residence */
-        characterResidence.setText(getString(
+        mResidence.setText(getString(
                 R.string.char_residence,
                 player.getResidence(),
                 player.getWorld()
         ));
         /* House */
         if(player.getHouse() != null){
-            boxHouse.setVisibility(View.VISIBLE);
-            characterHouse.setText(getString(
+            mContainerHouse.setVisibility(View.VISIBLE);
+            mHouse.setText(getString(
                     R.string.char_house,
                     player.getHouse(),
                     player.getHouseCity()
             ));
         }else{
-            boxHouse.setVisibility(View.GONE);
+            mContainerHouse.setVisibility(View.GONE);
         }
         /* Guild */
         if(player.getGuild() != null){
-            boxGuild.setVisibility(View.VISIBLE);
+            mContainerGuild.setVisibility(View.VISIBLE);
             final String guildRank = player.getGuildRank();
             final String guild = player.getGuild();
             final String guildString = getString(R.string.guildcontent,guildRank,guild);
@@ -397,50 +395,50 @@ public class CharacterFragment extends Fragment {
                             .commit();
                 }
             },startIndex,endIndex,0);
-            characterGuild.setMovementMethod(LinkMovementMethod.getInstance());
-            characterGuild.setText(guildStyled);
+            mGuild.setMovementMethod(LinkMovementMethod.getInstance());
+            mGuild.setText(guildStyled);
         }else{
-            boxGuild.setVisibility(View.GONE);
+            mContainerGuild.setVisibility(View.GONE);
         }
         /* Former names */
         if(player.getFormerNames() != null){
-            boxFormerName.setVisibility(View.VISIBLE);
-            characterFormerNames.setText(player.getFormerNames());
+            mContainerFormerNames.setVisibility(View.VISIBLE);
+            mFormerNames.setText(player.getFormerNames());
         }else{
-            boxFormerName.setVisibility(View.GONE);
+            mContainerFormerNames.setVisibility(View.GONE);
         }
         /* Former world */
         if(player.getFormerWorld() != null){
-            boxFormerWorld.setVisibility(View.VISIBLE);
-            characterFormerWorld.setText(player.getFormerWorld());
+            mContainerFormerWorld.setVisibility(View.VISIBLE);
+            mFormerWorld.setText(player.getFormerWorld());
         }else{
-            boxFormerWorld.setVisibility(View.GONE);
+            mContainerFormerWorld.setVisibility(View.GONE);
         }
         /* Last login */
         if(player.getLastLoginString() != null) {
-            characterLastLogin.setText(player.getLastLoginString());
+            mLastLogin.setText(player.getLastLoginString());
         }
         /* Comment */
         if(player.getComment() != null) {
-            characterComment.setText(Html.fromHtml(player.getComment()));
-            boxComment.setVisibility(View.VISIBLE);
+            mComment.setText(Html.fromHtml(player.getComment()));
+            mContainerComment.setVisibility(View.VISIBLE);
         }
         /* Deaths */
         if(player.getDeathList().size() > 0) {
-            characterDeaths.removeAllViews();
-            boxDeaths.setVisibility(View.VISIBLE);
-            loadDeathsView(getContext(),characterDeaths, player.getDeathList());
+            mDeaths.removeAllViews();
+            mContainerDeaths.setVisibility(View.VISIBLE);
+            loadDeathsView(getContext(), mDeaths, player.getDeathList());
         }
         if(player.getOtherCharacters().size() > 1) {
-            otherCharacters.removeAllViews();
-            boxChars.setVisibility(View.VISIBLE);
-            loadCharsView(getContext(),otherCharacters, player.getOtherCharacters());
+            mCharacters.removeAllViews();
+            mContainerChars.setVisibility(View.VISIBLE);
+            loadCharsView(getContext(), mCharacters, player.getOtherCharacters());
         }
 
         /* Deletion */
         if(player.getDeletion() != null){
-            characterWarning.setVisibility(View.VISIBLE);
-            characterWarning.setOnClickListener(new OnClickListener() {
+            mWarning.setVisibility(View.VISIBLE);
+            mWarning.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast toast = Toast.makeText(getContext(),getString(R.string.deletion, player.getDeletionString()),Toast.LENGTH_LONG);
@@ -449,7 +447,7 @@ public class CharacterFragment extends Fragment {
                 }
             });
         }else{
-            characterWarning.setVisibility(View.GONE);
+            mWarning.setVisibility(View.GONE);
         }
     }
 

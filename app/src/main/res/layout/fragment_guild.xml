@@ -27,7 +27,7 @@
                 android:inputType="text"
                 android:maxLines="1" />
             <Button
-                android:id="@+id/search_button"
+                android:id="@+id/button_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
@@ -39,7 +39,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/loading_box"
+        android:id="@+id/container_loading"
         android:visibility="gone">
         <ProgressBar
             android:layout_centerInParent="true"
@@ -50,7 +50,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/no_results_box"
+        android:id="@+id/container_no_results"
         android:visibility="gone">
         <TextView
             android:layout_centerInParent="true"

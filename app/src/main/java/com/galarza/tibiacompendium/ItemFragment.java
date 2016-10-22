@@ -117,7 +117,7 @@ public class ItemFragment extends Fragment {
 
         searchField.setAdapter(cursorAdapter);
 
-        searchButton = (Button)rootView.findViewById(R.id.search_button);
+        searchButton = (Button)rootView.findViewById(R.id.button_search);
         searchButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

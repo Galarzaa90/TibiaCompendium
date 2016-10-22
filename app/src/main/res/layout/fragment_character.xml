@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/cardview_padding">
             <EditText
-                android:id="@+id/search_char"
+                android:id="@+id/field_search"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -27,7 +27,7 @@
                 android:maxLines="1"
                 android:gravity="center_vertical"/>
             <Button
-                android:id="@+id/search_button"
+                android:id="@+id/button_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:theme="@style/RaisedButton"
@@ -46,7 +46,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/loading_box"
+                android:id="@+id/container_loading"
                 android:visibility="gone"
                 tools:visibility="visible">
                 <ProgressBar
@@ -58,7 +58,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/no_results_box"
+                android:id="@+id/container_no_results"
                 android:visibility="gone"
                 tools:visibility="visible">
                 <TextView
@@ -71,7 +71,7 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/character_box"
+                android:id="@+id/container_character"
                 android:layout_marginTop="@dimen/cardview_margin"
                 android:layout_marginBottom="@dimen/cardview_margin"
                 android:visibility="gone"
@@ -145,7 +145,7 @@
                         tools:text="City in World"
                         style="@style/EntryText"/>
                     <LinearLayout
-                        android:id="@+id/box_house"
+                        android:id="@+id/container_house"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -161,7 +161,7 @@
                             style="@style/EntryText"/>
                     </LinearLayout>
                     <LinearLayout
-                        android:id="@+id/box_guild"
+                        android:id="@+id/container_guild"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -171,14 +171,14 @@
                             android:text="@string/guild"
                             style="@style/TitleText"/>
                         <TextView
-                            android:id="@+id/char_guild"
+                            android:id="@+id/guild"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             tools:text="Rank of the Guild"
                             style="@style/EntryText"/>
                     </LinearLayout>
                     <LinearLayout
-                        android:id="@+id/box_former_name"
+                        android:id="@+id/container_former_names"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -187,14 +187,14 @@
                             android:layout_width="wrap_content"
                             android:text="@string/former_names"/>
                         <TextView
-                            android:id="@+id/char_former_names"
+                            android:id="@+id/former_names"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             tools:text="Former name, Former name 2, ..."
                             style="@style/EntryText"/>
                     </LinearLayout>
                     <LinearLayout
-                        android:id="@+id/box_former_world"
+                        android:id="@+id/container_former_world"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -203,7 +203,7 @@
                             android:layout_width="wrap_content"
                             android:text="@string/former_world"/>
                         <TextView
-                            android:id="@+id/char_former_world"
+                            android:id="@+id/former_world"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             tools:text="Former World"
@@ -214,7 +214,7 @@
                         android:layout_width="wrap_content"
                         android:text="@string/last_login"/>
                     <TextView
-                        android:id="@+id/char_last_login"
+                        android:id="@+id/last_login"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         tools:text="Sep 09 2015 13:37 PST"
@@ -222,7 +222,7 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
-                android:id="@+id/comment_box"
+                android:id="@+id/container_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/cardview_margin"
@@ -236,7 +236,7 @@
                     android:animateLayoutChanges="true"
                     android:padding="@dimen/cardview_padding">
                     <TextView
-                        android:id="@+id/comment_header"
+                        android:id="@+id/header_comment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/comment"
@@ -245,13 +245,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/char_comment"
+                        android:id="@+id/comment"
                         android:visibility="gone"
                         style="@style/EntryText"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
-                android:id="@+id/deaths_box"
+                android:id="@+id/container_deaths"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/cardview_margin"
@@ -265,14 +265,14 @@
                     android:orientation="vertical"
                     android:animateLayoutChanges="true">
                     <TextView
-                        android:id="@+id/deaths_header"
+                        android:id="@+id/header_deaths"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/deaths"
                         style="@style/TitleText"
                         android:drawableEnd="@drawable/ic_arrow_drop_down"/>
                     <LinearLayout
-                        android:id="@+id/char_deaths"
+                        android:id="@+id/deaths"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -281,7 +281,7 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
-                android:id="@+id/chars_box"
+                android:id="@+id/container_chars"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/cardview_margin"
@@ -295,7 +295,7 @@
                     android:orientation="vertical"
                     android:animateLayoutChanges="true">
                     <TextView
-                        android:id="@+id/chars_header"
+                        android:id="@+id/header_chars"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/other_chars"
