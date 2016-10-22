@@ -29,4 +29,5 @@ dependencies {
     compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    compile 'com.google.code.gson:gson:2.7'
 }

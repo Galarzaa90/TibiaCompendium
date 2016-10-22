@@ -30,6 +30,7 @@ import com.galarza.tibiacompendium.data.NetworkUtils;
 import com.galarza.tibiacompendium.data.Parser;
 import com.galarza.tibiacompendium.data.Player;
 import com.galarza.tibiacompendium.data.Utils;
+import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,7 +47,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class CharacterFragment extends Fragment {
-    private Player player = null;
+    private Player mPlayer = null;
 
     /* Views used in the async task */
     private ViewGroup characterInfo;
@@ -209,18 +210,41 @@ public class CharacterFragment extends Fragment {
                 }
             }
         });
-        /* Getting player name argument */
+        /* Getting mPlayer name argument */
         String playerName = getArguments().getString(Utils.ARG_PLAYER_NAME);
-        /* If a player is already loaded, fill views */
-        if(player != null){
-            loadViews(player);
+        /* If a mPlayer is already loaded, fill views */
+        if(mPlayer != null){
+            loadViews(mPlayer);
         /* If fragment was called with a name argument, load name */
         }else if(playerName != null){
             searchField.setText(playerName);
             new fetchData(getContext()).execute(playerName);
         }
 
+        if(savedInstanceState != null){
+            String playerJson = savedInstanceState.getString("PLAYER","");
+            if(!playerJson.isEmpty()){
+                Gson gson = new Gson();
+                loadViews(gson.fromJson(playerJson,Player.class));
+            }
+        }
+
         return rootView;
+    }
+
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Gson gson = new Gson();
+        String playerJson = null;
+        if(mPlayer != null){
+            playerJson = gson.toJson(mPlayer);
+
+        }
+        outState.putString("PLAYER",playerJson);
+
+        super.onSaveInstanceState(outState);
     }
 
     private class fetchData extends AsyncTask<String, Integer, Player> {
@@ -279,7 +303,7 @@ public class CharacterFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            player = null;
+            mPlayer = null;
             boxLoading.setVisibility(View.VISIBLE);
             characterInfo.setVisibility(View.GONE);
             boxComment.setVisibility(View.GONE);
@@ -291,8 +315,8 @@ public class CharacterFragment extends Fragment {
         @Override
         protected void onPostExecute(Player result){
             boxLoading.setVisibility(View.GONE);
-            player = result;
-            loadViews(player);
+            mPlayer = result;
+            loadViews(mPlayer);
         }
     }
 
