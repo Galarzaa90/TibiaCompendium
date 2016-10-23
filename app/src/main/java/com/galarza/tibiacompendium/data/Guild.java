@@ -15,7 +15,6 @@ import java.util.List;
  * @author Allan Galarza
  */
 public class Guild {
-    private static final String TAG ="Guild";
 
     private String name;
     private String logoUrl;

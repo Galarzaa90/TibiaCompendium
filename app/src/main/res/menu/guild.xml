@@ -6,7 +6,6 @@
     tools:context=".GuildFragment">
         <item
             android:title="@string/action_sort"
-            android:id="@+id/menu_sort"
             android:icon="@drawable/menu_sort"
             app:showAsAction="always">
             <menu>

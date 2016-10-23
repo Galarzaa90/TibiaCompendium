@@ -15,7 +15,6 @@ import android.widget.Button;
 import com.galarza.tibiacompendium.data.Utils;
 
 public class MainActivity extends AppCompatActivity {
-    private CharSequence mTitle;
 
     public Fragment fragment;
 

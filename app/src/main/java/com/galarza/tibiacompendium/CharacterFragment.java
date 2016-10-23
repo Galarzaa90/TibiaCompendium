@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -40,10 +39,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class CharacterFragment extends Fragment {
     private Player mPlayer = null;
 
@@ -247,7 +242,7 @@ public class CharacterFragment extends Fragment {
     }
 
     private class fetchData extends AsyncTask<String, Integer, Player> {
-        private Context mContext;
+        private final Context mContext;
         fetchData(Context context){
             mContext = context;
         }
@@ -421,7 +416,7 @@ public class CharacterFragment extends Fragment {
         }
         /* Comment */
         if(player.getComment() != null) {
-            mComment.setText(Html.fromHtml(player.getComment()));
+            mComment.setText(Utils.fromHtml(player.getComment()));
             mContainerComment.setVisibility(View.VISIBLE);
         }
         /* Deaths */
@@ -453,11 +448,11 @@ public class CharacterFragment extends Fragment {
     }
 
 
-    void loadDeathsView(Context context,ViewGroup parent, List<Death> deaths) {
+    private void loadDeathsView(Context context, ViewGroup parent, List<Death> deaths) {
         LayoutInflater inflater =
                 (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for(Death death : deaths) {
-            View rowView = inflater.inflate(R.layout.row_death, null);
+            View rowView = inflater.inflate(R.layout.row_death, parent);
 
             TextView dateView = (TextView)rowView.findViewById(R.id.death_date);
             dateView.setText(death.getDateString());
@@ -472,7 +467,7 @@ public class CharacterFragment extends Fragment {
         }
     }
 
-    void loadCharsView(Context context,ViewGroup parent, List<Player> players) {
+    private void loadCharsView(Context context, ViewGroup parent, List<Player> players) {
         LayoutInflater inflater =
                 (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for(Player player : players) {

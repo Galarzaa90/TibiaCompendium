@@ -15,9 +15,9 @@ public class Item {
     private boolean stackable;
     private byte[] image;
     private String lookText;
-    private List<ItemDrop> droppedBy = new ArrayList<>();
-    private List<NpcOffer> buyers = new ArrayList<>();
-    private List<NpcOffer> sellers = new ArrayList<>();
+    private final List<ItemDrop> droppedBy = new ArrayList<>();
+    private final List<NpcOffer> buyers = new ArrayList<>();
+    private final List<NpcOffer> sellers = new ArrayList<>();
 
     /**
      * @return the name of the item

@@ -19,9 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,9 +47,6 @@ import java.util.List;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class GuildFragment extends Fragment {
 
     private Guild mGuild = null;
@@ -101,9 +96,9 @@ public class GuildFragment extends Fragment {
         ((MainActivity)getActivity()).fragment = this;
 
         /* Views used in the async task */
-        containerGuild = (LinearLayout)rootView.findViewById(R.id.guild_box);
-        containerLoading = (RelativeLayout)rootView.findViewById(R.id.container_loading);
-        containerNoResults = (RelativeLayout)rootView.findViewById(R.id.container_no_results);
+        containerGuild = (ViewGroup)rootView.findViewById(R.id.guild_box);
+        containerLoading = (ViewGroup) rootView.findViewById(R.id.container_loading);
+        containerNoResults = (ViewGroup) rootView.findViewById(R.id.container_no_results);
 
         mName = (TextView)rootView.findViewById(R.id.name);
         mLogo = (GifImageView) rootView.findViewById(R.id.guild_logo);

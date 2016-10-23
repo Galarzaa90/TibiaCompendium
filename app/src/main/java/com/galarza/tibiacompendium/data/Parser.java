@@ -1,7 +1,6 @@
 package com.galarza.tibiacompendium.data;
 
 
-import android.text.Html;
 import android.util.Log;
 
 import java.util.regex.Matcher;
@@ -47,7 +46,7 @@ public class Parser {
         /* Check if player is scheduled for deletion and get date */
         m = getMatcher(content,", will be deleted at ([^<]+)");
         if(m.find()){
-            String deleted = Html.fromHtml(m.group(1)).toString();
+            String deleted = Utils.fromHtml(m.group(1)).toString();
             deleted = deleted.replaceAll(String.valueOf((char) 160), " ");
             player.setDeletion(deleted);
         }
@@ -128,7 +127,7 @@ public class Parser {
         /* Get the player's last login date */
         m = getMatcher(content, "Last login:</td><td>([^<]+)");
         if(m.find()) {
-            String lastLogin = Html.fromHtml(m.group(1)).toString();
+            String lastLogin = Utils.fromHtml(m.group(1)).toString();
             lastLogin = lastLogin.replaceAll(String.valueOf((char) 160), " ");
             player.setLastLogin(lastLogin);
         }
@@ -155,7 +154,7 @@ public class Parser {
             while (m.find()) {
                 Death death = new Death();
                 /* Getting death's date */
-                String date = Html.fromHtml(m.group(1)).toString();
+                String date = Utils.fromHtml(m.group(1)).toString();
                 date = date.replaceAll(String.valueOf((char) 160), " ");
                 death.setDate(date);
                 /* Getting level and killer */
@@ -231,7 +230,7 @@ public class Parser {
         m = getMatcher(content,"founded on (\\w+) on ([^.]+)");
         if(m.find()){
             guild.setWorld(m.group(1));
-            String founded = Html.fromHtml(m.group(2)).toString();
+            String founded = Utils.fromHtml(m.group(2)).toString();
             founded = founded.replaceAll(String.valueOf((char) 160), " ");
             guild.setFounded(founded);
         }
@@ -252,7 +251,7 @@ public class Parser {
         while(m.find()){
             GuildMember member = new GuildMember();
             /* Getting rank */
-            String rank = Html.fromHtml(m.group(1)).toString();
+            String rank = Utils.fromHtml(m.group(1)).toString();
             if(rank.equals(String.valueOf((char) 160))){
                 member.setRank(prevRank);
             }else{
@@ -276,7 +275,7 @@ public class Parser {
             }
             member.setLevel(level);
             /* Getting join date */
-            String joined = Html.fromHtml(m.group(6)).toString();
+            String joined = Utils.fromHtml(m.group(6)).toString();
             joined = joined.replaceAll(String.valueOf((char) 160), " ");
             member.setJoined(joined);
             member.setOnline(m.group(7).equalsIgnoreCase("green"));

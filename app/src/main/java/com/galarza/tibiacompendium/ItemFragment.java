@@ -61,7 +61,6 @@ public class ItemFragment extends Fragment {
     private RecyclerView categoryView;
 
     private AutoCompleteTextView searchField;
-    private Button searchButton;
 
     public static ItemFragment newInstance() {
         ItemFragment fragment = new ItemFragment();
@@ -117,7 +116,7 @@ public class ItemFragment extends Fragment {
 
         searchField.setAdapter(cursorAdapter);
 
-        searchButton = (Button)rootView.findViewById(R.id.button_search);
+        Button searchButton = (Button) rootView.findViewById(R.id.button_search);
         searchButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,7 +213,7 @@ public class ItemFragment extends Fragment {
 
 
     private class fetchData extends AsyncTask<String, Integer, List<Item>> {
-        private Context mContext;
+        private final Context mContext;
         fetchData(Context context){
             mContext = context;
         }
@@ -242,7 +241,7 @@ public class ItemFragment extends Fragment {
     }
 
     private class fetchItem extends AsyncTask<String, Integer, Item> {
-        private Context mContext;
+        private final Context mContext;
         fetchItem(Context context){
             mContext = context;
         }
@@ -308,10 +307,10 @@ public class ItemFragment extends Fragment {
 
     private class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder>{
         private final Context mContext;
-        private String[] categoryTitles;
-        private String[] categorySort;
-        private TypedArray categoryDrawables;
-        private String[] categoryNames;
+        private final String[] categoryTitles;
+        private final String[] categorySort;
+        private final TypedArray categoryDrawables;
+        private final String[] categoryNames;
 
         CategoryAdapter(Context context){
             categoryTitles = getResources().getStringArray(R.array.categories_titles);
@@ -355,11 +354,6 @@ public class ItemFragment extends Fragment {
         @Override
         public int getItemCount() {
             return categoryTitles.length;
-        }
-
-        @Override
-        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-            super.onAttachedToRecyclerView(recyclerView);
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
@@ -437,7 +431,7 @@ public class ItemFragment extends Fragment {
         }
     }
 
-    public void loadDropsView(Context context, ViewGroup parent, List<ItemDrop> itemDrops) {
+    private void loadDropsView(Context context, ViewGroup parent, List<ItemDrop> itemDrops) {
         parent.removeAllViews();
         LayoutInflater inflater =
                 (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -448,7 +442,7 @@ public class ItemFragment extends Fragment {
             TextView chance = (TextView) rowView.findViewById(R.id.chance);
 
             name.setText(itemDrop.getCreature());
-            GifDrawable gifFromBytes = null;
+            GifDrawable gifFromBytes;
             try {
                 gifFromBytes = new GifDrawable(itemDrop.getImage());
             } catch (IOException e) {
@@ -467,7 +461,7 @@ public class ItemFragment extends Fragment {
         }
     }
 
-    public void loadOffersView(Context context, ViewGroup parent, List<NpcOffer> offers) {
+    private void loadOffersView(Context context, ViewGroup parent, List<NpcOffer> offers) {
         parent.removeAllViews();
         LayoutInflater inflater =
                 (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -29,6 +29,7 @@ public class NetworkUtils {
         return isConnected(context, ConnectivityManager.TYPE_MOBILE);
     }
 
+    @SuppressWarnings("deprecation")
     private static boolean isConnected(@NonNull Context context, int type) {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
