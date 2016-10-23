@@ -224,7 +224,8 @@ public class CharacterFragment extends Fragment {
             String playerJson = savedInstanceState.getString("PLAYER","");
             if(!playerJson.isEmpty()){
                 Gson gson = new Gson();
-                loadViews(gson.fromJson(playerJson,Player.class));
+                mPlayer = gson.fromJson(playerJson,Player.class);
+                loadViews(mPlayer);
             }
         }
 

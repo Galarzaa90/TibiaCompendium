@@ -30,6 +30,7 @@ import com.galarza.tibiacompendium.data.GuildMember;
 import com.galarza.tibiacompendium.data.NetworkUtils;
 import com.galarza.tibiacompendium.data.Parser;
 import com.galarza.tibiacompendium.data.Utils;
+import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,19 +54,19 @@ import pl.droidsonroids.gif.GifImageView;
  */
 public class GuildFragment extends Fragment {
 
-    private Guild guild = null;
+    private Guild mGuild = null;
     private MemberListAdapter adapter = null;
 
     /* Views used in the async task */
-    private LinearLayout guildBox;
-    private RelativeLayout boxLoading;
-    private RelativeLayout boxNoResults;
+    private ViewGroup containerGuild;
+    private ViewGroup containerLoading;
+    private ViewGroup containerNoResults;
 
-    private TextView guildName;
-    private GifImageView guildLogo;
-    private TextView guildInfo;
-    private TextView guildMembers;
-    private TextView guildOnline;
+    private TextView mName;
+    private GifImageView mLogo;
+    private TextView mInfo;
+    private TextView mMembersCount;
+    private TextView mOnlineCount;
 
     private ListView memberList;
 
@@ -100,20 +101,20 @@ public class GuildFragment extends Fragment {
         ((MainActivity)getActivity()).fragment = this;
 
         /* Views used in the async task */
-        guildBox = (LinearLayout)rootView.findViewById(R.id.guild_box);
-        boxLoading = (RelativeLayout)rootView.findViewById(R.id.container_loading);
-        boxNoResults = (RelativeLayout)rootView.findViewById(R.id.container_no_results);
+        containerGuild = (LinearLayout)rootView.findViewById(R.id.guild_box);
+        containerLoading = (RelativeLayout)rootView.findViewById(R.id.container_loading);
+        containerNoResults = (RelativeLayout)rootView.findViewById(R.id.container_no_results);
 
-        guildName = (TextView)rootView.findViewById(R.id.guild_name);
-        guildLogo = (GifImageView) rootView.findViewById(R.id.guild_logo);
-        guildInfo = (TextView)rootView.findViewById(R.id.guild_info);
-        guildMembers = (TextView)rootView.findViewById(R.id.guild_members);
-        guildOnline = (TextView)rootView.findViewById(R.id.guild_members_online);
+        mName = (TextView)rootView.findViewById(R.id.name);
+        mLogo = (GifImageView) rootView.findViewById(R.id.guild_logo);
+        mInfo = (TextView)rootView.findViewById(R.id.info);
+        mMembersCount = (TextView)rootView.findViewById(R.id.members);
+        mOnlineCount = (TextView)rootView.findViewById(R.id.members_online);
 
         memberList = (ListView)rootView.findViewById(R.id.member_list);
 
-        final EditText searchField = (EditText)rootView.findViewById(R.id.search_guild);
-        searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        final EditText fieldSearch = (EditText)rootView.findViewById(R.id.field_search);
+        fieldSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_SEARCH){
@@ -129,8 +130,8 @@ public class GuildFragment extends Fragment {
             }
         });
 
-        Button searchButton = (Button) rootView.findViewById(R.id.button_search);
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        Button buttonSearch = (Button) rootView.findViewById(R.id.button_search);
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 /* Hide virtual keyboard */
@@ -138,21 +139,43 @@ public class GuildFragment extends Fragment {
                         (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
 
-                new fetchData(getContext()).execute(searchField.getText().toString());
+                new fetchData(getContext()).execute(fieldSearch.getText().toString());
             }
         });
         /* Getting guild name argument */
         String guildName = getArguments().getString(Utils.ARG_GUILD_NAME);
         /* If a guild is already loaded, fill views */
-        if(guild != null){
-            loadViews(guild);
+        if(mGuild != null){
+            loadViews(mGuild);
         /* If fragment was called with a guild argument, load guild */
         }else if(guildName != null){
-            searchField.setText(guildName);
+            fieldSearch.setText(guildName);
             new fetchData(getContext()).execute(guildName);
         }
 
+        /* Recovering state */
+        if(savedInstanceState != null){
+            String guildJson = savedInstanceState.getString("GUILD","");
+            if(!guildJson.isEmpty()){
+                Gson gson = new Gson();
+                mGuild = gson.fromJson(guildJson,Guild.class);
+                loadViews(mGuild);
+            }
+        }
+
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Gson gson = new Gson();
+        String guildJson = null;
+        if(mGuild != null){
+            guildJson = gson.toJson(mGuild);
+        }
+
+        outState.putString("GUILD",guildJson);
+        super.onSaveInstanceState(outState);
     }
 
     private class fetchData extends AsyncTask<String,Integer,Guild>{
@@ -210,17 +233,17 @@ public class GuildFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            guild = null;
-            boxLoading.setVisibility(View.VISIBLE);
-            boxNoResults.setVisibility(View.GONE);
-            guildBox.setVisibility(View.GONE);
+            mGuild = null;
+            containerLoading.setVisibility(View.VISIBLE);
+            containerNoResults.setVisibility(View.GONE);
+            containerGuild.setVisibility(View.GONE);
         }
 
         @Override
         protected void onPostExecute(Guild result) {
-            boxLoading.setVisibility(View.GONE);
-            guild = result;
-            loadViews(guild);
+            containerLoading.setVisibility(View.GONE);
+            mGuild = result;
+            loadViews(mGuild);
         }
     }
     
@@ -256,9 +279,9 @@ public class GuildFragment extends Fragment {
         @Override
         protected void onPostExecute(GifDrawable gifDrawable) {
             if (gifDrawable != null){
-                guildLogo.setImageDrawable(gifDrawable);
+                mLogo.setImageDrawable(gifDrawable);
             }else{
-                guildLogo.setImageResource(R.drawable.default_guildlogo);
+                mLogo.setImageResource(R.drawable.default_guildlogo);
             }
         }
     }
@@ -277,31 +300,31 @@ public class GuildFragment extends Fragment {
 
     private void loadViews(Guild guild){
         if(guild == null){
-            boxNoResults.setVisibility(View.VISIBLE);
-            guildBox.setVisibility(View.GONE);
+            containerNoResults.setVisibility(View.VISIBLE);
+            containerGuild.setVisibility(View.GONE);
             return;
         }
-        boxNoResults.setVisibility(View.GONE);
-        guildBox.setVisibility(View.VISIBLE);
+        containerNoResults.setVisibility(View.GONE);
+        containerGuild.setVisibility(View.VISIBLE);
         /* Guild logo */
         new fetchGuildLogo(guild.getLogoUrl()).execute();
         /* Guild name */
-        guildName.setText(guild.getName());
+        mName.setText(guild.getName());
         /* Guild info */
-        guildInfo.setText(getString(
+        mInfo.setText(getString(
                 R.string.guild_info,
                 guild.getWorld(),
                 guild.getFoundedString()
         ));
         /* Member count */
-        guildMembers.setText(getResources().getQuantityString(
+        mMembersCount.setText(getResources().getQuantityString(
                 R.plurals.guild_member_count,
                 guild.getMemberCount(),
                 guild.getMemberCount()
         ));
         /* Online member count */
         int onlineCount = guild.getOnlineCount();
-        guildOnline.setText(getResources().getQuantityString(
+        mOnlineCount.setText(getResources().getQuantityString(
                 R.plurals.guild_members_online,
                 onlineCount,
                 onlineCount));
@@ -320,32 +343,32 @@ public class GuildFragment extends Fragment {
         int id = item.getItemId();
         switch(id){
             case R.id.by_name:
-                if(guild != null) {
-                    guild.sortByName();
+                if(mGuild != null) {
+                    mGuild.sortByName();
                     adapter.notifyDataSetChanged();
                 }
                 break;
             case R.id.by_rank:
-                if(guild != null) {
-                    guild.sortByRank();
+                if(mGuild != null) {
+                    mGuild.sortByRank();
                     adapter.notifyDataSetChanged();
                 }
                 break;
             case R.id.by_level:
-                if(guild != null) {
-                    guild.sortByLevel();
+                if(mGuild != null) {
+                    mGuild.sortByLevel();
                     adapter.notifyDataSetChanged();
                 }
                 break;
             case R.id.by_vocation:
-                if(guild != null) {
-                    guild.sortByVocation();
+                if(mGuild != null) {
+                    mGuild.sortByVocation();
                     adapter.notifyDataSetChanged();
                 }
                 break;
             case R.id.by_joined:
-                if(guild != null) {
-                    guild.sortByJoined();
+                if(mGuild != null) {
+                    mGuild.sortByJoined();
                     adapter.notifyDataSetChanged();
                 }
                 break;

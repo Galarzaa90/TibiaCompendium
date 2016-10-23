@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/cardview_padding">
             <EditText
-                android:id="@+id/search_guild"
+                android:id="@+id/field_search"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -76,29 +76,29 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/cardview_margin">
                 <TextView
-                    android:id="@+id/guild_name"
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/BigTitleText"
                     android:gravity="center_horizontal"
                     tools:text="Guild Name"/>
                 <TextView
-                    android:id="@+id/guild_info"
+                    android:id="@+id/info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/guild_name"
+                    android:layout_below="@id/name"
                     tools:text="@string/guild_info"/>
                 <TextView
-                    android:id="@+id/guild_members"
+                    android:id="@+id/members"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/guild_info"
+                    android:layout_below="@id/info"
                     tools:text="The guild has 100 members."/>
                 <TextView
-                    android:id="@+id/guild_members_online"
+                    android:id="@+id/members_online"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/guild_members"
+                    android:layout_below="@id/members"
                     tools:text="There are 10 members online."/>
                 <pl.droidsonroids.gif.GifImageView
                     android:id="@+id/guild_logo"
