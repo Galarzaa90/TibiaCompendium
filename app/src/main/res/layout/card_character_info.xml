@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/cardview_padding"
+    xmlns:tools="http://schemas.android.com/tools">
+    <ImageView
+        android:id="@+id/warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:src="@drawable/ic_warning"
+        android:tint="@color/red"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:contentDescription="@string/warning"
+        app:layout_constraintBottom_toBottomOf="@+id/name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/name" />
+    <TextView
+        android:id="@+id/name"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_weight="10"
+        tools:text="Name"
+        style="@style/BigTitleText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:src="@drawable/ic_male"
+        android:contentDescription="@string/male"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/name" />
+    <TextView
+        android:id="@+id/summary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="100"
+        style="@style/EntryText"
+        tools:text="Level 123 Vocation"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        app:layout_constraintLeft_toLeftOf="@+id/name" />
+    <TextView
+        android:id="@+id/achievements"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="20"
+        style="@style/EntryText"
+        app:layout_constraintRight_toLeftOf="@+id/icon_achievements"
+        app:layout_constraintBaseline_toBaselineOf="@+id/summary" />
+    <ImageView
+        android:id="@+id/icon_achievements"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_achievements"
+        android:contentDescription="@string/achievements"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/summary" />
+    <TextView
+        android:id="@+id/residence_title"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/residence"
+        style="@style/TitleText"
+        app:layout_constraintTop_toBottomOf="@+id/summary"
+        app:layout_constraintLeft_toLeftOf="@+id/summary" />
+    <TextView
+        android:id="@+id/residence"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        tools:text="City in World"
+        style="@style/EntryText"
+        app:layout_constraintTop_toBottomOf="@+id/residence_title"
+        app:layout_constraintLeft_toLeftOf="@+id/residence_title" />
+    <LinearLayout
+        android:id="@+id/container_house"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/residence"
+        app:layout_constraintLeft_toLeftOf="@+id/residence">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/house"/>
+        <TextView
+            android:id="@+id/house"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            tools:text="House"
+            style="@style/EntryText"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/container_guild"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/container_house"
+        app:layout_constraintLeft_toLeftOf="@+id/container_house">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/guild"
+            style="@style/TitleText"/>
+        <TextView
+            android:id="@+id/guild"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            tools:text="Rank of the Guild"
+            style="@style/EntryText"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/container_former_names"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="@+id/container_guild"
+        app:layout_constraintTop_toBottomOf="@+id/container_guild">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/former_names"/>
+        <TextView
+            android:id="@+id/former_names"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            tools:text="Former name, Former name 2, ..."
+            style="@style/EntryText"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/container_former_world"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/container_former_names"
+        app:layout_constraintLeft_toLeftOf="@+id/container_former_names">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/former_world"/>
+        <TextView
+            android:id="@+id/former_world"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            tools:text="Former World"
+            style="@style/EntryText"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/last_login_title"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/last_login"
+        app:layout_constraintTop_toBottomOf="@+id/container_former_world"
+        app:layout_constraintLeft_toLeftOf="@+id/container_former_world" />
+    <TextView
+        android:id="@+id/last_login"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        tools:text="Sep 09 2015 13:37 PST"
+        style="@style/EntryText"
+        app:layout_constraintTop_toBottomOf="@+id/last_login_title"
+        app:layout_constraintLeft_toLeftOf="@+id/last_login_title" />
+</android.support.constraint.ConstraintLayout>

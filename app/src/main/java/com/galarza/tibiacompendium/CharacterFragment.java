@@ -452,7 +452,7 @@ public class CharacterFragment extends Fragment {
         LayoutInflater inflater =
                 (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for(Death death : deaths) {
-            View rowView = inflater.inflate(R.layout.row_death, parent);
+            View rowView = inflater.inflate(R.layout.row_death, null);
 
             TextView dateView = (TextView)rowView.findViewById(R.id.death_date);
             dateView.setText(death.getDateString());
