@@ -1,5 +1,6 @@
 package com.galarza.tibiacompendium.data;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -23,6 +24,7 @@ public class Player {
     private String world;
     private String formerWorld;
     private String residence;
+    private String marriage;
     private String house;
     private String houseCity;
     private String guildRank;
@@ -158,6 +160,14 @@ public class Player {
      */
     public void setResidence(String residence) {
         this.residence = residence;
+    }
+
+    public String getMarriage() {
+        return marriage;
+    }
+
+    public void setMarriage(String marriage) {
+        this.marriage = marriage;
     }
 
     /**

@@ -52,6 +52,7 @@ public class CharacterFragment extends Fragment {
     private TextView mName;
     private TextView mSummary;
     private TextView mResidence;
+    private TextView mMarriage;
     private TextView mHouse;
     private TextView mGuild;
     private TextView mAchiements;
@@ -63,6 +64,7 @@ public class CharacterFragment extends Fragment {
     private ViewGroup mDeaths;
     private ViewGroup mCharacters;
 
+    private ViewGroup mContainerMarriage;
     private ViewGroup mContainerHouse;
     private ViewGroup mContainerGuild;
     private ViewGroup mContainerFormerNames;
@@ -111,6 +113,7 @@ public class CharacterFragment extends Fragment {
         mName = (TextView)rootView.findViewById(R.id.name);
         mSummary = (TextView)rootView.findViewById(R.id.summary);
         mResidence = (TextView)rootView.findViewById(R.id.residence);
+        mMarriage = (TextView)rootView.findViewById(R.id.marriage);
         mHouse = (TextView)rootView.findViewById(R.id.house);
         mAchiements = (TextView)rootView.findViewById(R.id.achievements);
         mGuild = (TextView)rootView.findViewById(R.id.guild);
@@ -122,6 +125,7 @@ public class CharacterFragment extends Fragment {
         mDeaths = (ViewGroup) rootView.findViewById(R.id.deaths);
         mCharacters = (ViewGroup) rootView.findViewById(R.id.other_chars);
 
+        mContainerMarriage = (ViewGroup) rootView.findViewById(R.id.container_marriage);
         mContainerHouse = (ViewGroup) rootView.findViewById(R.id.container_house);
         mContainerGuild = (ViewGroup) rootView.findViewById(R.id.container_guild);
         mContainerFormerNames = (ViewGroup) rootView.findViewById(R.id.container_former_names);
@@ -358,6 +362,22 @@ public class CharacterFragment extends Fragment {
                 player.getResidence(),
                 player.getWorld()
         ));
+        /* Marriage */
+        if(player.getMarriage() != null){
+            mContainerMarriage.setVisibility(View.VISIBLE);
+            final String marriageString = player.getMarriage();
+            SpannableString marriageStyled = new SpannableString(marriageString);
+            marriageStyled.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View view) {
+                    new fetchData(getContext()).execute(marriageString);
+                }
+            },0,marriageString.length(),0);
+            mMarriage.setMovementMethod(LinkMovementMethod.getInstance());
+            mMarriage.setText(marriageStyled);
+        }else{
+            mContainerMarriage.setVisibility(View.GONE);
+        }
         /* House */
         if(player.getHouse() != null){
             mContainerHouse.setVisibility(View.VISIBLE);

@@ -57,8 +57,8 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/summary" />
     <ImageView
         android:id="@+id/icon_achievements"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_gravity="center"
         android:src="@drawable/ic_achievements"
         android:contentDescription="@string/achievements"
@@ -81,14 +81,34 @@
         app:layout_constraintTop_toBottomOf="@+id/residence_title"
         app:layout_constraintLeft_toLeftOf="@+id/residence_title" />
     <LinearLayout
+        android:id="@+id/container_marriage"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/residence"
+        app:layout_constraintLeft_toLeftOf="@+id/residence">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/marriage"/>
+        <TextView
+            android:id="@+id/marriage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Sweetheart"
+            style="@style/EntryText"/>
+        </LinearLayout>
+    <LinearLayout
         android:id="@+id/container_house"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
         tools:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/residence"
-        app:layout_constraintLeft_toLeftOf="@+id/residence">
+        app:layout_constraintTop_toBottomOf="@+id/container_marriage"
+        app:layout_constraintLeft_toLeftOf="@+id/container_marriage">
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"

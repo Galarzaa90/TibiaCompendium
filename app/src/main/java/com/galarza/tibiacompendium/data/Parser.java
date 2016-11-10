@@ -105,6 +105,14 @@ public class Parser {
             player.setResidence(m.group(1));
         }
 
+        /* Get player's marriage */
+        m = getMatcher(content, "Married to:</td><td><a href=\"https://secure\\.tibia\\.com/community/\\?subtopic=characters&name=([^\"]+)\"");
+        if(m.find()) {
+            Log.e(TAG,m.group(0));
+            Log.e(TAG,m.group(1));
+            player.setMarriage(m.group(1).replaceAll("\\+"," "));
+        }
+
         /* Get player's house */
         m = getMatcher(content, "House:</td><td>(.+?)\\s\\(([A-z]+)\\) is paid until ([A-z]+).*?;(\\d+).*?;(\\d+)");
         if(m.find()) {
