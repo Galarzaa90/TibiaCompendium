@@ -106,34 +106,32 @@ public class Parser {
         }
 
         /* Get player's marriage */
-        m = getMatcher(content, "Married to:</td><td><a href=\"https://secure\\.tibia\\.com/community/\\?subtopic=characters&name=([^\"]+)\"");
+        m = getMatcher(content, "Married To:</td><td><a href=\"https://secure\\.tibia\\.com/community/\\?subtopic=characters&name=([^\"]+)\"");
         if(m.find()) {
-            Log.e(TAG,m.group(0));
-            Log.e(TAG,m.group(1));
             player.setMarriage(m.group(1).replaceAll("\\+"," "));
         }
 
         /* Get player's house */
-        m = getMatcher(content, "House:</td><td>(.+?)\\s\\(([A-z]+)\\) is paid until ([A-z]+).*?;(\\d+).*?;(\\d+)");
+        m = getMatcher(content, "House:</td><td> <a href=\\\"https://secure\\.tibia\\.com/community/\\?subtopic=houses.+houseid=(\\d+)&amp;character=(?:[^&]+)&amp;action=characters\\\" >([^<]+)</a> \\(([^(]+)\\) is paid until ([A-z]+).*?;(\\d+).*?;(\\d+)");
         if(m.find()) {
-            player.setHouse(m.group(1));
-            player.setHouseCity(m.group(2));
+            player.setHouse(m.group(2));
+            player.setHouseCity(m.group(3));
         }
 
         /* Get the player's guild rank */
-        m = getMatcher(content, "membership:</td><td>([^<]+)\\sof the");
+        m = getMatcher(content, "Membership:</td><td>([^<]+)\\sof the");
         if(m.find()){
             player.setGuildRank(m.group(1).trim());
 
             /* Get the player's guild */
-            m = getMatcher(content, "GuildName=.*?([^\"]+).+");
+            m = getMatcher(content, "GuildName=.*?([^&]+).+");
             if (m.find()){
                 player.setGuild(m.group(1).replaceAll("\\+"," "));
             }
         }
 
         /* Get the player's last login date */
-        m = getMatcher(content, "Last login:</td><td>([^<]+)");
+        m = getMatcher(content, "Last Login:</td><td>([^<]+)");
         if(m.find()) {
             String lastLogin = Utils.fromHtml(m.group(1)).toString();
             lastLogin = lastLogin.replaceAll(String.valueOf((char) 160), " ");
