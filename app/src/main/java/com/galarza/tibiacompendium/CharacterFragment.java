@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,6 +29,8 @@ import com.galarza.tibiacompendium.data.Parser;
 import com.galarza.tibiacompendium.data.Player;
 import com.galarza.tibiacompendium.data.Utils;
 import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,23 +55,22 @@ public class CharacterFragment extends Fragment {
     private TextView mName;
     private TextView mSummary;
     private TextView mResidence;
+    private TextView mMarriageTitle;
     private TextView mMarriage;
+    private TextView mHouseTitle;
     private TextView mHouse;
+    private TextView mGuildTitle;
     private TextView mGuild;
-    private TextView mAchiements;
+    private TextView mAchievements;
+    private TextView mFormerNamesTitle;
     private TextView mFormerNames;
+    private TextView mFormerWorldTitle;
     private TextView mFormerWorld;
     private TextView mLastLogin;
-    private TextView mComment;
 
+    private TextView mComment;
     private ViewGroup mDeaths;
     private ViewGroup mCharacters;
-
-    private ViewGroup mContainerMarriage;
-    private ViewGroup mContainerHouse;
-    private ViewGroup mContainerGuild;
-    private ViewGroup mContainerFormerNames;
-    private ViewGroup mContainerFormerWorld;
 
     private ViewGroup mContainerComment;
     private ViewGroup mContainerDeaths;
@@ -115,7 +117,7 @@ public class CharacterFragment extends Fragment {
         mResidence = (TextView)rootView.findViewById(R.id.residence);
         mMarriage = (TextView)rootView.findViewById(R.id.marriage);
         mHouse = (TextView)rootView.findViewById(R.id.house);
-        mAchiements = (TextView)rootView.findViewById(R.id.achievements);
+        mAchievements = (TextView)rootView.findViewById(R.id.achievements);
         mGuild = (TextView)rootView.findViewById(R.id.guild);
         mFormerNames = (TextView)rootView.findViewById(R.id.former_names);
         mFormerWorld = (TextView)rootView.findViewById(R.id.former_world);
@@ -125,11 +127,11 @@ public class CharacterFragment extends Fragment {
         mDeaths = (ViewGroup) rootView.findViewById(R.id.deaths);
         mCharacters = (ViewGroup) rootView.findViewById(R.id.other_chars);
 
-        mContainerMarriage = (ViewGroup) rootView.findViewById(R.id.container_marriage);
-        mContainerHouse = (ViewGroup) rootView.findViewById(R.id.container_house);
-        mContainerGuild = (ViewGroup) rootView.findViewById(R.id.container_guild);
-        mContainerFormerNames = (ViewGroup) rootView.findViewById(R.id.container_former_names);
-        mContainerFormerWorld = (ViewGroup) rootView.findViewById(R.id.container_former_world);
+        mMarriageTitle = (TextView) rootView.findViewById(R.id.marriage_title);
+        mHouseTitle = (TextView) rootView.findViewById(R.id.house_title);
+        mGuildTitle = (TextView) rootView.findViewById(R.id.guild_title);
+        mFormerNamesTitle = (TextView) rootView.findViewById(R.id.former_names_title);
+        mFormerWorldTitle = (TextView) rootView.findViewById(R.id.former_world_title);
 
         mContainerComment = (ViewGroup) rootView.findViewById(R.id.container_comment);
         mContainerDeaths = (ViewGroup)rootView.findViewById(R.id.container_deaths);
@@ -355,7 +357,7 @@ public class CharacterFragment extends Fragment {
             mGender.setContentDescription(getString(R.string.male));
         }
         /* Achievement points */
-        mAchiements.setText(String.valueOf(player.getAchievementPoints()));
+        mAchievements.setText(String.valueOf(player.getAchievementPoints()));
         /* Residence */
         mResidence.setText(getString(
                 R.string.char_residence,
@@ -364,7 +366,6 @@ public class CharacterFragment extends Fragment {
         ));
         /* Marriage */
         if(player.getMarriage() != null){
-            mContainerMarriage.setVisibility(View.VISIBLE);
             final String marriageString = player.getMarriage();
             SpannableString marriageStyled = new SpannableString(marriageString);
             marriageStyled.setSpan(new ClickableSpan() {
@@ -375,23 +376,31 @@ public class CharacterFragment extends Fragment {
             },0,marriageString.length(),0);
             mMarriage.setMovementMethod(LinkMovementMethod.getInstance());
             mMarriage.setText(marriageStyled);
+            mMarriage.setVisibility(View.VISIBLE);
+            mMarriageTitle.setVisibility(View.VISIBLE);
         }else{
-            mContainerMarriage.setVisibility(View.GONE);
+            mMarriage.setVisibility(View.GONE);
+            mMarriageTitle.setVisibility(View.GONE);
         }
         /* House */
         if(player.getHouse() != null){
-            mContainerHouse.setVisibility(View.VISIBLE);
+            Log.e("afafaf","house set visible");
+            mHouseTitle.setVisibility(View.VISIBLE);
+            mHouse.setVisibility(View.VISIBLE);
             mHouse.setText(getString(
                     R.string.char_house,
                     player.getHouse(),
                     player.getHouseCity()
             ));
         }else{
-            mContainerHouse.setVisibility(View.GONE);
+            Log.e("afafaf","house set gone");
+            mHouse.setVisibility(View.GONE);
+            mHouseTitle.setVisibility(View.GONE);
         }
         /* Guild */
         if(player.getGuild() != null){
-            mContainerGuild.setVisibility(View.VISIBLE);
+            mGuild.setVisibility(View.VISIBLE);
+            mGuildTitle.setVisibility(View.VISIBLE);
             final String guildRank = player.getGuildRank();
             final String guild = player.getGuild();
             final String guildString = getString(R.string.guildcontent,guildRank,guild);
@@ -414,21 +423,26 @@ public class CharacterFragment extends Fragment {
             mGuild.setMovementMethod(LinkMovementMethod.getInstance());
             mGuild.setText(guildStyled);
         }else{
-            mContainerGuild.setVisibility(View.GONE);
+            mGuild.setVisibility(View.GONE);
+            mGuildTitle.setVisibility(View.GONE);
         }
         /* Former names */
         if(player.getFormerNames() != null){
-            mContainerFormerNames.setVisibility(View.VISIBLE);
+            mFormerNamesTitle.setVisibility(View.VISIBLE);
+            mFormerNames.setVisibility(View.VISIBLE);
             mFormerNames.setText(player.getFormerNames());
         }else{
-            mContainerFormerNames.setVisibility(View.GONE);
+            mFormerNamesTitle.setVisibility(View.GONE);
+            mFormerNames.setVisibility(View.GONE);
         }
         /* Former world */
         if(player.getFormerWorld() != null){
-            mContainerFormerWorld.setVisibility(View.VISIBLE);
+            mFormerWorldTitle.setVisibility(View.VISIBLE);
+            mFormerWorld.setVisibility(View.VISIBLE);
             mFormerWorld.setText(player.getFormerWorld());
         }else{
-            mContainerFormerWorld.setVisibility(View.GONE);
+            mFormerWorldTitle.setVisibility(View.GONE);
+            mFormerWorld.setVisibility(View.GONE);
         }
         /* Last login */
         if(player.getLastLoginString() != null) {
