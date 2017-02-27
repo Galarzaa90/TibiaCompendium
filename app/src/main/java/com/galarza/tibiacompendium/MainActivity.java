@@ -1,9 +1,15 @@
 package com.galarza.tibiacompendium;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -14,26 +20,54 @@ import android.widget.Button;
 
 import com.galarza.tibiacompendium.data.Utils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public Fragment fragment;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        /* Drawer views and actions */
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout,toolbar,R.string.open_navigation_drawer,R.string.close_navigation_drawer);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView)findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if(savedInstanceState == null){
             fragmentManager.beginTransaction()
-                    .replace(R.id.container,HomeFragment.newInstance())
+                    .replace(R.id.container,new HomeFragment())
                     .addToBackStack(null)
                     .commit();
         }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_item:
+                launchItemFragment();
+                break;
+            case R.id.action_character:
+                launchCharacterFragment();
+                break;
+            case R.id.action_guild:
+                launchGuildFragment();
+                break;
+        }
+        mDrawerLayout.closeDrawers();
+        return false;
     }
 
     @Override
@@ -55,6 +89,36 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    public void launchItemFragment(){
+        int in = R.anim.slide_in_right;
+        int out = R.anim.slide_out_left;
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container,new ItemFragment())
+                .setCustomAnimations(in,out,in,out)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public void launchCharacterFragment(){
+        int in = R.anim.slide_in_right;
+        int out = R.anim.slide_out_left;
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new CharacterFragment())
+                .setCustomAnimations(in,out,in,out)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public void launchGuildFragment(){
+        int in = R.anim.slide_in_right;
+        int out = R.anim.slide_out_left;
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container,new GuildFragment())
+                .setCustomAnimations(in,out,in,out)
+                .addToBackStack(null)
+                .commit();
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -68,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static HomeFragment newInstance() {
+        public HomeFragment newInstance() {
             HomeFragment fragment = new HomeFragment();
             Bundle args = new Bundle();
             args.putInt(Utils.ARG_TITLE_RESOURCE, R.string.title_home);
@@ -87,13 +151,7 @@ public class MainActivity extends AppCompatActivity {
             ItemsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int in = R.anim.slide_in_right;
-                    int out = R.anim.slide_out_left;
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.container,ItemFragment.newInstance())
-                            .setCustomAnimations(in,out,in,out)
-                            .addToBackStack(null)
-                            .commit();
+                    ((MainActivity)getActivity()).launchItemFragment();
                 }
             });
 
@@ -101,26 +159,14 @@ public class MainActivity extends AppCompatActivity {
             characterButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int in = R.anim.slide_in_right;
-                    int out = R.anim.slide_out_left;
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.container,CharacterFragment.newInstance())
-                            .setCustomAnimations(in,out,in,out)
-                            .addToBackStack(null)
-                            .commit();
+                    ((MainActivity)getActivity()).launchCharacterFragment();
                 }
             });
             final Button guildButton = (Button)rootView.findViewById(R.id.button_guild);
             guildButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int in = R.anim.slide_in_right;
-                    int out = R.anim.slide_out_left;
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.container,GuildFragment.newInstance())
-                            .setCustomAnimations(in,out,in,out)
-                            .addToBackStack(null)
-                            .commit();
+                    ((MainActivity)getActivity()).launchGuildFragment();
                 }
             });
             return rootView;

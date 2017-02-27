@@ -9,6 +9,9 @@
         <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimary</item>
         <item name="android:colorBackground">@color/grey_200</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="RaisedButton" parent="AppTheme">
         <item name="colorControlHighlight">@color/colorPrimaryDark</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>

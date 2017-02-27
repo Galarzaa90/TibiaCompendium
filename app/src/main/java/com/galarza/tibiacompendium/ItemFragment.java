@@ -301,7 +301,9 @@ public class ItemFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        //toolbar.setTitle(R.string.title_items);
+        if(toolbar != null) {
+            toolbar.setTitle(R.string.title_items);
+        }
 
     }
 

@@ -76,22 +76,6 @@ public class CharacterFragment extends Fragment {
     private ViewGroup mContainerDeaths;
     private ViewGroup mContainerChars;
 
-    public static CharacterFragment newInstance() {
-        CharacterFragment fragment = new CharacterFragment();
-        Bundle args = new Bundle();
-        args.putInt(Utils.ARG_TITLE_RESOURCE, R.string.title_search_char);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static CharacterFragment searchInstance(String name){
-        CharacterFragment fragment = newInstance();
-        Bundle args = fragment.getArguments();
-        args.putString(Utils.ARG_PLAYER_NAME,name);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -210,7 +194,11 @@ public class CharacterFragment extends Fragment {
             }
         });
         /* Getting player name argument */
-        String playerName = getArguments().getString(Utils.ARG_PLAYER_NAME);
+        Bundle arguments = getArguments();
+        String playerName = null;
+        if(arguments != null) {
+            playerName = getArguments().getString(Utils.ARG_PLAYER_NAME);
+        }
         /* If a player is already loaded, fill views */
         if(mPlayer != null){
             loadViews(mPlayer);
@@ -325,7 +313,7 @@ public class CharacterFragment extends Fragment {
         super.onAttach(context);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         if(toolbar != null) {
-            toolbar.setTitle(getArguments().getInt(Utils.ARG_TITLE_RESOURCE));
+            toolbar.setTitle(R.string.title_search_char);
         }
     }
 
@@ -413,10 +401,15 @@ public class CharacterFragment extends Fragment {
                 public void onClick(View widget) {
                     int in = R.anim.slide_in_right;
                     int out = R.anim.slide_out_left;
+                    GuildFragment fragment = new GuildFragment();
+                    Bundle arguments = new Bundle();
+                    arguments.putString(Utils.ARG_GUILD_NAME,guild);
+                    fragment.setArguments(arguments);
+
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(in,out,in,out)
                             .addToBackStack(null)
-                            .replace(R.id.container,GuildFragment.searchInstance(guild))
+                            .replace(R.id.container,fragment)
                             .commit();
                 }
             },startIndex,endIndex,0);
