@@ -72,6 +72,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="item_image">Item image</string>
     <string name="marriage">Marriage</string>
-    <string name="open_navigation_drawer">Abrir</string>
-    <string name="close_navigation_drawer">Cerrar</string>
+    <string name="open_navigation_drawer">Open</string>
+    <string name="close_navigation_drawer">Close</string>
 </resources>

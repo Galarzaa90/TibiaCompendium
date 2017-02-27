@@ -19,6 +19,9 @@ public class Utils {
     public static final String ARG_GUILD_NAME = "guild_name";
     public static final String ARG_PLAYER_NAME = "player_name";
 
+    public static final String PREFS_NAME = "TibiaCompendiumPrefs";
+    public static final String PREFS_CHARACTER_HISTORY = "CharacterHistory";
+
     /* Tibia.com date formats */
     public static final DateFormat LONG_DATE = new SimpleDateFormat("MMM dd yyyy, HH:mm:ss z", Locale.UK);
     public static final DateFormat SHORT_DATE = new SimpleDateFormat("MMM dd yyyy", Locale.UK);

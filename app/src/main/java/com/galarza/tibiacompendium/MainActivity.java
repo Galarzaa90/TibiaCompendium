@@ -3,6 +3,7 @@ package com.galarza.tibiacompendium;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public Fragment fragment;
     private DrawerLayout mDrawerLayout;
+
+    public SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .addToBackStack(null)
                     .commit();
         }
+
+        preferences = getSharedPreferences(Utils.PREFS_NAME,MODE_PRIVATE);
     }
 
     @Override

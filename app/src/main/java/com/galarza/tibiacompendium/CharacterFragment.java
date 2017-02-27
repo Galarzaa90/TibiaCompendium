@@ -1,6 +1,7 @@
 package com.galarza.tibiacompendium;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,7 +43,9 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CharacterFragment extends Fragment {
     private Player mPlayer = null;
@@ -76,6 +81,9 @@ public class CharacterFragment extends Fragment {
     private ViewGroup mContainerDeaths;
     private ViewGroup mContainerChars;
 
+    private Set<String> history;
+    SharedPreferences preferences;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -88,6 +96,9 @@ public class CharacterFragment extends Fragment {
         View rootView =  inflater.inflate(R.layout.fragment_character, container, false);
 
         ((MainActivity)getActivity()).fragment = this;
+
+        preferences = ((MainActivity) getActivity()).preferences;
+        history = preferences.getStringSet(Utils.PREFS_CHARACTER_HISTORY, new HashSet<String>());
 
         /* Views used in the async task */
         mContainerCharacter = (ViewGroup) rootView.findViewById(R.id.container_character);
@@ -121,7 +132,7 @@ public class CharacterFragment extends Fragment {
         mContainerDeaths = (ViewGroup)rootView.findViewById(R.id.container_deaths);
         mContainerChars = (ViewGroup) rootView.findViewById(R.id.container_chars);
 
-        final EditText fieldSearch = (EditText)rootView.findViewById(R.id.field_search);
+        final AutoCompleteTextView fieldSearch = (AutoCompleteTextView) rootView.findViewById(R.id.field_search);
         fieldSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -137,6 +148,10 @@ public class CharacterFragment extends Fragment {
                 return false;
             }
         });
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_list_item_1, history.toArray(new String[history.size()]));
+        fieldSearch.setAdapter(adapter);
+
 
         final Button buttonSearch = (Button) rootView.findViewById(R.id.button_search);
         buttonSearch.setOnClickListener(new OnClickListener() {
@@ -317,6 +332,14 @@ public class CharacterFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putStringSet(Utils.PREFS_CHARACTER_HISTORY, history);
+        editor.apply();
+    }
+
     private void loadViews(final Player player){
         if(player == null){
             mContainerNoResults.setVisibility(View.VISIBLE);
@@ -328,6 +351,9 @@ public class CharacterFragment extends Fragment {
         }
         mContainerNoResults.setVisibility(View.GONE);
         mContainerCharacter.setVisibility(View.VISIBLE);
+
+        history.add(player.getName());
+
         /* Name */
         mName.setText(player.getName());
         /* Summary (level & vocation) */
