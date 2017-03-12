@@ -74,4 +74,7 @@
     <string name="marriage">Marriage</string>
     <string name="open_navigation_drawer">Open</string>
     <string name="close_navigation_drawer">Close</string>
+    <string name="account_status">Account Status</string>
+    <string name="premium_account">Premium Account</string>
+    <string name="free_account">Free Account</string>
 </resources>

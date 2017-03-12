@@ -10,12 +10,12 @@
         android:layout_height="wrap_content"
         tools:text="Apr 09 2016 12:34:34 CET"
         android:id="@+id/death_date"
-        style="@style/TitleText"/>
+        style="@style/TimeText"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Died at Level 100 by a demon."
         android:id="@+id/death_details"
-        style="@style/EntryText"/>
+        style="@style/SmallEntryText"/>
 
 </LinearLayout>

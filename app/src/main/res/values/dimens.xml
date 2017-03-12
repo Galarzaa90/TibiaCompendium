@@ -5,9 +5,4 @@
     <dimen name="cardview_padding">3dp</dimen>
     <!-- Horizontal margin for CardViews -->
     <dimen name="cardview_margin">2dp</dimen>
-
-    <dimen name="title">14sp</dimen>
-    <dimen name="entry">18sp</dimen>
-    <dimen name="big_title">24sp</dimen>
-
 </resources>

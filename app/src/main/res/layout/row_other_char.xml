@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         tools:text="Character name"
         android:layout_alignParentStart="true"
-        style="@style/EntryText"/>
+        style="@style/SmallEntryText"/>
     <TextView
         android:id="@+id/char_world"
         android:layout_width="wrap_content"

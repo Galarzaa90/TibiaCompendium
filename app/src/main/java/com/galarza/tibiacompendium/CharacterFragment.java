@@ -66,12 +66,12 @@ public class CharacterFragment extends Fragment {
     private TextView mHouse;
     private TextView mGuildTitle;
     private TextView mGuild;
-    private TextView mAchievements;
     private TextView mFormerNamesTitle;
     private TextView mFormerNames;
     private TextView mFormerWorldTitle;
     private TextView mFormerWorld;
     private TextView mLastLogin;
+    private TextView mAccountStatus;
 
     private TextView mComment;
     private ViewGroup mDeaths;
@@ -112,11 +112,11 @@ public class CharacterFragment extends Fragment {
         mResidence = (TextView)rootView.findViewById(R.id.residence);
         mMarriage = (TextView)rootView.findViewById(R.id.marriage);
         mHouse = (TextView)rootView.findViewById(R.id.house);
-        mAchievements = (TextView)rootView.findViewById(R.id.achievements);
         mGuild = (TextView)rootView.findViewById(R.id.guild);
         mFormerNames = (TextView)rootView.findViewById(R.id.former_names);
         mFormerWorld = (TextView)rootView.findViewById(R.id.former_world);
         mLastLogin = (TextView)rootView.findViewById(R.id.last_login);
+        mAccountStatus = (TextView)rootView.findViewById(R.id.account_status);
         mComment = (TextView)rootView.findViewById(R.id.comment);
 
         mDeaths = (ViewGroup) rootView.findViewById(R.id.deaths);
@@ -370,8 +370,6 @@ public class CharacterFragment extends Fragment {
             mGender.setImageResource(R.drawable.ic_male);
             mGender.setContentDescription(getString(R.string.male));
         }
-        /* Achievement points */
-        mAchievements.setText(String.valueOf(player.getAchievementPoints()));
         /* Residence */
         mResidence.setText(getString(
                 R.string.char_residence,
@@ -482,6 +480,12 @@ public class CharacterFragment extends Fragment {
             mCharacters.removeAllViews();
             mContainerChars.setVisibility(View.VISIBLE);
             loadCharsView(getContext(), mCharacters, player.getOtherCharacters());
+        }
+
+        if(player.isPremium()){
+            mAccountStatus.setText(R.string.premium_account);
+        }else{
+            mAccountStatus.setText(R.string.free_account);
         }
 
         /* Deletion */
