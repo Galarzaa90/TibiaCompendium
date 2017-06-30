@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -21,12 +23,16 @@ import android.widget.Button;
 
 import com.galarza.tibiacompendium.data.Utils;
 
+import okhttp3.OkHttpClient;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public Fragment fragment;
     private DrawerLayout mDrawerLayout;
 
     public SharedPreferences preferences;
+
+    public static final OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,8 +187,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public void onAttach(Context context) {
             super.onAttach(context);
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-            //toolbar.setTitle(R.string.app_name);
-
         }
 
     }

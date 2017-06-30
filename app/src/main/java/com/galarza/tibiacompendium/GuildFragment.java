@@ -1,11 +1,14 @@
 package com.galarza.tibiacompendium;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,12 +33,8 @@ import com.galarza.tibiacompendium.data.Parser;
 import com.galarza.tibiacompendium.data.Utils;
 import com.google.gson.Gson;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -44,6 +43,10 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
@@ -102,7 +105,7 @@ public class GuildFragment extends Fragment {
                             (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
 
-                    new fetchData(getContext()).execute(v.getText().toString().trim());
+                    fetchGuild(v.getText().toString().trim());
                     return true;
                 }
                 return false;
@@ -118,7 +121,7 @@ public class GuildFragment extends Fragment {
                         (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
 
-                new fetchData(getContext()).execute(fieldSearch.getText().toString());
+                fetchGuild(fieldSearch.getText().toString());
             }
         });
         /* Getting guild name argument */
@@ -133,7 +136,7 @@ public class GuildFragment extends Fragment {
         /* If fragment was called with a guild argument, load guild */
         }else if(guildName != null){
             fieldSearch.setText(guildName);
-            new fetchData(getContext()).execute(guildName);
+            fetchGuild(guildName);
         }
 
         /* Recovering state */
@@ -161,75 +164,65 @@ public class GuildFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private class fetchData extends AsyncTask<String,Integer,Guild>{
-        private Context mContext;
-        fetchData(Context context){
-            mContext = context;
+    private void fetchGuild(String name){
+        name = name.trim();
+        if(!NetworkUtils.isConnected(getContext())){
+            Toast.makeText(getContext(),R.string.no_network_error,Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        @Override
-        protected Guild doInBackground(String... params) {
-            if(!NetworkUtils.isConnected(mContext)){
-                publishProgress(Utils.NO_NETWORK_ENABLED);
-                return null;
+        Request request;
+        try {
+            request = new Request.Builder()
+                    .url("https://secure.tibia.com/community/?subtopic=guilds&page=view&GuildName="+ URLEncoder.encode(name,"UTF-8"))
+                    .build();
+        } catch (UnsupportedEncodingException e) {
+            return;
+        }
+
+        mGuild = null;
+        containerLoading.setVisibility(View.VISIBLE);
+        containerNoResults.setVisibility(View.GONE);
+        containerGuild.setVisibility(View.GONE);
+
+        MainActivity.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        containerLoading.setVisibility(View.GONE);
+                        Toast.makeText(getContext(),R.string.network_error,Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
-            HttpURLConnection connection;
-            InputStream stream;
-            try {
-                connection = (HttpURLConnection)(
-                        new URL("https://secure.tibia.com/community/?subtopic=guilds&page=view&GuildName="+ URLEncoder.encode(params[0],"UTF-8")))
-                        .openConnection();
-                connection.setRequestMethod("GET");
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                connection.connect();
-
-                //Reading response
-                StringBuilder buffer = new StringBuilder();
-                stream = connection.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(!response.isSuccessful()){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),R.string.network_error,Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return;
                 }
-
-                stream.close();
-                connection.disconnect();
-                    return Parser.parseGuild(buffer.toString());
-            }catch (SocketTimeoutException s){
-                //publishProgress();
-            }catch (IOException e) {
-                publishProgress(Utils.COULDNT_REACH);
+                final Guild guild = Parser.parseGuild(response.body().string());
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        containerLoading.setVisibility(View.GONE);
+                        mGuild = guild;
+                        loadViews(mGuild);
+                    }
+                });
             }
-            return null;
-        }
+        });
 
-        protected void onProgressUpdate(Integer... progress){
-            if(progress[0] == Utils.COULDNT_REACH){
-                Toast.makeText(getContext(),R.string.network_error,Toast.LENGTH_SHORT).show();
-            }
-            if(progress[0] == Utils.NO_NETWORK_ENABLED){
-                Toast.makeText(getContext(),R.string.no_network_error,Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            mGuild = null;
-            containerLoading.setVisibility(View.VISIBLE);
-            containerNoResults.setVisibility(View.GONE);
-            containerGuild.setVisibility(View.GONE);
-        }
-
-        @Override
-        protected void onPostExecute(Guild result) {
-            containerLoading.setVisibility(View.GONE);
-            mGuild = result;
-            loadViews(mGuild);
-        }
     }
-    
+
+    //TODO: Replace with okhttp call
     private class fetchGuildLogo extends AsyncTask<String,Integer,GifDrawable>{
 
         private final String logoUrl;

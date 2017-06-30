@@ -249,7 +249,7 @@ public class Parser {
         /* Getting member list */
         m = getMatcher(
                 content,
-                "<TD>([^<]+)</TD></td><TD><A HREF=\"https://secure\\.tibia\\.com/community/\\?subtopic=characters&name=([^\"]+)\">[^<]+</A> *\\(*(.*?)\\)*</TD><TD>([^<]+)</TD><TD>([^<]+)</TD><TD>([^<]+)</TD><TD class='onlinestatus'><span class=\"(\\w+)\"",
+                "<TR BGCOLOR=#[\\dABCDEF]+><TD>(.+?)<\\/TD>\\s<\\/td><TD><A HREF=\"https:\\/\\/secure.tibia.com\\/community\\/\\?subtopic=characters&name=(.+?)\">.+?<\\/A> *\\(*(.*?)\\)*<\\/TD>\\s<TD>(.+?)<\\/TD>\\s<TD>(.+?)<\\/TD>\\s<TD>(.+?)<\\/TD>\\s<TD class='onlinestatus'><span class=\"(\\w+)\"",
                 Pattern.DOTALL
         );
         String prevRank = "";

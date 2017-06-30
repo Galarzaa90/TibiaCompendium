@@ -39,6 +39,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -46,6 +47,13 @@ import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class CharacterFragment extends Fragment {
     private Player mPlayer = null;
@@ -142,7 +150,7 @@ public class CharacterFragment extends Fragment {
                             (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
 
-                    new fetchData(getContext()).execute(v.getText().toString().trim());
+                    fetchCharacter(v.getText().toString().trim());
                     return true;
                 }
                 return false;
@@ -162,7 +170,7 @@ public class CharacterFragment extends Fragment {
                         (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
 
-                new fetchData(getContext()).execute(fieldSearch.getText().toString());
+                fetchCharacter(fieldSearch.getText().toString());
             }
         });
 
@@ -220,7 +228,7 @@ public class CharacterFragment extends Fragment {
         /* If fragment was called with a name argument, load name */
         }else if(playerName != null){
             fieldSearch.setText(playerName);
-            new fetchData(getContext()).execute(playerName);
+            fetchCharacter(playerName);
         }
 
         /* Recovering state */
@@ -250,77 +258,66 @@ public class CharacterFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private class fetchData extends AsyncTask<String, Integer, Player> {
-        private final Context mContext;
-        fetchData(Context context){
-            mContext = context;
+
+    private void fetchCharacter(String name){
+        if(!NetworkUtils.isConnected(getContext())){
+            Toast.makeText(getContext(),R.string.no_network_error,Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        @Override
-        protected Player doInBackground(String... params) {
-            if(!NetworkUtils.isConnected(mContext)){
-                publishProgress(Utils.NO_NETWORK_ENABLED);
-                return null;
+        Request request;
+        try {
+            request = new Request.Builder()
+                    .url("https://secure.tibia.com/community/?subtopic=characters&name="+ URLEncoder.encode(name,"UTF-8"))
+                    .build();
+        } catch (UnsupportedEncodingException e) {
+            return;
+        }
+
+        mPlayer = null;
+        mContainerLoading.setVisibility(View.VISIBLE);
+        mContainerCharacter.setVisibility(View.GONE);
+        mContainerComment.setVisibility(View.GONE);
+        mContainerDeaths.setVisibility(View.GONE);
+        mContainerChars.setVisibility(View.GONE);
+        mContainerNoResults.setVisibility(View.GONE);
+
+        MainActivity.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mContainerLoading.setVisibility(View.GONE);
+                        Toast.makeText(getContext(),R.string.network_error,Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
-            HttpURLConnection connection;
-            InputStream stream;
-            try {
-                connection = (HttpURLConnection)(
-                        new URL("https://secure.tibia.com/community/?subtopic=characters&name="+ URLEncoder.encode(params[0],"UTF-8")))
-                        .openConnection();
-                connection.setRequestMethod("GET");
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                connection.connect();
-
-                //Reading response
-                StringBuilder buffer = new StringBuilder();
-                stream = connection.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(!response.isSuccessful()){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),R.string.network_error,Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return;
                 }
-
-                stream.close();
-                connection.disconnect();
-
-                return Parser.parseCharacter(buffer.toString());
-            }catch (SocketTimeoutException s){
-                //publishProgress();
-            }catch (IOException e) {
-                publishProgress(Utils.COULDNT_REACH);
+                final Player player = Parser.parseCharacter(response.body().string());
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mContainerLoading.setVisibility(View.GONE);
+                        mPlayer = player;
+                        loadViews(mPlayer);
+                    }
+                });
             }
-            return null;
-        }
+        });
 
-        protected void onProgressUpdate(Integer... progress){
-            if(progress[0] == Utils.COULDNT_REACH){
-                Toast.makeText(getContext(),R.string.network_error,Toast.LENGTH_SHORT).show();
-            }
-            if(progress[0] == Utils.NO_NETWORK_ENABLED){
-                Toast.makeText(getContext(),R.string.no_network_error,Toast.LENGTH_SHORT).show();
-            }
-        }
 
-        @Override
-        protected void onPreExecute() {
-            mPlayer = null;
-            mContainerLoading.setVisibility(View.VISIBLE);
-            mContainerCharacter.setVisibility(View.GONE);
-            mContainerComment.setVisibility(View.GONE);
-            mContainerDeaths.setVisibility(View.GONE);
-            mContainerChars.setVisibility(View.GONE);
-            mContainerNoResults.setVisibility(View.GONE);
-        }
-
-        @Override
-        protected void onPostExecute(Player result){
-            mContainerLoading.setVisibility(View.GONE);
-            mPlayer = result;
-            loadViews(mPlayer);
-        }
     }
 
     @Override
@@ -383,7 +380,7 @@ public class CharacterFragment extends Fragment {
             marriageStyled.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(View view) {
-                    new fetchData(getContext()).execute(marriageString);
+                    fetchCharacter(marriageString);
                 }
             },0,marriageString.length(),0);
             mMarriage.setMovementMethod(LinkMovementMethod.getInstance());
@@ -538,7 +535,7 @@ public class CharacterFragment extends Fragment {
             rowView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new fetchData(getContext()).execute(((TextView) v.findViewById(R.id.name)).getText().toString());
+                    fetchCharacter(((TextView) v.findViewById(R.id.name)).getText().toString());
                 }
             });
             parent.addView(rowView);
